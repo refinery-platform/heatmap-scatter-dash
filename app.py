@@ -32,15 +32,6 @@ app.layout = html.Div([
     ),
     dcc.Graph(
         id='heatmap',
-        figure={
-            'data': [
-                go.Heatmap(
-                    x=conditions,
-                    y=genes,
-                    z=df.as_matrix()
-                )
-            ]
-        },
         style=style
     )
 ])
@@ -50,13 +41,34 @@ app.layout = html.Div([
     [Input(component_id='search', component_property='value')]
 )
 def update_scatter(search_term):
-    matching = [search_term in gene if search_term else True for gene in genes]
+    if not search_term:
+        search_term = ''
+    gene_matches = [search_term in gene for gene in genes]
     return {
         'data': [
             go.Scatter(
-                x=df['cond1'][matching],
-                y=df['cond2'][matching],
+                x=df['cond1'][gene_matches],
+                y=df['cond2'][gene_matches],
                 mode='markers'
+            )
+        ]
+    }
+
+@app.callback(
+    Output(component_id='heatmap', component_property='figure'),
+    [Input(component_id='search', component_property='value')]
+)
+def update_heatmap(search_term):
+    if not search_term:
+        search_term = ''
+    gene_matches = [search_term in gene for gene in genes]
+    matching = [gene for gene in genes if search_term in gene]
+    return {
+        'data': [
+            go.Heatmap(
+                x=conditions,
+                y=matching,
+                z=df[gene_matches].as_matrix()
             )
         ]
     }
