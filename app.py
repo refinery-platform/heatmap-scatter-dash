@@ -34,6 +34,8 @@ app.layout = html.Div([
         figure={
             'data': [
                 go.Heatmap(
+                    x=df.axes[0].tolist(),
+                    y=df.axes[1].tolist(),
                     z=df.as_matrix()
                 )
             ]
