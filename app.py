@@ -36,6 +36,9 @@ app.layout = html.Div([
     )
 ])
 
+def gene_match_booleans(search_term):
+    return [search_term in gene for gene in genes]
+
 @app.callback(
     Output(component_id='scatter', component_property='figure'),
     [Input(component_id='search', component_property='value')]
@@ -43,15 +46,27 @@ app.layout = html.Div([
 def update_scatter(search_term):
     if not search_term:
         search_term = ''
-    gene_matches = [search_term in gene for gene in genes]
+    booleans = gene_match_booleans(search_term)
     return {
         'data': [
             go.Scatter(
-                x=df['cond1'][gene_matches],
-                y=df['cond2'][gene_matches],
+                x=df['cond1'][booleans],
+                y=df['cond2'][booleans],
                 mode='markers'
+                # xmin=0,
+                # xmax=1,
+                # ymin=0,
+                # ymax=1
             )
-        ]
+        ],
+        'layout': go.Layout(
+            xaxis=dict(
+                range=[0,1]
+            ),
+            yaxis=dict(
+                range=[0, 1]
+            )
+        )
     }
 
 @app.callback(
@@ -61,14 +76,16 @@ def update_scatter(search_term):
 def update_heatmap(search_term):
     if not search_term:
         search_term = ''
-    gene_matches = [search_term in gene for gene in genes]
-    matching = [gene for gene in genes if search_term in gene]
+    booleans = gene_match_booleans(search_term)
+    matching_genes = [gene for gene in genes if search_term in gene]
     return {
         'data': [
             go.Heatmap(
                 x=conditions,
-                y=matching,
-                z=df[gene_matches].as_matrix()
+                y=matching_genes,
+                z=df[booleans].as_matrix(),
+                zmax=1,
+                zmin=0
             )
         ]
     }
