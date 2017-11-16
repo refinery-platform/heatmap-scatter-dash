@@ -22,9 +22,21 @@ genes = df.axes[0].tolist()
 
 style = {'width': '50%', 'display': 'inline-block'}
 
+conditions_options = [{'label': cond, 'value': cond} for cond in conditions]
+
 app.layout = html.Div([
     html.Div([
         dcc.Input(id='search', placeholder='Search genes...', type="text"),
+        dcc.Dropdown(
+            id='scatter-x-axis-select',
+            options=conditions_options,
+            value=conditions[0]
+        ),
+        dcc.Dropdown(
+            id='scatter-y-axis-select',
+            options=conditions_options,
+            value=conditions[1]
+        )
     ]),
     dcc.Graph(
         id='scatter',
@@ -41,37 +53,35 @@ def gene_match_booleans(search_term):
 
 @app.callback(
     Output(component_id='scatter', component_property='figure'),
-    [Input(component_id='search', component_property='value')]
+    [
+        Input(component_id='search', component_property='value'),
+        Input(component_id='scatter-x-axis-select', component_property='value'),
+        Input(component_id='scatter-y-axis-select', component_property='value')
+    ]
 )
-def update_scatter(search_term):
+def update_scatter(search_term, x_axis, y_axis):
     if not search_term:
         search_term = ''
     booleans = gene_match_booleans(search_term)
     return {
         'data': [
             go.Scatter(
-                x=df['cond1'][booleans],
-                y=df['cond2'][booleans],
+                x=df[x_axis][booleans],
+                y=df[y_axis][booleans],
                 mode='markers'
-                # xmin=0,
-                # xmax=1,
-                # ymin=0,
-                # ymax=1
             )
         ],
         'layout': go.Layout(
-            xaxis=dict(
-                range=[0,1]
-            ),
-            yaxis=dict(
-                range=[0, 1]
-            )
+            xaxis={'range': [0, 1], 'title': x_axis},
+            yaxis={'range': [0, 1], 'title': y_axis}
         )
     }
 
 @app.callback(
     Output(component_id='heatmap', component_property='figure'),
-    [Input(component_id='search', component_property='value')]
+    [
+        Input(component_id='search', component_property='value')
+    ]
 )
 def update_heatmap(search_term):
     if not search_term:
