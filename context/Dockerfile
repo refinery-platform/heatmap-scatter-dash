@@ -1,11 +1,15 @@
 FROM python:3.6.3
 
-COPY . .
+RUN pip install wget  # Lighter weight than the binary
 
-# TODO: Wget an unversioned copy, install from it, and then get the right version.
-# The idea is that version bumps on one dependency shouldn't bust cache for everything.
+# This gives us a layer with most dependencies cached.
+RUN python -m wget https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/master/context/requirements.txt
+RUN pip install -r requirements.txt
+
+# Now only the dependencies which have changed need to be downloaded.
+COPY . .
 RUN pip install -r requirements.txt
 
 VOLUME data
 
-CMD ["python", "app/app_runner.py"]
+CMD ["python", "app/app_runner.py", "--demo", "--port", "80", "--debug"]

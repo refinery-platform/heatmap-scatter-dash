@@ -5,4 +5,4 @@ install:
 - pip install -r context/requirements.txt
 - pip install -r requirements-dev.txt
 script:
-- test.sh
+- ./test.sh
