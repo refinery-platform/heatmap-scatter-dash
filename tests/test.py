@@ -48,7 +48,8 @@ class TestApp(unittest.TestCase):
 
     def test_scripts(self):
         self.assertEqual(
-            [script['namespace'] for script in self.app.scripts.get_all_scripts()],
+            [script['namespace'] for script
+             in self.app.scripts.get_all_scripts()],
             ['dash_html_components',
              'dash_core_components',
              'dash_core_components']

@@ -5,7 +5,7 @@ start() { echo travis_fold':'start:$1; echo $1; }
 end() { echo travis_fold':'end:$1; }
 
 start test
-python -m unittest discover -s tests --verbose
+PYTHONPATH=context python -m unittest discover -s tests --verbose
 end test
 
 start format

@@ -13,7 +13,10 @@ def make_app(dataframe):
 
     style = {'width': '50%', 'display': 'inline-block'}
 
-    conditions_options = [{'label': cond, 'value': cond} for cond in conditions]
+    conditions_options = [
+        {'label': cond, 'value': cond}
+        for cond in conditions
+    ]
 
     app.layout = html.Div([
         html.Div([
@@ -39,15 +42,14 @@ def make_app(dataframe):
         )
     ])
 
-
     def gene_match_booleans(search_term):
         return [search_term in gene for gene in genes]
-
 
     @app.callback(
         Output(component_id='scatter', component_property='figure'),
         [
-            Input(component_id='search', component_property='value'),
+            Input(component_id='search',
+                  component_property='value'),
             Input(component_id='scatter-x-axis-select',
                   component_property='value'),
             Input(component_id='scatter-y-axis-select',
@@ -71,7 +73,6 @@ def make_app(dataframe):
                 yaxis={'range': [0, 1], 'title': y_axis}
             )
         }
-
 
     @app.callback(
         Output(component_id='heatmap', component_property='figure'),
