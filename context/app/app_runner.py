@@ -1,5 +1,4 @@
 from app_factory import make_app
-from sys import argv
 import pandas
 from io import StringIO
 import argparse
