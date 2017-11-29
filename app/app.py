@@ -48,15 +48,19 @@ app.layout = html.Div([
     )
 ])
 
+
 def gene_match_booleans(search_term):
     return [search_term in gene for gene in genes]
+
 
 @app.callback(
     Output(component_id='scatter', component_property='figure'),
     [
         Input(component_id='search', component_property='value'),
-        Input(component_id='scatter-x-axis-select', component_property='value'),
-        Input(component_id='scatter-y-axis-select', component_property='value')
+        Input(component_id='scatter-x-axis-select',
+              component_property='value'),
+        Input(component_id='scatter-y-axis-select',
+              component_property='value')
     ]
 )
 def update_scatter(search_term, x_axis, y_axis):
@@ -76,6 +80,7 @@ def update_scatter(search_term, x_axis, y_axis):
             yaxis={'range': [0, 1], 'title': y_axis}
         )
     }
+
 
 @app.callback(
     Output(component_id='heatmap', component_property='figure'),
@@ -99,6 +104,7 @@ def update_heatmap(search_term):
             )
         ]
     }
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

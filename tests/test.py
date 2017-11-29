@@ -1,6 +1,7 @@
 import unittest
 from app.app import app
 
+
 def tree(node):
     if hasattr(node, 'children'):
         return [tree(child) for child in node.children]
@@ -36,7 +37,9 @@ class TestApp(unittest.TestCase):
     def test_scripts(self):
         self.assertEqual(
             [script['namespace'] for script in app.scripts.get_all_scripts()],
-            ['dash_html_components', 'dash_core_components', 'dash_core_components']
+            ['dash_html_components',
+             'dash_core_components',
+             'dash_core_components']
         )
 
     # Config tests: unlike to change?
@@ -66,5 +69,5 @@ class TestApp(unittest.TestCase):
     def test_url_base(self):
         self.assertEqual(
             app.url_base_pathname,
-           '/'
+            '/'
         )
