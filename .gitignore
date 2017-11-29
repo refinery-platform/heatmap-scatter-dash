@@ -1,4 +1,5 @@
 *.pyc
 .idea/
 .ipynb_checkpoints/
+fixtures/
 temp-plot.html

@@ -1,12 +1,8 @@
 language: python
 python:
-- 3.6.0
+- 3.6
 install:
 - pip install -r requirements.txt
 - pip install -r requirements-dev.txt
-- start() { echo travis_fold':'start:$1; echo $1; }
-- end() { echo travis_fold':'end:$1; }
 script:
-- set -o errexit
-- start test;   python -m unittest tests.test; end test
-- start format; flake8;                        end format
+- test.sh
