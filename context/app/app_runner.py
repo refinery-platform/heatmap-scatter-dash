@@ -33,4 +33,4 @@ else:
         gene-six,0.6,0.9,0.5,0.8
         """)
 dataframe = pandas.read_csv(csv, index_col=0)
-make_app(dataframe).run_server(debug=args.debug, port=int(args.port))
+make_app(dataframe).run_server(debug=args.debug, port=int(args.port or '8050'))
