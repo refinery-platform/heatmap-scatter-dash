@@ -2,16 +2,28 @@ from app_factory import make_app
 from sys import argv
 import pandas
 from io import StringIO
+import argparse
+from sys import exit
 
 
 if __name__ != '__main__':
     raise Exception('Should be run as script')
 
-if len(argv) > 2:
-    raise Exception('Expects one argument, the csv file to read')
+parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+parser.add_argument('--demo', action='store_true')
+parser.add_argument('--port')
+parser.add_argument('--file')
+parser.add_argument('--debug', action='store_true')
 
-if len(argv) == 2:
-    csv = open(argv[1])
+args = parser.parse_args()
+
+if not(args.demo or args.file):
+    print('Either "--demo" or "--file FILE" is required')
+    parser.print_help()
+    exit(1)
+
+if args.file:
+    csv = open(args.file)
 else:
     csv = StringIO("""gene,cond1,cond2,cond3,cond4
         gene-one,0.2,0.7,0.2,0.7
@@ -22,4 +34,4 @@ else:
         gene-six,0.6,0.9,0.5,0.8
         """)
 dataframe = pandas.read_csv(csv, index_col=0)
-make_app(dataframe).run_server(debug=True)
+make_app(dataframe).run_server(debug=args.debug, port=int(args.port))
