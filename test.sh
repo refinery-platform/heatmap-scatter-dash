@@ -13,14 +13,18 @@ flake8
 end format
 
 start docker
-TAG=heatmap-scatter-dash
-docker build --tag $TAG context
+source define_repo.sh
+# TODO: docker pull $REPO
+
+docker build --tag $IMAGE context
+# TODO: --cache-from $REPO
 
 PORT=8888
-docker run --detach --publish $PORT:80 $TAG
+docker run --detach --publish $PORT:80 $IMAGE
 
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
-    echo 'not up yet'
+    echo "not up yet"
     sleep 1
 done
+echo "docker is responsive"
 end docker
