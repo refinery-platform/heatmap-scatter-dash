@@ -4,8 +4,8 @@ language: python
 python:
 - 3.6.0
 install:
-- sudo pip install -r context/requirements.txt
-- sudo pip install -r requirements-dev.txt
+- pip install -r context/requirements.txt
+- pip install -r requirements-dev.txt
 script:
 - ./test.sh
 #after_success:
