@@ -1,13 +1,16 @@
+# Docker on Travis requires sudo.
+sudo: required
+
 language: python
 python:
-  - 3.6
+  - 3.6.0
 
 install:
   - pip install -r context/requirements.txt
   - pip install -r requirements-dev.txt
 
 script:
-  - ./test.sh
+  - sudo ./test.sh
 
 #after_success:
 #  - source define_repo.sh
