@@ -8,26 +8,26 @@ install:
 - pip install -r requirements-dev.txt
 script:
 - ./test.sh
-#after_success:
-#  - source define_repo.sh
-#  - tag_push() { echo "Tagging into $2"; sudo docker tag $1 $2; sudo docker push $2; }
-#
-#  - sudo docker login -u $DOCKER_USER -p $DOCKER_PASS
-#  # Always update "latest": the cache will be used for the next build.
-#  - tag_push $IMAGE $REPO
-#  - >
-#      if [ "$TRAVIS_EVENT_TYPE" == "pull_request" ]; then
-#        echo "PR!";
-#        BRANCH=`echo ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} | perl -pne 'chomp;s{.*/}{};s/\W/-/g'`;
-#        tag_push $IMAGE $REPO:$BRANCH;
-#        tag_push $IMAGE $REPO:latest-pr;
-#      fi
-#  - >
-#      if [ ! -z "$TRAVIS_TAG" ]; then
-#        echo "Git tag!";
-#        tag_push $IMAGE $REPO:$TRAVIS_TAG;
-#        tag_push $IMAGE $REPO:latest;
-#      fi
+after_success:
+- source define_repo.sh
+- tag_push() { echo "Tagging into $2"; sudo docker tag $1 $2; sudo docker push $2; }
+
+- sudo docker login -u $DOCKER_USER -p $DOCKER_PASS
+# Always update "latest": the cache will be used for the next build.
+- tag_push $IMAGE $REPO
+- >
+    if [ "$TRAVIS_EVENT_TYPE" == "pull_request" ]; then
+      echo "PR!";
+      BRANCH=`echo ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} | perl -pne 'chomp;s{.*/}{};s/\W/-/g'`;
+      tag_push $IMAGE $REPO:$BRANCH;
+      tag_push $IMAGE $REPO:latest-pr;
+    fi
+- >
+    if [ ! -z "$TRAVIS_TAG" ]; then
+      echo "Git tag!";
+      tag_push $IMAGE $REPO:$TRAVIS_TAG;
+      tag_push $IMAGE $REPO:latest;
+    fi
 env:
   global:
   - secure: RsSFauJxIEduhP1guih68hK4jr9EfPEBp9FBJxINy+fiAiX9NlnNllo9hKGKGeJtqSCQtUZ7ZRxrfYsAs5pu80wNJA1XW3RIRKgMH3O5T1t4iNGA2HIlyufIb8cnV5Wzg9hwXulT6Xfjbm7W7Uu1Y6loF9E9NkwLKgk3qtSqjIbuWGg7o87UsvTHwAkzzz8eklSMIJXwpAtMspzg/7L1JgW+vuOLarbyndGVSRmkz8EYs4rwjnXthp+lvzw1pHp6KJG8+uojRgqP4JBoj7/MQbOQBkOfTsNnQ8BWqfzQVbzMpHCzrWmlUx2WolKIQepu5Oik331IwXsg2TGlGze7uNcM6KM6YVsdqtx0Z9wDhntJsIPRxHemi2u3vxdaBQ2+/wSlYf/5vAu6QFsJZmLWlHE4H+k/t6pm6XFpgPH45bZUvlPblnGqSYE1WePUOLF28tpBMtw5Bre+fhmDVgC0o0hyiNX2/EDAfn3bcI3UACP6BaG+iyxZQMyM2aR2JHgmjaUPg0Xg9B6OuxvsEDIBFuRmtI8WodPr8gIDhFynhQrD8tc3IWC0Kq1hFU29EMjQbrYHzgSNaBcrc3hsRN7vCO19jvAzLEv/z9kambLqMk8okNrHjoZM8dqn5cyzEItTb1IhGQqgcX7gE+/zzYYh+g9m4RK1gN+PDw5RsU8JYD8=
