@@ -2,6 +2,7 @@ import argparse
 from io import StringIO
 from sys import exit
 
+import numpy as np
 import pandas
 
 from app_factory import make_app
@@ -24,17 +25,15 @@ if not(args.demo or args.file):
 
 if args.file:
     csv = open(args.file)
+    dataframe = pandas.read_csv(csv, index_col=0)
 else:
-    csv = StringIO("""gene,cond1,cond2,cond3,cond4
-        gene-one,0.2,0.7,0.2,0.7
-        gene-two,0.4,0.8,0.2,0.8
-        gene-three,0.5,0.8,0.1,0.9
-        gene-four,0.6,0.8,0.3,0.8
-        gene-five,0.6,0.9,0.4,0.8
-        gene-six,0.6,0.9,0.5,0.9
-        """)
+    rows = 20
+    cols = 10
+    array = np.random.rand(rows, cols)
+    col_labels = ['cond-{}'.format(i) for i in range(cols)]
+    row_labels = ['gene-{}'.format(i) for i in range(rows)]
+    dataframe = pandas.DataFrame(array, columns=col_labels, index=row_labels)
 
-dataframe = pandas.read_csv(csv, index_col=0)
 make_app(dataframe).run_server(
     debug=args.debug,
     port=int(args.port or '8050'),
