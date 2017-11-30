@@ -30,7 +30,12 @@ else:
         gene-three,0.5,0.8,0.1,0.9
         gene-four,0.6,0.8,0.3,0.8
         gene-five,0.6,0.9,0.4,0.8
-        gene-six,0.6,0.9,0.5,0.8
+        gene-six,0.6,0.9,0.5,0.9
         """)
+
 dataframe = pandas.read_csv(csv, index_col=0)
-make_app(dataframe).run_server(debug=args.debug, port=int(args.port))
+make_app(dataframe).run_server(
+    debug=args.debug,
+    port=int(args.port or '8050'),
+    host='0.0.0.0'
+)
