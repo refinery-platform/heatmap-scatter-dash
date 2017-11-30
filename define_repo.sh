@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-OWNER=gehlenborglab
+OWNER=mccalluc # TODO: gehlenborglab
 export IMAGE=heatmap_scatter_dash
 export REPO=$OWNER/$IMAGE

@@ -14,9 +14,8 @@ end format
 
 start docker
 source define_repo.sh
-# TODO: docker pull $REPO
 
-# We don't want to run the whole script under sudo in travis,
+# We don't want to run the whole script under sudo on Travis,
 # because then it gets the system python instead of the version
 # we've specified.
 OPT_SUDO=''
@@ -24,8 +23,8 @@ if [ ! -z "$TRAVIS" ]; then
   OPT_SUDO='sudo'
 fi
 
-$OPT_SUDO docker build --tag $IMAGE context
-# TODO: --cache-from $REPO
+$OPT_SUDO docker pull $REPO
+$OPT_SUDO docker build  --cache-from $REPO --tag $IMAGE context
 
 PORT=8888
 $OPT_SUDO docker run --detach --publish $PORT:80 $IMAGE
