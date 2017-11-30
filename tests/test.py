@@ -1,7 +1,9 @@
 import unittest
-from app.app_factory import make_app
-import pandas
 from io import StringIO
+
+import pandas
+
+from app.app_factory import make_app
 
 
 class TestApp(unittest.TestCase):

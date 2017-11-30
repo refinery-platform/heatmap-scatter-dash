@@ -1,9 +1,10 @@
-from app_factory import make_app
-import pandas
-from io import StringIO
 import argparse
+from io import StringIO
 from sys import exit
 
+import pandas
+
+from app_factory import make_app
 
 if __name__ != '__main__':
     raise Exception('Should be run as script')

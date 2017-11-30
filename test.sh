@@ -4,13 +4,22 @@ set -o errexit
 start() { echo travis_fold':'start:$1; echo $1; }
 end() { echo travis_fold':'end:$1; }
 
+
 start test
 PYTHONPATH=context python -m unittest discover -s tests --verbose
 end test
 
+
 start format
 flake8
 end format
+
+
+start isort
+echo "Run 'isort -rc .' locally to fix any problems."
+isort -r . --check-only
+end isort
+
 
 start docker
 source define_repo.sh
