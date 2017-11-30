@@ -7,7 +7,7 @@ install:
 - sudo pip install -r context/requirements.txt
 - sudo pip install -r requirements-dev.txt
 script:
-- sudo ./test.sh
+- ./test.sh
 #after_success:
 #  - source define_repo.sh
 #  - tag_push() { echo "Tagging into $2"; sudo docker tag $1 $2; sudo docker push $2; }
