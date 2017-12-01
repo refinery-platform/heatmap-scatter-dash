@@ -7,8 +7,12 @@ import numpy as np
 def cluster(dataframe):
     cols_linkage = linkage(dataframe.T, 'ward')
     cols_order = leaves_list(cols_linkage).tolist()
+    col_labels = dataframe.columns.tolist()
+    col_label_order = [col_labels[i] for i in cols_order]
 
     rows_linkage = linkage(dataframe, 'ward')
     rows_order = leaves_list(rows_linkage).tolist()
+    row_labels = dataframe.index.tolist()
+    row_label_order = [row_labels[i] for i in rows_order]
 
-    return dataframe[cols_order].iloc[rows_order]
+    return dataframe[col_label_order].iloc[row_label_order]
