@@ -4,9 +4,13 @@ import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
+from cluster import cluster
 
-def make_app(dataframe):
+def make_app(dataframe, clustering=False):
     app = dash.Dash()
+
+    if clustering:
+        dataframe = cluster(dataframe)
 
     conditions = dataframe.axes[1].tolist()
     genes = dataframe.axes[0].tolist()
@@ -90,9 +94,7 @@ def make_app(dataframe):
                 go.Heatmapgl(
                     x=conditions,
                     y=matching_genes,
-                    z=dataframe[booleans].as_matrix(),
-                    zmax=1,
-                    zmin=0
+                    z=dataframe[booleans].as_matrix()
                 )
             ],
             'layout': go.Layout(

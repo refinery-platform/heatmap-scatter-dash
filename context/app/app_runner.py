@@ -51,6 +51,7 @@ parser.add_argument('--demo', type=dimensions_regex)
 parser.add_argument('--files', nargs='+', type=argparse.FileType('r'))
 parser.add_argument('--port', type=int, default=8050)
 parser.add_argument('--debug', action='store_true')
+parser.add_argument('--cluster', action='store_true')
 args = parser.parse_args()
 
 
@@ -70,7 +71,7 @@ for frame in dataframes:
                                 how='outer',
                                 right_index=True,
                                 left_index=True)
-make_app(merged_df).run_server(
+make_app(merged_df, clustering=args.cluster).run_server(
     debug=args.debug,
     port=args.port,
     host='0.0.0.0'
