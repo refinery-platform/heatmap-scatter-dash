@@ -29,8 +29,8 @@ class TestDash(unittest.TestCase):
         self.assertEqual(
             tree(self.app.layout),
             [
-                ['Input', 'Dropdown', 'Dropdown'],
-                'Graph', 'Graph'
+                ['Graph', 'str'],
+                [['Graph', ['Input'], ['Dropdown'], ['Dropdown']], 'str']
             ]
         )
 

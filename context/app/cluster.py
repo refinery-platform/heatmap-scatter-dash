@@ -1,8 +1,8 @@
-from scipy.cluster.hierarchy import dendrogram, linkage, leaves_list
-import numpy as np
+from scipy.cluster.hierarchy import leaves_list, linkage
 
 # I found this tutorial very helpful:
 # https://joernhees.de/blog/2015/08/26/scipy-hierarchical-clustering-and-dendrogram-tutorial/
+
 
 def cluster(dataframe):
     cols_linkage = linkage(dataframe.T, 'ward')

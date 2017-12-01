@@ -4,7 +4,8 @@ import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
-from cluster import cluster
+from app.cluster import cluster
+
 
 def make_app(dataframe, clustering=False):
     app = dash.Dash()
@@ -39,7 +40,10 @@ def make_app(dataframe, clustering=False):
                         id='scatter'
                     ),
                     html.Div([
-                        dcc.Input(id='search', placeholder='Search genes...', type="text")
+                        dcc.Input(
+                            id='search',
+                            placeholder='Search genes...',
+                            type="text")
                     ]),
                     html.Div(
                         [dcc.Dropdown(
@@ -83,7 +87,8 @@ def make_app(dataframe, clustering=False):
         booleans = gene_match_booleans(search_term)
         return {
             'data': [
-                go.Scattergl(  # TODO: try go.pointcloud if we still need something faster?
+                go.Scattergl(
+                    # TODO: try go.pointcloud if we need something faster?
                     x=dataframe[x_axis][booleans],
                     y=dataframe[y_axis][booleans],
                     mode='markers'
@@ -92,7 +97,8 @@ def make_app(dataframe, clustering=False):
             'layout': go.Layout(
                 xaxis={'title': x_axis},
                 yaxis={'title': y_axis},
-                margin={'l': 75, 'b': 50, 't': 0, 'r': 0} # Axis labels lie in the margin.
+                margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
+                # Axis labels lie in the margin.
             )
         }
 
