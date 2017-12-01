@@ -17,31 +17,22 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
             'Should be of the form "FRAMES,ROWS,COLS", '
             'where each is an integer'
         )
-    return [int(i) for i in s.split(',')]
+    dimensions = [int(i) for i in s.split(',')]
+    return {
+        'frames': dimensions[0],
+        'rows': dimensions[1],
+        'cols': dimensions[2]
+    }
 
 
-parser = argparse.ArgumentParser(description='Plotly Dash visualization')
-parser.add_argument('--demo', type=dimensions_regex)
-parser.add_argument('--port', type=int)
-parser.add_argument('--files', nargs='+', type=argparse.FileType('r'))
-parser.add_argument('--debug', action='store_true')
-
-args = parser.parse_args()
-
-if not(args.demo or args.file):
-    print('Either "--demo" or "--files FILE" is required')
-    parser.print_help()
-    exit(1)
-
-if args.files:
-    dataframes = [
+def real_dataframes(files):
+    return [
         pandas.read_csv(open(file), index_col=0)
         for file in args.files
     ]
-else:
-    frames = args.demo[0]
-    rows = args.demo[1]
-    cols = args.demo[2]
+
+
+def demo_dataframes(frames, rows, cols):
     dataframes = []
     for f in range(frames):
         array = np.random.rand(rows, cols)
@@ -52,6 +43,26 @@ else:
         dataframes.append(pandas.DataFrame(array,
                                            columns=col_labels,
                                            index=row_labels))
+    return dataframes
+
+
+parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+parser.add_argument('--demo', type=dimensions_regex)
+parser.add_argument('--files', nargs='+', type=argparse.FileType('r'))
+parser.add_argument('--port', type=int, default=8050)
+parser.add_argument('--debug', action='store_true')
+args = parser.parse_args()
+
+
+if args.files:
+    dataframes = real_dataframes(args.files)
+elif args.demo:
+    dataframes = demo_dataframes(**args.demo)
+else:
+    print('Either "--demo FRAMES,ROWS,COLS" or "--files FILE" is required')
+    parser.print_help()
+    exit(1)
+
 
 merged_df = pandas.DataFrame()
 for frame in dataframes:
@@ -61,6 +72,6 @@ for frame in dataframes:
                                 left_index=True)
 make_app(merged_df).run_server(
     debug=args.debug,
-    port=int(args.port or '8050'),
+    port=args.port,
     host='0.0.0.0'
 )
