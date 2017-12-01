@@ -94,7 +94,11 @@ def make_app(dataframe):
                     zmax=1,
                     zmin=0
                 )
-            ]
+            ],
+            'layout': go.Layout(
+                xaxis={'ticks': '', 'showticklabels': False},
+                yaxis={'ticks': '', 'showticklabels': False}
+            )
         }
 
     return app
