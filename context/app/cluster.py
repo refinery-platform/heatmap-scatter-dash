@@ -15,4 +15,4 @@ def cluster(dataframe):
     row_labels = dataframe.index.tolist()
     row_label_order = [row_labels[i] for i in rows_order]
 
-    return dataframe[col_label_order].iloc[row_label_order]
+    return dataframe[col_label_order].loc[row_label_order]
