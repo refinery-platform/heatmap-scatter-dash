@@ -62,7 +62,7 @@ def make_app(dataframe):
         booleans = gene_match_booleans(search_term)
         return {
             'data': [
-                go.Scatter(
+                go.Scattergl(  # TODO: try go.pointcloud if we still need something faster?
                     x=dataframe[x_axis][booleans],
                     y=dataframe[y_axis][booleans],
                     mode='markers'
@@ -87,7 +87,7 @@ def make_app(dataframe):
         matching_genes = [gene for gene in genes if search_term in gene]
         return {
             'data': [
-                go.Heatmap(
+                go.Heatmapgl(
                     x=conditions,
                     y=matching_genes,
                     z=dataframe[booleans].as_matrix(),
