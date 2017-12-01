@@ -11,7 +11,7 @@ Read [`.travis.yml`](.travis.yml) for instructions on installing dependencies.
 (You probably want a virtualenv.) Then:
 
 ```bash
-$ python context/app/app_runner.py --demo 1,10,10 --port 8888
+$ python context/app/app_runner.py --demo 1,10,10 --port 8888 --cluster
 ```
 
 and visit `http://localhost:8888/`.

@@ -15,7 +15,7 @@ def make_app(dataframe, clustering=False):
     conditions = dataframe.axes[1].tolist()
     genes = dataframe.axes[0].tolist()
 
-    style = {'width': '50%', 'display': 'inline-block'}
+    half_width = {'width': '50%', 'display': 'inline-block'}
 
     conditions_options = [
         {'label': cond, 'value': cond}
@@ -24,26 +24,43 @@ def make_app(dataframe, clustering=False):
 
     app.layout = html.Div([
         html.Div([
-            dcc.Input(id='search', placeholder='Search genes...', type="text"),
-            dcc.Dropdown(
-                id='scatter-x-axis-select',
-                options=conditions_options,
-                value=conditions[0]
+            # First row
+            dcc.Graph(
+                id='heatmap',
+                style=half_width
             ),
-            dcc.Dropdown(
-                id='scatter-y-axis-select',
-                options=conditions_options,
-                value=conditions[1]
-            )
+            'TODO: PCA'
         ]),
-        dcc.Graph(
-            id='scatter',
-            style=style
-        ),
-        dcc.Graph(
-            id='heatmap',
-            style=style
-        )
+        html.Div([
+            # Second row
+            html.Div(
+                [
+                    dcc.Graph(
+                        id='scatter'
+                    ),
+                    html.Div([
+                        dcc.Input(id='search', placeholder='Search genes...', type="text")
+                    ]),
+                    html.Div(
+                        [dcc.Dropdown(
+                            id='scatter-x-axis-select',
+                            options=conditions_options,
+                            value=conditions[0]
+                        )],
+                        style=half_width
+                    ),
+                    html.Div(
+                        [dcc.Dropdown(
+                            id='scatter-y-axis-select',
+                            options=conditions_options,
+                            value=conditions[1]
+                        )],
+                        style=half_width
+                    )
+                ],
+                style=half_width),
+            'TODO: Volcano'
+        ])
     ])
 
     def gene_match_booleans(search_term):
@@ -74,7 +91,8 @@ def make_app(dataframe, clustering=False):
             ],
             'layout': go.Layout(
                 xaxis={'title': x_axis},
-                yaxis={'title': y_axis}
+                yaxis={'title': y_axis},
+                margin={'l': 75, 'b': 50, 't': 0, 'r': 0} # Axis labels lie in the margin.
             )
         }
 
@@ -98,8 +116,9 @@ def make_app(dataframe, clustering=False):
                 )
             ],
             'layout': go.Layout(
-                xaxis={'ticks': '', 'showticklabels': False},
-                yaxis={'ticks': '', 'showticklabels': False}
+                xaxis={'ticks': '', 'showticklabels': True, 'tickangle': 90},
+                yaxis={'ticks': '', 'showticklabels': False},
+                margin={'l': 75, 'b': 100, 't': 0, 'r': 0}
             )
         }
 
