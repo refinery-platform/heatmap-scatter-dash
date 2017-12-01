@@ -69,8 +69,8 @@ def make_app(dataframe):
                 )
             ],
             'layout': go.Layout(
-                xaxis={'range': [0, 1], 'title': x_axis},
-                yaxis={'range': [0, 1], 'title': y_axis}
+                xaxis={'title': x_axis},
+                yaxis={'title': y_axis}
             )
         }
 

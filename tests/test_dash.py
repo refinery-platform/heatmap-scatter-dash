@@ -6,7 +6,7 @@ import pandas
 from app.app_factory import make_app
 
 
-class TestApp(unittest.TestCase):
+class TestDash(unittest.TestCase):
 
     def setUp(self):
         csv = StringIO("""gene,cond1,cond2,cond3,cond4

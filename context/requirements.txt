@@ -4,3 +4,4 @@ dash-html-components==0.8.0
 dash-core-components==0.14.0
 plotly==2.2.1
 pandas==0.21.0
+scipy==0.18.1
