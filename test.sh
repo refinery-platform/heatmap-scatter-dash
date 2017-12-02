@@ -38,16 +38,20 @@ $OPT_SUDO docker build  --cache-from $REPO --tag $IMAGE context
 PORT=8888
 $OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 $IMAGE
 
-TRIES=0
+TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
-    echo "not up yet"
-    (( TRIES++ ))
+    echo "$TRIES: not up yet"
     if (( $TRIES > 3 )); then
         echo "HTTP requests to app in Docker container never succeeded"
         $OPT_SUDO docker logs $IMAGE-container
         exit 1
     fi
+    (( TRIES++ ))
     sleep 1
 done
 echo "docker is responsive"
+
+docker stop $IMAGE-container
+docker rm $IMAGE-container
+echo "container cleaned up"
 end docker
