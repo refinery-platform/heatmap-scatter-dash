@@ -1,10 +1,12 @@
 import unittest
-from app.app_factory import make_app
-import pandas
 from io import StringIO
 
+import pandas
 
-class TestApp(unittest.TestCase):
+from app.app_factory import make_app
+
+
+class TestDash(unittest.TestCase):
 
     def setUp(self):
         csv = StringIO("""gene,cond1,cond2,cond3,cond4
@@ -27,8 +29,8 @@ class TestApp(unittest.TestCase):
         self.assertEqual(
             tree(self.app.layout),
             [
-                ['Input', 'Dropdown', 'Dropdown'],
-                'Graph', 'Graph'
+                ['Graph', 'str'],
+                [['Graph', ['Input'], ['Dropdown'], ['Dropdown']], 'str']
             ]
         )
 
