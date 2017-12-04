@@ -22,7 +22,7 @@ class AppWrapper:
         conditions_options = [
             {'label': cond, 'value': cond}
             for cond in self._conditions
-            ]
+        ]
 
         self.app.layout = html.Div([
             html.Div([
@@ -72,10 +72,8 @@ class AppWrapper:
 
         genes = self._dataframe.axes[0].tolist()
 
-
         def gene_match_booleans(search_term):
             return [search_term in gene for gene in genes]
-
 
         @self.app.callback(
             Output(component_id='scatter', component_property='figure'),
@@ -109,7 +107,6 @@ class AppWrapper:
                 )
             }
 
-
         @self.app.callback(
             Output(component_id='heatmap', component_property='figure'),
             [
@@ -130,8 +127,13 @@ class AppWrapper:
                     )
                 ],
                 'layout': go.Layout(
-                    xaxis={'ticks': '', 'showticklabels': True, 'tickangle': 90},
-                    yaxis={'ticks': '', 'showticklabels': False},
+                    xaxis={
+                        'ticks': '',
+                        'showticklabels': True,
+                        'tickangle': 90},
+                    yaxis={
+                        'ticks': '',
+                        'showticklabels': False},
                     margin={'l': 75, 'b': 100, 't': 0, 'r': 0}
                 )
             }

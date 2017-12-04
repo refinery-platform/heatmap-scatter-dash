@@ -3,7 +3,7 @@ from io import StringIO
 
 import pandas
 
-from app.app_factory import make_app
+from app.app_wrapper import AppWrapper
 
 
 class TestDash(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestDash(unittest.TestCase):
             gene-six,0.6,0.9,0.5,0.8
             """)
         dataframe = pandas.read_csv(csv, index_col=0)
-        self.app = make_app(dataframe)
+        self.app = AppWrapper(dataframe).app
 
     def test_layout(self):
         def tree(node):
