@@ -5,12 +5,14 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
 from app.cluster import cluster
+from app.pca import pca
 
 
 class AppWrapper:
 
     def __init__(self, dataframe, clustering=False):
         self._dataframe = cluster(dataframe) if clustering else dataframe
+        self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
         self.app = dash.Dash()
         self._configure_layout()
@@ -31,7 +33,10 @@ class AppWrapper:
                     id='heatmap',
                     style=half_width
                 ),
-                'TODO: PCA'
+                dcc.Graph(
+                    id='scatter-pca',
+                    style=half_width
+                ),
             ]),
             html.Div([
                 # Second row
@@ -101,6 +106,33 @@ class AppWrapper:
                     yaxis={
                         'ticks': '',
                         'showticklabels': False},
+                    margin={'l': 75, 'b': 100, 't': 30, 'r': 0}
+                    # Need top margin so infobox on hover is not truncated
+                )
+            }
+
+        @self.app.callback(
+            Output(component_id='scatter-pca', component_property='figure'),
+            [
+                # TODO
+            ]
+        )
+        def update_scatter_pca():
+            return {
+                'data': [
+                    go.Scattergl(
+                        x=self._dataframe_pca['pc1'],
+                        y=self._dataframe_pca['pc2'],
+                        mode='markers'
+                    )
+                ],
+                'layout': go.Layout(
+                    # xaxis={
+                    #     'ticks': '',
+                    #     'showticklabels': Tr},
+                    # yaxis={
+                    #     'ticks': '',
+                    #     'showticklabels': False},
                     margin={'l': 75, 'b': 100, 't': 30, 'r': 0}
                     # Need top margin so infobox on hover is not truncated
                 )
