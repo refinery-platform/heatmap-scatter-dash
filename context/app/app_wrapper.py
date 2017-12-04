@@ -69,11 +69,42 @@ class AppWrapper:
         ])
 
     def _configure_callbacks(self):
-
         genes = self._dataframe.axes[0].tolist()
 
         def gene_match_booleans(search_term):
             return [search_term in gene for gene in genes]
+
+        @self.app.callback(
+            Output(component_id='heatmap', component_property='figure'),
+            [
+                Input(component_id='search', component_property='value')
+            ]
+        )
+        def update_heatmap(search_term):
+            if not search_term:
+                search_term = ''
+            booleans = gene_match_booleans(search_term)
+            matching_genes = [gene for gene in genes if search_term in gene]
+            return {
+                'data': [
+                    go.Heatmapgl(
+                        x=self._conditions,
+                        y=matching_genes,
+                        z=self._dataframe[booleans].as_matrix()
+                    )
+                ],
+                'layout': go.Layout(
+                    xaxis={
+                        'ticks': '',
+                        'showticklabels': True,
+                        'tickangle': 90},
+                    yaxis={
+                        'ticks': '',
+                        'showticklabels': False},
+                    margin={'l': 75, 'b': 100, 't': 30, 'r': 0}
+                    # Need top margin so infobox on hover is not truncated
+                )
+            }
 
         @self.app.callback(
             Output(component_id='scatter', component_property='figure'),
@@ -104,36 +135,5 @@ class AppWrapper:
                     yaxis={'title': y_axis},
                     margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
                     # Axis labels lie in the margin.
-                )
-            }
-
-        @self.app.callback(
-            Output(component_id='heatmap', component_property='figure'),
-            [
-                Input(component_id='search', component_property='value')
-            ]
-        )
-        def update_heatmap(search_term):
-            if not search_term:
-                search_term = ''
-            booleans = gene_match_booleans(search_term)
-            matching_genes = [gene for gene in genes if search_term in gene]
-            return {
-                'data': [
-                    go.Heatmapgl(
-                        x=self._conditions,
-                        y=matching_genes,
-                        z=self._dataframe[booleans].as_matrix()
-                    )
-                ],
-                'layout': go.Layout(
-                    xaxis={
-                        'ticks': '',
-                        'showticklabels': True,
-                        'tickangle': 90},
-                    yaxis={
-                        'ticks': '',
-                        'showticklabels': False},
-                    margin={'l': 75, 'b': 100, 't': 0, 'r': 0}
                 )
             }

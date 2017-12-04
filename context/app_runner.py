@@ -5,7 +5,7 @@ from sys import exit
 import numpy as np
 import pandas
 
-from app.app_factory import AppWrapper
+from app.app_wrapper import AppWrapper
 
 if __name__ != '__main__':
     raise Exception('Should be run as script')
