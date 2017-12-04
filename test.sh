@@ -3,7 +3,7 @@ set -o errexit
 
 start() { echo travis_fold':'start:$1; echo $1; }
 end() { echo travis_fold':'end:$1; }
-
+die() { echo "$*" 1>&2 ; exit 1; }
 
 start test
 PYTHONPATH=context python -m unittest discover -s tests --verbose
@@ -11,13 +11,12 @@ end test
 
 
 start format
-flake8
+flake8 || die "Run 'autopep8 --in-place -r .'"
 end format
 
 
 start isort
-echo "Run 'isort -rc .' locally to fix any problems."
-isort -r . --check-only
+isort -r . --check-only || die "Run 'isort -rc .'"
 end isort
 
 
@@ -41,7 +40,7 @@ $OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 $IMAGE
 TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
     echo "$TRIES: not up yet"
-    if (( $TRIES > 3 )); then
+    if (( $TRIES > 5 )); then
         echo "HTTP requests to app in Docker container never succeeded"
         $OPT_SUDO docker logs $IMAGE-container
         exit 1

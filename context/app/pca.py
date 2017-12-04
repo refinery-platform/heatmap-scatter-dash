@@ -1,5 +1,6 @@
-from sklearn import decomposition
 import pandas
+from sklearn import decomposition
+
 
 def pca(dataframe, components=2):
     orig_columns = dataframe.columns.tolist()
