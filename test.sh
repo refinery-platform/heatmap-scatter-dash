@@ -41,9 +41,8 @@ TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
     echo "$TRIES: not up yet"
     if (( $TRIES > 5 )); then
-        echo "HTTP requests to app in Docker container never succeeded"
         $OPT_SUDO docker logs $IMAGE-container
-        exit 1
+        die "HTTP requests to app in Docker container never succeeded"
     fi
     (( TRIES++ ))
     sleep 1
