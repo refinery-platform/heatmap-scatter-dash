@@ -31,6 +31,37 @@ class AppWrapper:
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
+        def scatter(id, options, search=False):
+            nodes = [
+                dcc.Graph(
+                    id='scatter-{}'.format(id)
+                ),
+                html.Div(
+                    [dcc.Dropdown(
+                        id='scatter-{}-x-axis-select'.format(id),
+                        options=options,
+                        value=options[0]['value']
+                    )],
+                    style=half_width
+                ),
+                html.Div(
+                    [dcc.Dropdown(
+                        id='scatter-{}-y-axis-select'.format(id),
+                        options=options,
+                        value=options[1]['value']
+                    )],
+                    style=half_width
+                )
+            ]
+            if search:
+                nodes.insert(1, html.Div([
+                            dcc.Input(
+                                id='search-{}'.format(id),
+                                placeholder='Search...',
+                                type="text")
+                ]))
+            return html.Div(nodes, style=half_width)
+
         self.app.layout = html.Div([
             html.Div([
                 # First row
@@ -38,60 +69,11 @@ class AppWrapper:
                     id='heatmap',
                     style=half_width
                 ),
-                html.Div([
-                    dcc.Graph(
-                        id='scatter-pca'
-                    ),
-                    html.Div(
-                        [dcc.Dropdown(
-                            id='scatter-pca-x-axis-select',
-                            options=pc_options,
-                            value='pc1'  # TODO: DRY
-                        )],
-                        style=half_width
-                    ),
-                    html.Div(
-                        [dcc.Dropdown(
-                            id='scatter-pca-y-axis-select',
-                            options=pc_options,
-                            value='pc2'  # TODO: DRY
-                        )],
-                        style=half_width
-                    )
-                ],
-                    style=half_width)
+                scatter('pca', pc_options)
             ]),
             html.Div([
                 # Second row
-                html.Div(
-                    [
-                        dcc.Graph(
-                            id='scatter-genes'
-                        ),
-                        html.Div([
-                            dcc.Input(
-                                id='search-genes',
-                                placeholder='Search genes...',
-                                type="text")
-                        ]),
-                        html.Div(
-                            [dcc.Dropdown(
-                                id='scatter-genes-x-axis-select',
-                                options=conditions_options,
-                                value=self._conditions[0]
-                            )],
-                            style=half_width
-                        ),
-                        html.Div(
-                            [dcc.Dropdown(
-                                id='scatter-genes-y-axis-select',
-                                options=conditions_options,
-                                value=self._conditions[1]
-                            )],
-                            style=half_width
-                        )
-                    ],
-                    style=half_width),
+                scatter('genes', conditions_options, search=True),
                 'TODO: Volcano'
             ])
         ])

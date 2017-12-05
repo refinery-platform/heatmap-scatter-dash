@@ -2,9 +2,9 @@
 set -o errexit
 
 # xtrace turned on only within the travis folds
-start() { echo travis_fold':'start:$1; echo $1; set -x; }
-end() { set +x; echo travis_fold':'end:$1; }
-die() { echo "$*" 1>&2 ; exit 1; }
+start() { echo travis_fold':'start:$1; echo $1; set -v; }
+end() { set +v; echo travis_fold':'end:$1; }
+die() { set +v; echo "$*" 1>&2 ; exit 1; }
 
 start test
 PYTHONPATH=context python -m unittest discover -s tests --verbose

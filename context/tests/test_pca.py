@@ -9,12 +9,9 @@ from app.pca import pca
 class TestPCA(unittest.TestCase):
 
     def test_pca(self):
-        def sign(y):
-            return copysign(1, y)
-
         def same_sign(a, b):
-            return sign(a) == sign(b)
-        
+            return copysign(1, a) == copysign(1, b)
+
         dataframe = pandas.DataFrame(
             [[1, 2, 8, 9],
              [1, 2, 8, 9],
