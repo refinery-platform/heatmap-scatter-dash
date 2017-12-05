@@ -29,7 +29,7 @@ class TestDash(unittest.TestCase):
         self.assertEqual(
             tree(self.app.layout),
             [
-                ['Graph', 'Graph'],
+                ['Graph', ['Graph', ['Dropdown'], ['Dropdown']]],
                 [['Graph', ['Input'], ['Dropdown'], ['Dropdown']], 'str']
             ]
         )
@@ -37,7 +37,7 @@ class TestDash(unittest.TestCase):
     def test_callback_map(self):
         self.assertEqual(
             list(self.app.callback_map.keys()),
-            ['heatmap.figure', 'scatter-pca.figure', 'scatter.figure']
+            ['heatmap.figure', 'scatter-pca.figure', 'scatter-genes.figure']
         )
 
     # Outside resource tests:

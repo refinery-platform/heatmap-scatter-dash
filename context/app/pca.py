@@ -2,7 +2,8 @@ import pandas
 from sklearn import decomposition
 
 
-def pca(dataframe, components=4):  # TODO: Confirm that this is a good number of components
+def pca(dataframe, components=4):
+    # TODO: Confirm that this is a good number of components
     dataframe = dataframe.fillna(0)  # TODO: Confirm that this is correct
     orig_columns = dataframe.columns.tolist()
     components = min(components, len(orig_columns))

@@ -28,7 +28,7 @@ class AppWrapper:
 
         pc_options = [
             {'label': pc, 'value': pc}
-            for pc in ['pc1','pc2','pc3','pc4']  # TODO: DRY
+            for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
         self.app.layout = html.Div([
@@ -59,7 +59,7 @@ class AppWrapper:
                         style=half_width
                     )
                 ],
-                style=half_width)
+                    style=half_width)
             ]),
             html.Div([
                 # Second row

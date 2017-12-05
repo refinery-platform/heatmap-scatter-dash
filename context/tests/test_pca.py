@@ -18,15 +18,15 @@ class TestPCA(unittest.TestCase):
         )
         principle_components = pca(dataframe)
         self.assertEqual(principle_components.round().as_matrix().tolist(),
-                         [[7.0, 3.0],
-                          [5.0, -5.0],
-                          [-5.0, 5.0],
-                          [-7.0, -3.0]]
+                         [[7.0, 3.0, 0.0, 0.0],
+                          [5.0, -5.0, -0.0, 0.0],
+                          [-5.0, 5.0, -0.0, 0.0],
+                          [-7.0, -3.0, 0.0, 0.0]]
                          )
         # The pairs 1+2 and 3+4 are similar in the first component.
         # But 1+3 and 2+4 are also related, as shown in the second component.
         self.assertEqual(principle_components.columns.tolist(),
-                         ['pc0', 'pc1']
+                         ['pc0', 'pc1', 'pc2', 'pc3']
                          )
         self.assertEqual(principle_components.index.tolist(),
                          ['c1', 'c2', 'c3', 'c4']
