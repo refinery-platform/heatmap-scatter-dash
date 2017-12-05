@@ -5,7 +5,7 @@ from sys import exit
 import numpy as np
 import pandas
 
-from app.app_factory import make_app
+from app.app_wrapper import AppWrapper
 
 if __name__ != '__main__':
     raise Exception('Should be run as script')
@@ -71,7 +71,7 @@ for frame in dataframes:
                                 how='outer',
                                 right_index=True,
                                 left_index=True)
-make_app(merged_df, clustering=args.cluster).run_server(
+AppWrapper(merged_df, clustering=args.cluster).app.run_server(
     debug=args.debug,
     port=args.port,
     host='0.0.0.0'

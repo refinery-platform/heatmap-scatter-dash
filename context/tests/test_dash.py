@@ -3,7 +3,7 @@ from io import StringIO
 
 import pandas
 
-from app.app_factory import make_app
+from app.app_wrapper import AppWrapper
 
 
 class TestDash(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestDash(unittest.TestCase):
             gene-six,0.6,0.9,0.5,0.8
             """)
         dataframe = pandas.read_csv(csv, index_col=0)
-        self.app = make_app(dataframe)
+        self.app = AppWrapper(dataframe).app
 
     def test_layout(self):
         def tree(node):
@@ -29,7 +29,7 @@ class TestDash(unittest.TestCase):
         self.assertEqual(
             tree(self.app.layout),
             [
-                ['Graph', 'str'],
+                ['Graph', ['Graph', ['Dropdown'], ['Dropdown']]],
                 [['Graph', ['Input'], ['Dropdown'], ['Dropdown']], 'str']
             ]
         )
@@ -37,7 +37,7 @@ class TestDash(unittest.TestCase):
     def test_callback_map(self):
         self.assertEqual(
             list(self.app.callback_map.keys()),
-            ['scatter.figure', 'heatmap.figure']
+            ['heatmap.figure', 'scatter-pca.figure', 'scatter-genes.figure']
         )
 
     # Outside resource tests:
