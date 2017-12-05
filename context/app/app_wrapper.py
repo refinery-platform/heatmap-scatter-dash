@@ -26,6 +26,11 @@ class AppWrapper:
             for cond in self._conditions
         ]
 
+        pc_options = [
+            {'label': pc, 'value': pc}
+            for pc in ['pc1','pc2','pc3','pc4']  # TODO: DRY
+        ]
+
         self.app.layout = html.Div([
             html.Div([
                 # First row
@@ -33,27 +38,45 @@ class AppWrapper:
                     id='heatmap',
                     style=half_width
                 ),
-                dcc.Graph(
-                    id='scatter-pca',
-                    style=half_width
-                ),
+                html.Div([
+                    dcc.Graph(
+                        id='scatter-pca'
+                    ),
+                    html.Div(
+                        [dcc.Dropdown(
+                            id='scatter-pca-x-axis-select',
+                            options=pc_options,
+                            value='pc1'  # TODO: DRY
+                        )],
+                        style=half_width
+                    ),
+                    html.Div(
+                        [dcc.Dropdown(
+                            id='scatter-pca-y-axis-select',
+                            options=pc_options,
+                            value='pc2'  # TODO: DRY
+                        )],
+                        style=half_width
+                    )
+                ],
+                style=half_width)
             ]),
             html.Div([
                 # Second row
                 html.Div(
                     [
                         dcc.Graph(
-                            id='scatter'
+                            id='scatter-genes'
                         ),
                         html.Div([
                             dcc.Input(
-                                id='search',
+                                id='search-genes',
                                 placeholder='Search genes...',
                                 type="text")
                         ]),
                         html.Div(
                             [dcc.Dropdown(
-                                id='scatter-x-axis-select',
+                                id='scatter-genes-x-axis-select',
                                 options=conditions_options,
                                 value=self._conditions[0]
                             )],
@@ -61,7 +84,7 @@ class AppWrapper:
                         ),
                         html.Div(
                             [dcc.Dropdown(
-                                id='scatter-y-axis-select',
+                                id='scatter-genes-y-axis-select',
                                 options=conditions_options,
                                 value=self._conditions[1]
                             )],
@@ -82,7 +105,7 @@ class AppWrapper:
         @self.app.callback(
             Output(component_id='heatmap', component_property='figure'),
             [
-                Input(component_id='search', component_property='value')
+                Input(component_id='search-genes', component_property='value')
             ]
         )
         def update_heatmap(search_term):
@@ -114,7 +137,10 @@ class AppWrapper:
         @self.app.callback(
             Output(component_id='scatter-pca', component_property='figure'),
             [
-                # TODO
+                Input(component_id='scatter-pca-x-axis-select',
+                      component_property='value'),
+                Input(component_id='scatter-pca-y-axis-select',
+                      component_property='value')
             ]
         )
         def update_scatter_pca():
@@ -139,17 +165,17 @@ class AppWrapper:
             }
 
         @self.app.callback(
-            Output(component_id='scatter', component_property='figure'),
+            Output(component_id='scatter-genes', component_property='figure'),
             [
-                Input(component_id='search',
+                Input(component_id='search-genes',
                       component_property='value'),
-                Input(component_id='scatter-x-axis-select',
+                Input(component_id='scatter-genes-x-axis-select',
                       component_property='value'),
-                Input(component_id='scatter-y-axis-select',
+                Input(component_id='scatter-genes-y-axis-select',
                       component_property='value')
             ]
         )
-        def update_scatter(search_term, x_axis, y_axis):
+        def update_scatter_genes(search_term, x_axis, y_axis):
             if not search_term:
                 search_term = ''
             booleans = gene_match_booleans(search_term)
