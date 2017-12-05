@@ -41,7 +41,7 @@ class AppWrapper:
                 style=half_width
             )
 
-        def scatter(id, options, search=False):
+        def scatter(id, options, search=False, log=False):
             nodes = [
                 dcc.Graph(
                     id='scatter-{}'.format(id)
@@ -99,7 +99,18 @@ class AppWrapper:
                     go.Heatmapgl(
                         x=self._conditions,
                         y=matching_genes,
-                        z=self._dataframe[booleans].as_matrix()
+                        z=self._dataframe[booleans].as_matrix(),
+                        colorscale=[
+                            # I don't believe plotly offers anything other than linear color scales
+                            # The one hack they offer is setting up your own color scale,
+                            # setting different colors at exponential points.
+                            # https://plot.ly/python/logarithmic-color-scale/
+                            [0, 'rgb(0, 0, 100)'],
+                            [0.001, 'rgb(25, 0, 75)'],
+                            [0.01, 'rgb(50, 0, 50)'],
+                            [0.1, 'rgb(75, 0, 25)'],
+                            [1, 'rgb(100, 0, 0)']
+                        ]
                     )
                 ],
                 'layout': go.Layout(
@@ -114,10 +125,14 @@ class AppWrapper:
                 )
             }
 
-        def scatter_layout(x_axis, y_axis):
+        def scatter_layout(x_axis, y_axis, x_log=False, y_log=False):
+            x_axis_config = {'title': x_axis}
+            y_axis_config = {'title': y_axis}
+            if x_log: x_axis_config['type'] = 'log'
+            if y_log: y_axis_config['type'] = 'log'
             return go.Layout(
-                xaxis={'title': x_axis},
-                yaxis={'title': y_axis},
+                xaxis=x_axis_config,
+                yaxis=y_axis_config,
                 margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
             )
 
@@ -167,7 +182,7 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': scatter_layout(x_axis, y_axis)
+                'layout': scatter_layout(x_axis, y_axis, x_log=True, y_log=True)
             }
 
         @self.app.callback(
