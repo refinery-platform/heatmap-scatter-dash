@@ -116,14 +116,30 @@ class AppWrapper:
                 )
             }
 
-        @self.app.callback(
-            Output(component_id='scatter-pca', component_property='figure'),
-            [
-                Input(component_id='scatter-pca-x-axis-select',
+        def scatter_layout(x_axis, y_axis):
+            return go.Layout(
+                xaxis={'title': x_axis},
+                yaxis={'title': y_axis},
+                margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
+            )
+
+        def scatter_inputs(id, search=False):
+            inputs = [
+                Input(component_id='scatter-{}-x-axis-select'.format(id),
                       component_property='value'),
-                Input(component_id='scatter-pca-y-axis-select',
+                Input(component_id='scatter-{}-y-axis-select'.format(id),
                       component_property='value')
             ]
+            if search:
+                inputs.append(
+                    Input(component_id='search-{}'.format(id),
+                          component_property='value')
+                )
+            return inputs
+
+        @self.app.callback(
+            Output(component_id='scatter-pca', component_property='figure'),
+            scatter_inputs('pca')
         )
         def update_scatter_pca(x_axis, y_axis):
             return {
@@ -134,23 +150,12 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': go.Layout(
-                    xaxis={'title': x_axis},
-                    yaxis={'title': y_axis},
-                    margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
-                )
+                'layout': scatter_layout(x_axis, y_axis)
             }
 
         @self.app.callback(
             Output(component_id='scatter-genes', component_property='figure'),
-            [
-                Input(component_id='scatter-genes-x-axis-select',
-                      component_property='value'),
-                Input(component_id='scatter-genes-y-axis-select',
-                      component_property='value'),
-                Input(component_id='search-genes',
-                      component_property='value'),
-            ]
+            scatter_inputs('genes', search=True)
         )
         def update_scatter_genes(x_axis, y_axis, search_term):
             if not search_term:
@@ -165,10 +170,5 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': go.Layout(
-                    xaxis={'title': x_axis},
-                    yaxis={'title': y_axis},
-                    margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
-                    # Axis labels lie in the margin.
-                )
+                'layout': scatter_layout(x_axis, y_axis)
             }
