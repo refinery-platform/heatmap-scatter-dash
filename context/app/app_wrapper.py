@@ -31,27 +31,23 @@ class AppWrapper:
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
+        def dropdown(id, options, axis, axis_index):
+            return html.Div(
+                [dcc.Dropdown(
+                    id='scatter-{}-{}-axis-select'.format(id, axis),
+                    options=options,
+                    value=options[axis_index]['value']
+                )],
+                style=half_width
+            )
+
         def scatter(id, options, search=False):
             nodes = [
                 dcc.Graph(
                     id='scatter-{}'.format(id)
                 ),
-                html.Div(
-                    [dcc.Dropdown(
-                        id='scatter-{}-x-axis-select'.format(id),
-                        options=options,
-                        value=options[0]['value']
-                    )],
-                    style=half_width
-                ),
-                html.Div(
-                    [dcc.Dropdown(
-                        id='scatter-{}-y-axis-select'.format(id),
-                        options=options,
-                        value=options[1]['value']
-                    )],
-                    style=half_width
-                )
+                dropdown(id, options, 'x', 0),
+                dropdown(id, options, 'y', 1)
             ]
             if search:
                 nodes.insert(1, html.Div([
@@ -106,7 +102,6 @@ class AppWrapper:
                 'layout': go.Layout(
                     xaxis={
                         'ticks': '',
-                        'showticklabels': True,
                         'tickangle': 90},
                     yaxis={
                         'ticks': '',
@@ -125,10 +120,9 @@ class AppWrapper:
 
         def scatter_inputs(id, search=False):
             inputs = [
-                Input(component_id='scatter-{}-x-axis-select'.format(id),
-                      component_property='value'),
-                Input(component_id='scatter-{}-y-axis-select'.format(id),
-                      component_property='value')
+                Input(
+                    component_id='scatter-{}-{}-axis-select'.format(id, axis),
+                    component_property='value') for axis in ['x', 'y']
             ]
             if search:
                 inputs.append(
