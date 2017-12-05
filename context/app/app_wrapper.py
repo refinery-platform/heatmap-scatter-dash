@@ -143,39 +143,34 @@ class AppWrapper:
                       component_property='value')
             ]
         )
-        def update_scatter_pca():
+        def update_scatter_pca(x_axis, y_axis):
             return {
                 'data': [
                     go.Scattergl(
-                        x=self._dataframe_pca['pc1'],
-                        y=self._dataframe_pca['pc2'],
+                        x=self._dataframe_pca[x_axis],
+                        y=self._dataframe_pca[y_axis],
                         mode='markers'
                     )
                 ],
                 'layout': go.Layout(
-                    # xaxis={
-                    #     'ticks': '',
-                    #     'showticklabels': Tr},
-                    # yaxis={
-                    #     'ticks': '',
-                    #     'showticklabels': False},
-                    margin={'l': 75, 'b': 100, 't': 30, 'r': 0}
-                    # Need top margin so infobox on hover is not truncated
+                    xaxis={'title': x_axis},
+                    yaxis={'title': y_axis},
+                    margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
                 )
             }
 
         @self.app.callback(
             Output(component_id='scatter-genes', component_property='figure'),
             [
-                Input(component_id='search-genes',
-                      component_property='value'),
                 Input(component_id='scatter-genes-x-axis-select',
                       component_property='value'),
                 Input(component_id='scatter-genes-y-axis-select',
-                      component_property='value')
+                      component_property='value'),
+                Input(component_id='search-genes',
+                      component_property='value'),
             ]
         )
-        def update_scatter_genes(search_term, x_axis, y_axis):
+        def update_scatter_genes(x_axis, y_axis, search_term):
             if not search_term:
                 search_term = ''
             booleans = gene_match_booleans(search_term)
