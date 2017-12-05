@@ -51,10 +51,10 @@ class AppWrapper:
             ]
             if search:
                 nodes.insert(1, html.Div([
-                            dcc.Input(
-                                id='search-{}'.format(id),
-                                placeholder='Search...',
-                                type="text")
+                    dcc.Input(
+                        id='search-{}'.format(id),
+                        placeholder='Search...',
+                        type="text")
                 ]))
             return html.Div(nodes, style=half_width)
 
@@ -70,18 +70,21 @@ class AppWrapper:
             html.Div([
                 # Second row
                 scatter('genes', conditions_options, search=True),
-                'TODO: Volcano'
+                scatter('volcano', conditions_options)
             ])
         ])
 
     def _configure_callbacks(self):
         genes = self._dataframe.axes[0].tolist()
 
+        def figure_output(id):
+            return Output(component_id=id, component_property='figure')
+
         def gene_match_booleans(search_term):
             return [search_term in gene for gene in genes]
 
         @self.app.callback(
-            Output(component_id='heatmap', component_property='figure'),
+            figure_output('heatmap'),
             [
                 Input(component_id='search-genes', component_property='value')
             ]
@@ -132,7 +135,7 @@ class AppWrapper:
             return inputs
 
         @self.app.callback(
-            Output(component_id='scatter-pca', component_property='figure'),
+            figure_output('scatter-pca'),
             scatter_inputs('pca')
         )
         def update_scatter_pca(x_axis, y_axis):
@@ -148,7 +151,7 @@ class AppWrapper:
             }
 
         @self.app.callback(
-            Output(component_id='scatter-genes', component_property='figure'),
+            figure_output('scatter-genes'),
             scatter_inputs('genes', search=True)
         )
         def update_scatter_genes(x_axis, y_axis, search_term):
@@ -161,6 +164,22 @@ class AppWrapper:
                         # TODO: try go.pointcloud if we need something faster?
                         x=self._dataframe[x_axis][booleans],
                         y=self._dataframe[y_axis][booleans],
+                        mode='markers'
+                    )
+                ],
+                'layout': scatter_layout(x_axis, y_axis)
+            }
+
+        @self.app.callback(
+            figure_output('scatter-volcano'),
+            scatter_inputs('volcano')
+        )
+        def update_scatter_volcano(x_axis, y_axis):
+            return {
+                'data': [
+                    go.Scattergl(
+                        x=self._dataframe[x_axis],
+                        y=self._dataframe[y_axis],
                         mode='markers'
                     )
                 ],

@@ -1,6 +1,6 @@
 # heatmap-scatter-dash
 
-A heatmap-scatterplot (TODO: -pca-volcano) using [Dash by plotly](https://plot.ly/products/dash/).
+A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
 Can be run as a Flask app from the commandline,
 or as Docker container for [Refinery](https://github.com/refinery-platform/refinery-platform) visualizations.
 
