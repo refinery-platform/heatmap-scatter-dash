@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -o errexit
 
-start() { echo travis_fold':'start:$1; echo $1; }
-end() { echo travis_fold':'end:$1; }
+# xtrace turned on only within the travis folds
+start() { echo travis_fold':'start:$1; echo $1; set -x; }
+end() { set +x; echo travis_fold':'end:$1; }
 die() { echo "$*" 1>&2 ; exit 1; }
 
 start test
