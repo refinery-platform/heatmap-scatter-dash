@@ -36,9 +36,12 @@ $OPT_SUDO docker pull $REPO
 $OPT_SUDO docker build  --cache-from $REPO --tag $IMAGE context
 
 PORT=8888
+# Preferred syntax, Docker version >= 17.06
+#    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
+#    --mount type=volume,target=/refinery-data/ \
 $OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 \
-    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
-    --mount type=volume,target=/refinery-data/ \
+    --volume $(pwd)/fixtures/good/input.json:/data/input.json \
+    --volume /refinery-data/ \
     $IMAGE
     # TODO : volume mounting
 
