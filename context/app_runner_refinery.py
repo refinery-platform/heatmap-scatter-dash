@@ -1,6 +1,5 @@
-import json
-
 import argparse
+import json
 
 import app_runner
 
@@ -27,9 +26,12 @@ class RunnerArgs():
 
 parser = argparse.ArgumentParser(
     description='Plotly Dash visualization for Refinery')
-parser.add_argument('--input', type=argparse.FileType('r'), required=True)
-parser.add_argument('--files', nargs='+', type=argparse.FileType('r'), required=True)
-parser.add_argument('--port', type=int, default=80)
+parser.add_argument('--input',
+                    type=argparse.FileType('r'), required=True)
+parser.add_argument('--files',
+                    nargs='+', type=argparse.FileType('r'), required=True)
+parser.add_argument('--port',
+                    type=int, default=80)
 args = RunnerArgs(parser.parse_args())
 
 app_runner.main(args)
