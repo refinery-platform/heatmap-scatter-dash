@@ -12,5 +12,4 @@ RUN pip install -r requirements.txt
 
 VOLUME data
 
-CMD ["python", "app_runner.py", "--demo", "3,100,10", "--port", "80"]
-# TODO: Read the input data instead of running demo
+CMD ["python", "app_runner_refinery.py", "--input", "/data/input.json", "--files", "/refinery-data/*", "80"]
