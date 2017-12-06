@@ -25,7 +25,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
 def real_dataframes(files):
     return [
         pandas.read_csv(file, index_col=0)
-        for file in args.files
+        for file in files
     ]
 
 

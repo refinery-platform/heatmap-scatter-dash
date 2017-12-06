@@ -8,10 +8,17 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 
 The best way to run the app during development is just as a Flask app.
 Read [`.travis.yml`](.travis.yml) for instructions on installing dependencies. 
-(You probably want a virtualenv.) Then:
+(You probably want a virtualenv.) Then try one of these:
 
 ```bash
+  # Generates a random matrix:
 $ PYTHONPATH=context python context/app_runner.py --demo 1,10,10 --port 8888 --cluster
+
+  # Load data from disk:
+$ PYTHONPATH=context python context/app_runner.py --files fixtures/good/data/* --port 8888 --cluster
+
+  # Read an input.json like that created by Refinery:
+$ PYTHONPATH=context python context/app_runner_refinery.py --input fixtures/good/input.json --files fixtures/good/data/* --port 8888
 ```
 
 and visit `http://localhost:8888/`.

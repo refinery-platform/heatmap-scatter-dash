@@ -1,8 +1,8 @@
 {
   "file_relationships": [
     "/data/counts.csv",
-    "/data/stats-a-vs-b.csv",
-    "/data/stats-a-vs-c.csv"
+    "/data/stats-with-genes-in-col-1.csv",
+    "/data/stats-with-genes-in-col-2.csv"
   ],
   "node_info": {
     "some-refinery-uuid-1": {
@@ -13,11 +13,11 @@
       }
     },
     "some-refinery-uuid-2": {
-      "file_url": "/data/stats-a-vs-b.csv",
+      "file_url": "/data/stats-with-genes-in-col-1.csv",
       "node_solr_info": {}
     },
     "some-refinery-uuid-3": {
-      "file_url": "/data/stats-a-vs-b.csv",
+      "file_url": "/data/stats-with-genes-in-col-2.csv",
       "node_solr_info": {}
     }
   },
