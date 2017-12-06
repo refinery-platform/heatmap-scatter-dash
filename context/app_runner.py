@@ -7,9 +7,6 @@ import pandas
 
 from app.app_wrapper import AppWrapper
 
-if __name__ != '__main__':
-    raise Exception('Should be run as script')
-
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     if not pattern.match(s):
@@ -28,7 +25,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
 def real_dataframes(files):
     return [
         pandas.read_csv(file, index_col=0)
-        for file in args.files
+        for file in files
     ]
 
 
@@ -46,33 +43,42 @@ def demo_dataframes(frames, rows, cols):
     return dataframes
 
 
-parser = argparse.ArgumentParser(description='Plotly Dash visualization')
-parser.add_argument('--demo', type=dimensions_regex)
-parser.add_argument('--files', nargs='+', type=argparse.FileType('r'))
-parser.add_argument('--port', type=int, default=8050)
-parser.add_argument('--debug', action='store_true')
-parser.add_argument('--cluster', action='store_true')
-args = parser.parse_args()
+def main(args, parser=None):
+    if args.files:
+        dataframes = real_dataframes(args.files)
+    elif args.demo:
+        dataframes = demo_dataframes(**args.demo)
+    else:
+        message = 'Either "--demo FRAMES,ROWS,COLS" '\
+                  'or "--files FILE" is required'
+        if parser:
+            print(message)
+            parser.print_help()
+            exit(1)
+        else:
+            raise Exception(message)
+
+    merged_df = pandas.DataFrame()
+    for frame in dataframes:
+        merged_df = merged_df.merge(frame,
+                                    how='outer',
+                                    right_index=True,
+                                    left_index=True)
+    AppWrapper(merged_df, clustering=args.cluster).app.run_server(
+        debug=args.debug,
+        port=args.port,
+        host='0.0.0.0'
+    )
 
 
-if args.files:
-    dataframes = real_dataframes(args.files)
-elif args.demo:
-    dataframes = demo_dataframes(**args.demo)
-else:
-    print('Either "--demo FRAMES,ROWS,COLS" or "--files FILE" is required')
-    parser.print_help()
-    exit(1)
-
-
-merged_df = pandas.DataFrame()
-for frame in dataframes:
-    merged_df = merged_df.merge(frame,
-                                how='outer',
-                                right_index=True,
-                                left_index=True)
-AppWrapper(merged_df, clustering=args.cluster).app.run_server(
-    debug=args.debug,
-    port=args.port,
-    host='0.0.0.0'
-)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+    input_source = parser.add_mutually_exclusive_group(required=True)
+    input_source.add_argument('--demo', type=dimensions_regex)
+    input_source.add_argument('--files', nargs='+',
+                              type=argparse.FileType('r'))
+    parser.add_argument('--port', type=int, default=8050)
+    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--cluster', action='store_true')
+    args = parser.parse_args()
+    main(args, parser)

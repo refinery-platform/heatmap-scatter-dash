@@ -26,18 +26,24 @@ class TestDash(unittest.TestCase):
                 return [tree(child) for child in node.children]
             else:
                 return type(node).__name__
+        scatter = ['Graph', ['Dropdown'], ['Dropdown']]
+        scatter_search = ['Graph', ['Input'], ['Dropdown'], ['Dropdown']]
         self.assertEqual(
             tree(self.app.layout),
             [
-                ['Graph', ['Graph', ['Dropdown'], ['Dropdown']]],
-                [['Graph', ['Input'], ['Dropdown'], ['Dropdown']], 'str']
-            ]
+                [
+                    'Graph',
+                    scatter],
+                [
+                    scatter_search,
+                    scatter]]
         )
 
     def test_callback_map(self):
         self.assertEqual(
             list(self.app.callback_map.keys()),
-            ['heatmap.figure', 'scatter-pca.figure', 'scatter-genes.figure']
+            ['heatmap.figure']
+            + ['scatter-%s.figure' % s for s in ['pca', 'genes', 'volcano']]
         )
 
     # Outside resource tests:

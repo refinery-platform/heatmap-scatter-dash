@@ -31,34 +31,30 @@ class AppWrapper:
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
-        def scatter(id, options, search=False):
+        def dropdown(id, options, axis, axis_index):
+            return html.Div(
+                [dcc.Dropdown(
+                    id='scatter-{}-{}-axis-select'.format(id, axis),
+                    options=options,
+                    value=options[axis_index]['value']
+                )],
+                style=half_width
+            )
+
+        def scatter(id, options, search=False, log=False):
             nodes = [
                 dcc.Graph(
                     id='scatter-{}'.format(id)
                 ),
-                html.Div(
-                    [dcc.Dropdown(
-                        id='scatter-{}-x-axis-select'.format(id),
-                        options=options,
-                        value=options[0]['value']
-                    )],
-                    style=half_width
-                ),
-                html.Div(
-                    [dcc.Dropdown(
-                        id='scatter-{}-y-axis-select'.format(id),
-                        options=options,
-                        value=options[1]['value']
-                    )],
-                    style=half_width
-                )
+                dropdown(id, options, 'x', 0),
+                dropdown(id, options, 'y', 1)
             ]
             if search:
                 nodes.insert(1, html.Div([
-                            dcc.Input(
-                                id='search-{}'.format(id),
-                                placeholder='Search...',
-                                type="text")
+                    dcc.Input(
+                        id='search-{}'.format(id),
+                        placeholder='Search...',
+                        type="text")
                 ]))
             return html.Div(nodes, style=half_width)
 
@@ -74,18 +70,21 @@ class AppWrapper:
             html.Div([
                 # Second row
                 scatter('genes', conditions_options, search=True),
-                'TODO: Volcano'
+                scatter('volcano', conditions_options)
             ])
         ])
 
     def _configure_callbacks(self):
         genes = self._dataframe.axes[0].tolist()
 
+        def figure_output(id):
+            return Output(component_id=id, component_property='figure')
+
         def gene_match_booleans(search_term):
             return [search_term in gene for gene in genes]
 
         @self.app.callback(
-            Output(component_id='heatmap', component_property='figure'),
+            figure_output('heatmap'),
             [
                 Input(component_id='search-genes', component_property='value')
             ]
@@ -100,13 +99,23 @@ class AppWrapper:
                     go.Heatmapgl(
                         x=self._conditions,
                         y=matching_genes,
-                        z=self._dataframe[booleans].as_matrix()
+                        z=self._dataframe[booleans].as_matrix(),
+                        colorscale=[
+                            # Plotly offers only linear color scales,
+                            # but you can set up your own color scale,
+                            # setting different colors at exponential points.
+                            # https://plot.ly/python/logarithmic-color-scale/
+                            [0, 'rgb(0, 0, 100)'],
+                            [0.001, 'rgb(25, 0, 75)'],
+                            [0.01, 'rgb(50, 0, 50)'],
+                            [0.1, 'rgb(75, 0, 25)'],
+                            [1, 'rgb(100, 0, 0)']
+                        ]
                     )
                 ],
                 'layout': go.Layout(
                     xaxis={
                         'ticks': '',
-                        'showticklabels': True,
                         'tickangle': 90},
                     yaxis={
                         'ticks': '',
@@ -116,14 +125,35 @@ class AppWrapper:
                 )
             }
 
-        @self.app.callback(
-            Output(component_id='scatter-pca', component_property='figure'),
-            [
-                Input(component_id='scatter-pca-x-axis-select',
-                      component_property='value'),
-                Input(component_id='scatter-pca-y-axis-select',
-                      component_property='value')
+        def scatter_layout(x_axis, y_axis, x_log=False, y_log=False):
+            x_axis_config = {'title': x_axis}
+            y_axis_config = {'title': y_axis}
+            if x_log:
+                x_axis_config['type'] = 'log'
+            if y_log:
+                y_axis_config['type'] = 'log'
+            return go.Layout(
+                xaxis=x_axis_config,
+                yaxis=y_axis_config,
+                margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
+            )
+
+        def scatter_inputs(id, search=False):
+            inputs = [
+                Input(
+                    component_id='scatter-{}-{}-axis-select'.format(id, axis),
+                    component_property='value') for axis in ['x', 'y']
             ]
+            if search:
+                inputs.append(
+                    Input(component_id='search-{}'.format(id),
+                          component_property='value')
+                )
+            return inputs
+
+        @self.app.callback(
+            figure_output('scatter-pca'),
+            scatter_inputs('pca')
         )
         def update_scatter_pca(x_axis, y_axis):
             return {
@@ -134,23 +164,12 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': go.Layout(
-                    xaxis={'title': x_axis},
-                    yaxis={'title': y_axis},
-                    margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
-                )
+                'layout': scatter_layout(x_axis, y_axis)
             }
 
         @self.app.callback(
-            Output(component_id='scatter-genes', component_property='figure'),
-            [
-                Input(component_id='scatter-genes-x-axis-select',
-                      component_property='value'),
-                Input(component_id='scatter-genes-y-axis-select',
-                      component_property='value'),
-                Input(component_id='search-genes',
-                      component_property='value'),
-            ]
+            figure_output('scatter-genes'),
+            scatter_inputs('genes', search=True)
         )
         def update_scatter_genes(x_axis, y_axis, search_term):
             if not search_term:
@@ -165,10 +184,23 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': go.Layout(
-                    xaxis={'title': x_axis},
-                    yaxis={'title': y_axis},
-                    margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
-                    # Axis labels lie in the margin.
-                )
+                'layout': scatter_layout(
+                    x_axis, y_axis,
+                    x_log=True, y_log=True)
+            }
+
+        @self.app.callback(
+            figure_output('scatter-volcano'),
+            scatter_inputs('volcano')
+        )
+        def update_scatter_volcano(x_axis, y_axis):
+            return {
+                'data': [
+                    go.Scattergl(
+                        x=self._dataframe[x_axis],
+                        y=self._dataframe[y_axis],
+                        mode='markers'
+                    )
+                ],
+                'layout': scatter_layout(x_axis, y_axis)
             }

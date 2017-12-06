@@ -1,0 +1,5 @@
+gene, log_fold_change, p_value
+r1, 1, 1
+r2, -1, 2
+r3, 2, 3
+r4, -2, 4
