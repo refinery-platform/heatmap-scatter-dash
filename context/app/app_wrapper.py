@@ -101,8 +101,8 @@ class AppWrapper:
                         y=matching_genes,
                         z=self._dataframe[booleans].as_matrix(),
                         colorscale=[
-                            # I don't believe plotly offers anything other than linear color scales
-                            # The one hack they offer is setting up your own color scale,
+                            # Plotly offers only linear color scales,
+                            # but you can set up your own color scale,
                             # setting different colors at exponential points.
                             # https://plot.ly/python/logarithmic-color-scale/
                             [0, 'rgb(0, 0, 100)'],
@@ -128,8 +128,10 @@ class AppWrapper:
         def scatter_layout(x_axis, y_axis, x_log=False, y_log=False):
             x_axis_config = {'title': x_axis}
             y_axis_config = {'title': y_axis}
-            if x_log: x_axis_config['type'] = 'log'
-            if y_log: y_axis_config['type'] = 'log'
+            if x_log:
+                x_axis_config['type'] = 'log'
+            if y_log:
+                y_axis_config['type'] = 'log'
             return go.Layout(
                 xaxis=x_axis_config,
                 yaxis=y_axis_config,
@@ -182,7 +184,9 @@ class AppWrapper:
                         mode='markers'
                     )
                 ],
-                'layout': scatter_layout(x_axis, y_axis, x_log=True, y_log=True)
+                'layout': scatter_layout(
+                    x_axis, y_axis,
+                    x_log=True, y_log=True)
             }
 
         @self.app.callback(

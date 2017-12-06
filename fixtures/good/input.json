@@ -1,0 +1,33 @@
+{
+  "file_relationships": [
+    "/data/counts.csv",
+    "/data/stats-a-vs-b.csv",
+    "/data/stats-a-vs-c.csv"
+  ],
+  "node_info": {
+    "some-refinery-uuid-1": {
+      "file_url": "/data/counts.csv",
+      "node_solr_info": {
+        "A lot of data here...": "but I feel uncomfortable binding myself to these ugly internal names.",
+        "It needs a clean API": "True!"
+      }
+    },
+    "some-refinery-uuid-2": {
+      "file_url": "/data/stats-a-vs-b.csv",
+      "node_solr_info": {}
+    },
+    "some-refinery-uuid-3": {
+      "file_url": "/data/stats-a-vs-b.csv",
+      "node_solr_info": {}
+    }
+  },
+  "parameters": [
+    {
+      "name": "Cluster",
+      "description": "Should rows and columns of the heatmap be clustered?",
+      "value_type": "BOOLEAN",
+      "default_value": "false",
+      "value": "true"
+    }
+  ]
+}
