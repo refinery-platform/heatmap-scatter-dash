@@ -1,5 +1,6 @@
 import argparse
 import json
+
 import requests
 
 import app_runner
@@ -24,15 +25,17 @@ class RunnerArgs():
         assert parameters['Cluster'] in ['true', 'false']
         self.cluster = parameters['Cluster'] == 'true'
 
-        files = self._download_files(input['file_relationships'])
+        self.files = self._download_files(
+            input['file_relationships'],
+            input['extra_directories'][0]
+        )
 
-    def _download_files(urls, data_dir):
+    def _download_files(self, urls, data_dir):
         """
-        Download remote files specified by urls in the input.json file
-        :param data_dir: <String> Path to directory to populate with data
+        Given a list of urls and a target directory,
+        download the files to the target, and return a list of filenames.
         """
-        with open("/data/input.json") as f:
-            config_data = json.loads(f.read())
+        files = []
 
         for url in urls:
             try:
@@ -43,13 +46,17 @@ class RunnerArgs():
                     "Error fetching {} : {}".format(url, e)
                 )
             else:
-                with open('{}{}'.format(data_dir, url.split("/")[-1]), 'wb') as f:
+                name = url.split("/")[-1]
+                path = '{}{}'.format(data_dir, name)
+                files.append(path)  # TODO: More unique?
+                with open(path, 'wb') as f:
                     for chunk in response.iter_content(chunk_size=1024):
                         # filter out KEEP-ALIVE new chunks
                         if chunk:
                             f.write(chunk)
             finally:
                 response.close()
+            return files
 
 
 parser = argparse.ArgumentParser(

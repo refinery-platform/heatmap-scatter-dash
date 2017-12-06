@@ -18,19 +18,10 @@ $ PYTHONPATH=context python context/app_runner.py --demo 1,10,10 --port 8888 --c
 $ PYTHONPATH=context python context/app_runner.py --files fixtures/good/data/* --port 8888 --cluster
 
   # Read an input.json like that created by Refinery:
-$ PYTHONPATH=context python context/app_runner_refinery.py --input fixtures/good/input.json --files fixtures/good/data/* --port 8888
+$ PYTHONPATH=context python context/app_runner_refinery.py --input fixtures/good/input.json --port 8888
 ```
 
 and visit `http://localhost:8888/`.
-
-To build and run the Docker container:
-
-```bash
-$ docker build --tag heatmap-scatter-dash context
-$ docker run --detach --publish 8889:80 heatmap-scatter-dash
-```
-
-Then visit `http://localhost:8889/`.
 
 ## Release
 

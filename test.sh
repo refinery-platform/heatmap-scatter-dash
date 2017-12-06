@@ -36,7 +36,11 @@ $OPT_SUDO docker pull $REPO
 $OPT_SUDO docker build  --cache-from $REPO --tag $IMAGE context
 
 PORT=8888
-$OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 $IMAGE # TODO : volume mounting
+$OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 \
+    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
+    --mount type=volume,target=/refinery-data/ \
+    $IMAGE
+    # TODO : volume mounting
 
 TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do

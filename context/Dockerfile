@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 
 VOLUME data
 
-CMD ["python", "app_runner_refinery.py", "--input", "/data/input.json", "--files", "/refinery-data/*", "80"]
+CMD ["python", "app_runner_refinery.py", "--input", "/data/input.json"]
