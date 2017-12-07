@@ -6,7 +6,7 @@ import numpy as np
 import pandas
 
 from app.app_wrapper import AppWrapper
-from app.dataframe_merge import DataFrameMerge
+from app.data_frame_merge import DataFrameMerge
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -45,12 +45,19 @@ def demo_dataframes(frames, rows, cols):
 
 
 def main(args, parser=None):
+    if (args.demo_counts and args.diffs) or \
+        (args.counts and args.demo_diffs):
+        raise Exception('Demo data and real data should not be used together')
+        # Argument groups are not designed for nesting;
+        # Argparse can't do this for us.
+        # https://bugs.python.org/issue26952#msg265164
+
     if args.counts:
         count_frames = real_dataframes(args.counts)
     elif args.demo_counts:
         count_frames = demo_dataframes(**args.demo_counts)
     else:
-        raise Exception('argparse validation not working?')
+        raise Exception('Argparse validation should have failed earlier')
 
     if args.diffs:
         diff_frames = real_dataframes(args.diffs)
@@ -64,13 +71,6 @@ def main(args, parser=None):
         diff_frames=diff_frames,
         cluster=args.cluster)
 
-    # TODO: move
-    merged_df = pandas.DataFrame()
-    for frame in count_frames:
-        merged_df = merged_df.merge(frame,
-                                    how='outer',
-                                    right_index=True,
-                                    left_index=True)
     AppWrapper(df_merge).app.run_server(
         debug=args.debug,
         port=args.port,
@@ -79,7 +79,10 @@ def main(args, parser=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+    parser = argparse.ArgumentParser(
+        description='Plotly Dash visualization',
+        epilog='Arguments to --demo_counts and --demo_diffs should be of the form "FRAMES,ROWS,COLS".'
+    )
 
     counts_source = parser.add_mutually_exclusive_group(required=True)
     counts_source.add_argument('--demo_counts', type=dimensions_regex)
