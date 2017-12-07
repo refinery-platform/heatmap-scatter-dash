@@ -31,8 +31,8 @@
       "name": "Cluster",
       "description": "Should rows and columns of the heatmap be clustered?",
       "value_type": "BOOLEAN",
-      "default_value": "false",
-      "value": "true"
+      "default_value": false,
+      "value": true
     }
   ]
 }
