@@ -19,9 +19,9 @@ class TestDataFrameMerge(unittest.TestCase):
         )]
 
     def assertEqualDataFrames(self, a, b):
-        a_list = np.array(a.as_matrix().tolist())
-        b_list = np.array(b.as_matrix().tolist())
-        np.testing.assert_equal(a_list, b_list)
+        a_np = np.array(a.as_matrix().tolist())
+        b_np = np.array(b.as_matrix().tolist())
+        np.testing.assert_equal(a_np, b_np)
         self.assertEqual(a.columns.tolist(),     b.columns.tolist())
         self.assertEqual(a.index.tolist(),       b.index.tolist())
 
