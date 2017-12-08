@@ -7,13 +7,18 @@ from dash.dependencies import Input, Output
 from app.cluster import cluster
 from app.pca import pca
 
+from plotly.figure_factory.utils import PLOTLY_SCALES
 
 class AppWrapper:
 
-    def __init__(self, dataframe, clustering=False):
+    def __init__(self, dataframe, clustering=False, colors='Greys'):
         self._dataframe = cluster(dataframe) if clustering else dataframe
         self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
+        try:
+            self._color_scale = PLOTLY_SCALES[colors]
+        except AttributeError:
+            raise Exception('For color scale expected one of ' + list(PLOTLY_SCALES.keys()))
         self.app = dash.Dash()
         self._configure_layout()
         self._configure_callbacks()
@@ -165,17 +170,18 @@ class AppWrapper:
                         x=self._conditions,
                         y=matching_genes,
                         z=self._dataframe[booleans].as_matrix(),
-                        colorscale=[
-                            # Plotly offers only linear color scales,
-                            # but you can set up your own color scale,
-                            # setting different colors at exponential points.
-                            # https://plot.ly/python/logarithmic-color-scale/
-                            [0, 'rgb(0, 0, 100)'],
-                            [0.001, 'rgb(25, 0, 75)'],
-                            [0.01, 'rgb(50, 0, 50)'],
-                            [0.1, 'rgb(75, 0, 25)'],
-                            [1, 'rgb(100, 0, 0)']
-                        ]
+                        colorscale=self._color_scale,
+                        # [
+                        #     # Plotly offers only linear color scales,
+                        #     # but you can set up your own color scale,
+                        #     # setting different colors at exponential points.
+                        #     # https://plot.ly/python/logarithmic-color-scale/
+                        #     [0, 'rgb(0, 100, 100)'],
+                        #     [0.001, 'rgb(25, 100, 75)'],
+                        #     [0.01, 'rgb(50, 100, 50)'],
+                        #     [0.1, 'rgb(75, 100, 25)'],
+                        #     [1, 'rgb(100, 100, 0)']
+                        # ]
                     )
                 ],
                 'layout': go.Layout(

@@ -6,7 +6,7 @@ import numpy as np
 import pandas
 
 from app.app_wrapper import AppWrapper
-
+from plotly.figure_factory.utils import PLOTLY_SCALES
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     if not pattern.match(s):
@@ -64,7 +64,7 @@ def main(args, parser=None):
                                     how='outer',
                                     right_index=True,
                                     left_index=True)
-    AppWrapper(merged_df, clustering=args.cluster).app.run_server(
+    AppWrapper(merged_df, clustering=args.cluster, colors=args.colors).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
@@ -77,6 +77,7 @@ if __name__ == '__main__':
     input_source.add_argument('--demo', type=dimensions_regex)
     input_source.add_argument('--files', nargs='+',
                               type=argparse.FileType('r'))
+    parser.add_argument('--colors', choices=list(PLOTLY_SCALES), default='Greys')
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--cluster', action='store_true')
