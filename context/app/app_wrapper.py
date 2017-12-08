@@ -35,28 +35,48 @@ class AppWrapper:
 
         def dropdown(id, options, axis, axis_index):
             return html.Div(
-                [dcc.Dropdown(
-                    id='scatter-{}-{}-axis-select'.format(id, axis),
-                    options=options,
-                    value=options[axis_index]['value']
-                )]
+                [
+                    html.Label(
+                        [axis],
+                        className='col-sm-2 control-label'
+                    ),
+                    dcc.Dropdown(
+                        id='scatter-{}-{}-axis-select'.format(id, axis),
+                        options=options,
+                        value=options[axis_index]['value'],
+                        className='col-sm-10'
+                    )
+                ],
+                className='form-group'
             )
 
         def scatter(id, options, search=False, log=False):
-            nodes = [
-                dcc.Graph(
-                    id='scatter-{}'.format(id)
-                ),
+            control_nodes = [
                 dropdown(id, options, 'x', 0),
                 dropdown(id, options, 'y', 1)
             ]
             if search:
-                nodes.insert(1, html.Div([
-                    dcc.Input(
-                        id='search-{}'.format(id),
-                        placeholder='Search...',
-                        type="text")
-                ]))
+                control_nodes.insert(0, html.Div([
+                    html.Label(
+                        ['gene'],
+                        className='col-sm-2 control-label'
+                    ),
+                    html.Div([
+                        dcc.Input(
+                            id='search-{}'.format(id),
+                            placeholder='search...',
+                            type="text",
+                            className='form-control')
+                    ],
+                    className='col-sm-10')
+                ],
+                className='form-group'))
+            nodes = [
+                dcc.Graph(
+                    id='scatter-{}'.format(id)
+                ),
+                html.Div(control_nodes, className='form-horizontal')
+            ]
             return html.Div(nodes)
 
         self.app.layout = html.Div([
