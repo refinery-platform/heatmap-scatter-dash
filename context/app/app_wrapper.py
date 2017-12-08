@@ -19,7 +19,9 @@ class AppWrapper:
         self._configure_callbacks()
 
     def _configure_layout(self):
-        half_width = {'width': '50%', 'display': 'inline-block'}
+        self.app.css.append_css({
+            'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
+        })
 
         conditions_options = [
             {'label': cond, 'value': cond}
@@ -37,8 +39,7 @@ class AppWrapper:
                     id='scatter-{}-{}-axis-select'.format(id, axis),
                     options=options,
                     value=options[axis_index]['value']
-                )],
-                style=half_width
+                )]
             )
 
         def scatter(id, options, search=False, log=False):
@@ -56,23 +57,26 @@ class AppWrapper:
                         placeholder='Search...',
                         type="text")
                 ]))
-            return html.Div(nodes, style=half_width)
+            return html.Div(nodes)
 
         self.app.layout = html.Div([
             html.Div([
-                # First row
-                dcc.Graph(
-                    id='heatmap',
-                    style=half_width
-                ),
-                scatter('pca', pc_options)
-            ]),
-            html.Div([
-                # Second row
-                scatter('genes', conditions_options, search=True),
-                scatter('volcano', conditions_options)
-            ])
-        ])
+                html.Div([
+                    dcc.Graph(
+                        id='heatmap'
+                    ),
+                ],
+                className='col-md-6'),
+                html.Div([
+                    scatter('pca', pc_options),
+                    scatter('genes', conditions_options, search=True),
+                    scatter('volcano', conditions_options)
+                ],
+                className='col-md-6')
+            ],
+            className='row')
+        ],
+        className='container')
 
     def _configure_callbacks(self):
         genes = self._dataframe.axes[0].tolist()
