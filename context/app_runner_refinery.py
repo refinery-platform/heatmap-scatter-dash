@@ -22,8 +22,8 @@ class RunnerArgs():
             p['name']: p['value'] for p in input['parameters']
         }
         assert len(parameters) == 1
-        assert parameters['Cluster'] in ['true', 'false']
-        self.cluster = parameters['Cluster'] == 'true'
+        assert type(parameters['Cluster']) == bool
+        self.cluster = parameters['Cluster']
 
         self.files = self._download_files(
             input['file_relationships'],

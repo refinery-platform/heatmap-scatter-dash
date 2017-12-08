@@ -10,8 +10,8 @@ from app.pca import pca
 
 class AppWrapper:
 
-    def __init__(self, dataframe, clustering=False):
-        self._dataframe = cluster(dataframe) if clustering else dataframe
+    def __init__(self, dataframe):
+        self._dataframe = dataframe
         self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
         self.app = dash.Dash()

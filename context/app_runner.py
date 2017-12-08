@@ -6,6 +6,7 @@ import numpy as np
 import pandas
 
 from app.app_wrapper import AppWrapper
+from app.data_frame_merge import DataFrameMerge
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -44,27 +45,33 @@ def demo_dataframes(frames, rows, cols):
 
 
 def main(args, parser=None):
-    if args.files:
-        dataframes = real_dataframes(args.files)
-    elif args.demo:
-        dataframes = demo_dataframes(**args.demo)
-    else:
-        message = 'Either "--demo FRAMES,ROWS,COLS" '\
-                  'or "--files FILE" is required'
-        if parser:
-            print(message)
-            parser.print_help()
-            exit(1)
-        else:
-            raise Exception(message)
+    if (args.demo_counts and args.diffs) or \
+        (args.counts and args.demo_diffs):
+        raise Exception('Demo data and real data should not be used together')
+        # Argument groups are not designed for nesting;
+        # Argparse can't do this for us.
+        # https://bugs.python.org/issue26952#msg265164
 
-    merged_df = pandas.DataFrame()
-    for frame in dataframes:
-        merged_df = merged_df.merge(frame,
-                                    how='outer',
-                                    right_index=True,
-                                    left_index=True)
-    AppWrapper(merged_df, clustering=args.cluster).app.run_server(
+    if args.counts:
+        count_frames = real_dataframes(args.counts)
+    elif args.demo_counts:
+        count_frames = demo_dataframes(**args.demo_counts)
+    else:
+        raise Exception('Argparse validation should have failed earlier')
+
+    if args.diffs:
+        diff_frames = real_dataframes(args.diffs)
+    elif args.demo_diffs:
+        diff_frames = demo_dataframes(**args.demo_diffs)
+    else:
+        diff_frames = []
+
+    df_merge = DataFrameMerge(
+        count_frames=count_frames,
+        diff_frames=diff_frames,
+        cluster=args.cluster)
+
+    AppWrapper(df_merge).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
@@ -72,11 +79,21 @@ def main(args, parser=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Plotly Dash visualization')
-    input_source = parser.add_mutually_exclusive_group(required=True)
-    input_source.add_argument('--demo', type=dimensions_regex)
-    input_source.add_argument('--files', nargs='+',
+    parser = argparse.ArgumentParser(
+        description='Plotly Dash visualization',
+        epilog='Arguments to --demo_counts and --demo_diffs should be of the form "FRAMES,ROWS,COLS".'
+    )
+
+    counts_source = parser.add_mutually_exclusive_group(required=True)
+    counts_source.add_argument('--demo_counts', type=dimensions_regex)
+    counts_source.add_argument('--counts', nargs='+',
                               type=argparse.FileType('r'))
+
+    diffs_source = parser.add_mutually_exclusive_group()
+    diffs_source.add_argument('--demo_diffs', type=dimensions_regex)
+    diffs_source.add_argument('--diffs', nargs='+',
+                               type=argparse.FileType('r'))
+
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--cluster', action='store_true')
