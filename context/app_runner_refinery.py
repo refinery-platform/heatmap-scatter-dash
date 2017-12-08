@@ -16,6 +16,9 @@ class RunnerArgs():
         self.demo = False
         self.port = refinery_args.port
         self.debug = False
+        self.colors = 'Greys'
+        # Colors is not going to be configurable in Refinery,
+        # so pick the right value and set it here.
 
         input = json.loads(refinery_args.input.read(None))
 
