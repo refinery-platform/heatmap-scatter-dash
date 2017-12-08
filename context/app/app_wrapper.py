@@ -63,7 +63,8 @@ class AppWrapper:
             html.Div([
                 html.Div([
                     dcc.Graph(
-                        id='heatmap'
+                        id='heatmap',
+                        style={'height': '100vh'}
                     ),
                 ],
                 className='col-md-6'),
