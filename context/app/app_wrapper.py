@@ -78,7 +78,8 @@ class AppWrapper:
                 className='form-group'))
             nodes = [
                 dcc.Graph(
-                    id='scatter-{}'.format(id)
+                    id='scatter-{}'.format(id),
+                    style={'height': '33vh'}
                 ),
                 html.Div(control_nodes, className='form-horizontal')
             ]
