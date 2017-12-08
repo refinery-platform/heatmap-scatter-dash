@@ -22,6 +22,9 @@ class AppWrapper:
         self.app.css.append_css({
             'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
         })
+        self.app.scripts.append_script({
+            'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
+        })
 
         conditions_options = [
             {'label': cond, 'value': cond}
@@ -79,7 +82,7 @@ class AppWrapper:
                 ),
                 html.Div(control_nodes, className='form-horizontal')
             ]
-            return html.Div(nodes)
+            return html.Div(nodes, className='tab-pane active', id=id)
 
         self.app.layout = html.Div([
             html.Div([
@@ -92,8 +95,29 @@ class AppWrapper:
                 className='col-md-6'),
                 html.Div([
                     scatter('pca', pc_options),
-                    scatter('genes', conditions_options, search=True),
-                    scatter('volcano', conditions_options)
+                    html.Ul([
+                        html.Li([
+                            html.A([
+                                'Genes'
+                            ],
+                            href='#genes',
+                            className='active'
+                            )
+                        ]),
+                        html.Li([
+                            html.A([
+                                'Volcano'
+                            ],
+                            href='#volcano')
+                        ])
+                    ],
+                    className='nav nav-tabs'),
+                    html.Div([
+                        scatter('genes', conditions_options, search=True),
+                        scatter('volcano', conditions_options)
+                    ],
+                    className='tab-content')
+
                 ],
                 className='col-md-6')
             ],
