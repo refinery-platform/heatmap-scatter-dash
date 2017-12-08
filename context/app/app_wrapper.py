@@ -106,7 +106,7 @@ class AppWrapper:
                     ],
                     className='nav nav-tabs'),
                     html.Div([
-                        scatter('pca', pc_options, search=True),
+                        scatter('pca', pc_options),
                     ]),
                     html.Ul([
                         html.Li([
@@ -198,7 +198,14 @@ class AppWrapper:
                 y_axis_config['type'] = 'log'
             return go.Layout(
                 xaxis=x_axis_config,
-                yaxis=y_axis_config
+                yaxis=y_axis_config,
+                margin=go.Margin(
+                    l=80,
+                    r=20,
+                    b=60,
+                    t=20,
+                    pad=5
+                )
             )
 
         def scatter_inputs(id, search=False):
