@@ -139,8 +139,7 @@ class AppWrapper:
                 y_axis_config['type'] = 'log'
             return go.Layout(
                 xaxis=x_axis_config,
-                yaxis=y_axis_config,
-                margin={'l': 75, 'b': 50, 't': 0, 'r': 0}
+                yaxis=y_axis_config
             )
 
         def scatter_inputs(id, search=False):
