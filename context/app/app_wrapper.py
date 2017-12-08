@@ -94,7 +94,20 @@ class AppWrapper:
                 ],
                 className='col-md-6'),
                 html.Div([
-                    scatter('pca', pc_options),
+                    html.Ul([
+                        html.Li([
+                            html.A([
+                                'PCA'
+                            ],
+                                href='#pca',
+                                className='active'
+                            )
+                        ])
+                    ],
+                    className='nav nav-tabs'),
+                    html.Div([
+                        scatter('pca', pc_options, search=True),
+                    ]),
                     html.Ul([
                         html.Li([
                             html.A([
