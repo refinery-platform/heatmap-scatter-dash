@@ -34,7 +34,7 @@ class AppWrapper:
         ]
 
         def dropdown(id, options, axis, axis_index):
-            return html.Div(
+            return html.Span(
                 [
                     html.Label(
                         [axis],
@@ -44,16 +44,18 @@ class AppWrapper:
                         id='scatter-{}-{}-axis-select'.format(id, axis),
                         options=options,
                         value=options[axis_index]['value'],
-                        className='col-sm-10'
+                        className='col-sm-4'
                     )
-                ],
-                className='form-group'
+                ]
             )
 
         def scatter(id, options, search=False, log=False):
             control_nodes = [
-                dropdown(id, options, 'x', 0),
-                dropdown(id, options, 'y', 1)
+                html.Div([
+                    dropdown(id, options, 'x', 0),
+                    dropdown(id, options, 'y', 1)
+                ],
+                className='form-group')
             ]
             if search:
                 control_nodes.insert(0, html.Div([
