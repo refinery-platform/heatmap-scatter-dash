@@ -38,13 +38,13 @@ class AppWrapper:
                 [
                     html.Label(
                         [axis],
-                        className='col-sm-2 control-label'
+                        className='col-sm-1 control-label'
                     ),
                     dcc.Dropdown(
                         id='scatter-{}-{}-axis-select'.format(id, axis),
                         options=options,
                         value=options[axis_index]['value'],
-                        className='col-sm-4'
+                        className='col-sm-5'
                     )
                 ]
             )
@@ -61,7 +61,7 @@ class AppWrapper:
                 control_nodes.insert(0, html.Div([
                     html.Label(
                         ['gene'],
-                        className='col-sm-2 control-label'
+                        className='col-sm-1 control-label'
                     ),
                     html.Div([
                         dcc.Input(
@@ -70,7 +70,7 @@ class AppWrapper:
                             type="text",
                             className='form-control')
                     ],
-                    className='col-sm-10')
+                    className='col-sm-11')
                 ],
                 className='form-group'))
             nodes = [
