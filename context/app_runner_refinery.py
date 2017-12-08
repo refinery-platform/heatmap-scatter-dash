@@ -11,6 +11,7 @@ class RunnerArgs():
     Given a args object appropriate for app_runner_refinery.py,
     produces an object appropriate for app_runner.py
     """
+
     def __init__(self, refinery_args):
         self.demo = False
         self.port = refinery_args.port

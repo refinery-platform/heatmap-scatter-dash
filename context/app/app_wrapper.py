@@ -3,11 +3,11 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
+from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.cluster import cluster
 from app.pca import pca
 
-from plotly.figure_factory.utils import PLOTLY_SCALES
 
 class AppWrapper:
 
@@ -18,17 +18,22 @@ class AppWrapper:
         try:
             self._color_scale = PLOTLY_SCALES[colors]
         except AttributeError:
-            raise Exception('For color scale expected one of ' + list(PLOTLY_SCALES.keys()))
+            raise Exception('For color scale expected one of ' +
+                            list(PLOTLY_SCALES.keys()))
         self.app = dash.Dash()
         self._configure_layout()
         self._configure_callbacks()
 
     def _configure_layout(self):
         self.app.css.append_css({
-            'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
+            'external_url':
+                'https://maxcdn.bootstrapcdn.com/'
+                'bootstrap/3.3.7/css/bootstrap.min.css'
         })
         self.app.scripts.append_script({
-            'external_url': 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'
+            'external_url':
+                'https://maxcdn.bootstrapcdn.com/'
+                'bootstrap/3.3.7/js/bootstrap.min.js'
         })
 
         conditions_options = [
@@ -63,7 +68,7 @@ class AppWrapper:
                     dropdown(id, options, 'x', 0),
                     dropdown(id, options, 'y', 1)
                 ],
-                className='form-group')
+                    className='form-group')
             ]
             if search:
                 control_nodes.insert(0, html.Div([
@@ -78,9 +83,9 @@ class AppWrapper:
                             type="text",
                             className='form-control')
                     ],
-                    className='col-sm-11')
+                        className='col-sm-11')
                 ],
-                className='form-group'))
+                    className='form-group'))
             nodes = [
                 dcc.Graph(
                     id='scatter-{}'.format(id),
@@ -98,7 +103,7 @@ class AppWrapper:
                         style={'height': '100vh'}
                     ),
                 ],
-                className='col-md-6'),
+                    className='col-md-6'),
                 html.Div([
                     html.Ul([
                         html.Li([
@@ -110,7 +115,7 @@ class AppWrapper:
                             )
                         ])
                     ],
-                    className='nav nav-tabs'),
+                        className='nav nav-tabs'),
                     html.Div([
                         scatter('pca', pc_options),
                     ]),
@@ -119,30 +124,30 @@ class AppWrapper:
                             html.A([
                                 'Genes'
                             ],
-                            href='#genes',
-                            className='active'
+                                href='#genes',
+                                className='active'
                             )
                         ]),
                         html.Li([
                             html.A([
                                 'Volcano'
                             ],
-                            href='#volcano')
+                                href='#volcano')
                         ])
                     ],
-                    className='nav nav-tabs'),
+                        className='nav nav-tabs'),
                     html.Div([
                         scatter('genes', conditions_options, search=True),
                         scatter('volcano', conditions_options)
                     ],
-                    className='tab-content')
+                        className='tab-content')
 
                 ],
-                className='col-md-6')
+                    className='col-md-6')
             ],
-            className='row')
+                className='row')
         ],
-        className='container')
+            className='container')
 
     def _configure_callbacks(self):
         genes = self._dataframe.axes[0].tolist()
@@ -207,7 +212,7 @@ class AppWrapper:
                 xaxis=x_axis_config,
                 yaxis=y_axis_config,
                 margin=go.Margin(
-                    l=80,
+                    l=80,  # noqa: E741
                     r=20,
                     b=60,
                     t=20,
