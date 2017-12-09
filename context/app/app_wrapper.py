@@ -3,10 +3,28 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
-from plotly.figure_factory.utils import PLOTLY_SCALES
+from plotly.figure_factory.utils import (PLOTLY_SCALES, label_rgb, n_colors,
+                                         unlabel_rgb)
 
 from app.cluster import cluster
 from app.pca import pca
+
+
+def _log_interpolate(color_scale):
+    if len(color_scale) > 2:
+        raise Exception('Expected just two points on color scale')
+    points = 5  # TODO: We actually need to log the smallest value.
+    interpolated = n_colors(
+        unlabel_rgb(color_scale[1]),
+        unlabel_rgb(color_scale[0]),
+        points)
+    missing_zero = [
+        [10 ** -i, label_rgb(interpolated[i])]
+        for i in reversed(range(points))
+    ]
+    # Without a point at zero, Plotly gives a color scale
+    # that is mostly greys. No idea why.
+    return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
 
 
 class AppWrapper:
@@ -15,11 +33,7 @@ class AppWrapper:
         self._dataframe = cluster(dataframe) if clustering else dataframe
         self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
-        try:
-            self._color_scale = PLOTLY_SCALES[colors]
-        except AttributeError:
-            raise Exception('For color scale expected one of ' +
-                            list(PLOTLY_SCALES.keys()))
+        self._color_scale = _log_interpolate(PLOTLY_SCALES[colors])
         self.app = dash.Dash()
         self._configure_layout()
         self._configure_callbacks()
@@ -175,19 +189,7 @@ class AppWrapper:
                         x=self._conditions,
                         y=matching_genes,
                         z=self._dataframe[booleans].as_matrix(),
-                        colorscale=self._color_scale,
-                        # [
-                        #     # Plotly offers only linear color scales,
-                        #     # but you can set up your own color scale,
-                        #     # setting different colors at exponential points.
-                        #     # https://plot.ly/python/logarithmic-color-scale/
-                        #     [0, 'rgb(0, 100, 100)'],
-                        #     [0.001, 'rgb(25, 100, 75)'],
-                        #     [0.01, 'rgb(50, 100, 50)'],
-                        #     [0.1, 'rgb(75, 100, 25)'],
-                        #     [1, 'rgb(100, 100, 0)']
-                        # ]
-                    )
+                        colorscale=self._color_scale)
                 ],
                 'layout': go.Layout(
                     xaxis={
