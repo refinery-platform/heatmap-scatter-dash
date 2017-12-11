@@ -70,21 +70,17 @@ class AppWrapper:
             'external_url': _to_data_uri("""
                 setTimeout(
                     function() {
-                        var g = $("a[href=\'#genes\']");
-                        console.log(g);
-                        g.click(function (e) {
-                            e.preventDefault()
-                            $(this).tab('show')
+                        $('.nav-tabs a').click(function(e) {
+                            e.preventDefault();
+                            $(this).tab('show');
                         });
-
-                        var v = $("a[href=\'#volcano\']");
-                        console.log(v);
-                        v.click(function (e) {
-                            e.preventDefault()
-                            $(this).tab('show')
-                        });
-                    }, 1000);
-            """)
+                    }, 1000
+                )""")
+            # TODO: This is not good.
+            # Currently, there is no way to get data attributes in Dash.
+            # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
+            # So, we need to register them by hand...
+            # but when the JS loads, React hasn't generated the DOM.
         })
 
         conditions_options = [
