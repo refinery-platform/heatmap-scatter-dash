@@ -1,9 +1,9 @@
 import unittest
 
-from app.app_wrapper import _log_interpolate
+from app.app_wrapper import _log_interpolate, _to_data_uri
 
 
-class TestColors(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def test_log_interpolate(self):
         linear = ['rgb(0,0,0)', 'rgb(255,255,255)']
@@ -17,4 +17,12 @@ class TestColors(unittest.TestCase):
                 [0.01, 'rgb(127.5, 127.5, 127.5)'],
                 [0.1, 'rgb(191.25, 191.25, 191.25)'],
                 [1, 'rgb(255.0, 255.0, 255.0)']]
+        )
+
+    def test_to_data_uri(self):
+        s = 'alert("testing 123?")'
+        self.assertEqual(
+            _to_data_uri(s),
+            'data:application/javascript;base64,'
+            'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
         )

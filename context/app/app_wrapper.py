@@ -1,3 +1,5 @@
+from base64 import urlsafe_b64encode
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -5,8 +7,6 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import (PLOTLY_SCALES, label_rgb, n_colors,
                                          unlabel_rgb)
-
-from base64 import urlsafe_b64encode
 
 from app.cluster import cluster
 from app.pca import pca
@@ -30,9 +30,12 @@ def _log_interpolate(color_scale):
 
 
 def _to_data_uri(s):
-    uri = ('data:application/javascript;base64,'.encode('utf8') +
-        urlsafe_b64encode(s.encode('utf8'))).decode("utf-8", "strict")
+    uri = (
+        'data:application/javascript;base64,'.encode('utf8') +
+        urlsafe_b64encode(s.encode('utf8'))
+    ).decode("utf-8", "strict")
     return uri
+
 
 class AppWrapper:
 
@@ -52,8 +55,8 @@ class AppWrapper:
                 'bootstrap/3.3.7/css/bootstrap.min.css'
         })
         self.app.scripts.append_script({
-           'external_url':
-                'https://code.jquery.com/jquery-3.1.1.slim.min.js'
+            'external_url':
+            'https://code.jquery.com/jquery-3.1.1.slim.min.js'
         })
         self.app.scripts.append_script({
             'external_url':
@@ -75,7 +78,8 @@ class AppWrapper:
             # Currently, there is no way to get data attributes in Dash.
             # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
             # So, we need to register them by hand...
-            # but when the JS loads, React hasn't generated the DOM, so use "on".
+            # but when the JS loads, React hasn't yet
+            # generated the DOM, so we use "on" instead.
         })
 
         conditions_options = [

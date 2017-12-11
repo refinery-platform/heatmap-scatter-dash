@@ -58,6 +58,9 @@ class TestDash(unittest.TestCase):
             ['dash_html_components',
              'dash_core_components',
              'dash_core_components',
+             None,
+             None,
+             None,
              None]
         )
 
