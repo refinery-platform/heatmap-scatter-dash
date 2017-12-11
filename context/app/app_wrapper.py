@@ -70,7 +70,19 @@ class AppWrapper:
             'external_url': _to_data_uri("""
                 setTimeout(
                     function() {
-                        console.log($("a[href=\'#genes\']"))
+                        var g = $("a[href=\'#genes\']");
+                        console.log(g);
+                        g.click(function (e) {
+                            e.preventDefault()
+                            $(this).tab('show')
+                        });
+
+                        var v = $("a[href=\'#volcano\']");
+                        console.log(v);
+                        v.click(function (e) {
+                            e.preventDefault()
+                            $(this).tab('show')
+                        });
                     }, 1000);
             """)
         })
