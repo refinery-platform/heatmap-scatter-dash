@@ -113,7 +113,7 @@ class AppWrapper:
                     className='form-group')
             ]
             if search:
-                control_nodes.insert(0, html.Div([
+                control_nodes.append(html.Div([
                     html.Label(
                         ['gene'],
                         className='col-sm-1 control-label'
