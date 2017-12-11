@@ -1,4 +1,5 @@
 import unittest
+from base64 import urlsafe_b64decode
 
 from app.app_wrapper import _log_interpolate, _to_data_uri
 
@@ -20,9 +21,14 @@ class TestUtils(unittest.TestCase):
         )
 
     def test_to_data_uri(self):
-        s = 'alert("testing 123?")'
+        orig = 'alert("testing 123?")'
+        uri = _to_data_uri(orig)
+        encoded = 'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
         self.assertEqual(
-            _to_data_uri(s),
-            'data:application/javascript;base64,'
-            'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
+            uri,
+            'data:application/javascript;base64,' + encoded
+        )
+        self.assertEqual(
+            b'alert("testing 123?")',
+            urlsafe_b64decode(encoded)
         )
