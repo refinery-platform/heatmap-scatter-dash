@@ -32,7 +32,6 @@ def _log_interpolate(color_scale):
 def _to_data_uri(s):
     uri = ('data:application/javascript;base64,'.encode('utf8') +
         urlsafe_b64encode(s.encode('utf8'))).decode("utf-8", "strict")
-    print(uri)
     return uri
 
 class AppWrapper:
@@ -68,19 +67,15 @@ class AppWrapper:
         })
         self.app.scripts.append_script({
             'external_url': _to_data_uri("""
-                setTimeout(
-                    function() {
-                        $('.nav-tabs a').click(function(e) {
-                            e.preventDefault();
-                            $(this).tab('show');
-                        });
-                    }, 1000
-                )""")
+                $('body').on('click', '.nav-tabs a', function(e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });""")
             # TODO: This is not good.
             # Currently, there is no way to get data attributes in Dash.
             # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
             # So, we need to register them by hand...
-            # but when the JS loads, React hasn't generated the DOM.
+            # but when the JS loads, React hasn't generated the DOM, so use "on".
         })
 
         conditions_options = [
