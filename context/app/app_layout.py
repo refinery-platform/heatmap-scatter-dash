@@ -62,6 +62,17 @@ def scatter(id, options, search=False, log=False):
     ]
     return html.Div(nodes, className='tab-pane active', id=id)
 
+def tabs(*names):
+    tabs = html.Ul([
+        html.Li([
+            html.A([
+                name
+            ], href='#'+name.lower())
+        ], className=('active' if index==0 else ''))
+        for (index, name) in enumerate(names)],
+        className='nav nav-tabs')
+    return tabs
+
 
 def configure_layout(app_wrapper):
     app_wrapper.app.css.append_css({
@@ -100,12 +111,12 @@ def configure_layout(app_wrapper):
     conditions_options = [
         {'label': cond, 'value': cond}
         for cond in app_wrapper._conditions
-        ]
+    ]
 
     pc_options = [
         {'label': pc, 'value': pc}
         for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
-        ]
+    ]
 
     app_wrapper.app.layout = html.Div([
         html.Div([
@@ -118,30 +129,11 @@ def configure_layout(app_wrapper):
                 className='col-md-6'),
             html.Div([
                 html.Br(),  # Top of tab was right against window top
-                html.Ul([
-                    html.Li([
-                        html.A([
-                            'PCA'
-                        ],
-                            href='#pca'
-                        )
-                    ], className='active')
-                ], className='nav nav-tabs'),
+                tabs('PCA'),
                 html.Div([
                     scatter('pca', pc_options),
                 ]),
-                html.Ul([
-                    html.Li([
-                        html.A([
-                            'Genes'
-                        ], href='#genes')
-                    ], className='active'),
-                    html.Li([
-                        html.A([
-                            'Volcano'
-                        ], href='#volcano')
-                    ])
-                ], className='nav nav-tabs'),
+                tabs('Genes', 'Volcano'),
                 html.Div([
                     scatter('genes', conditions_options, search=True),
                     scatter('volcano', conditions_options)
