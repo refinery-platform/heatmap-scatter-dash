@@ -29,30 +29,13 @@ def dropdown(id, options, axis, axis_index):
     )
 
 
-def scatter(id, options, search=False, log=False):
+def scatter(id, options, log=False):
     control_nodes = [
         html.Div([
             dropdown(id, options, 'x', 0),
             dropdown(id, options, 'y', 1)
-        ],
-            className='form-group')
+        ], className='form-group')
     ]
-    if search:
-        control_nodes.append(html.Div([
-            html.Label(
-                ['gene'],
-                className='col-sm-1 control-label'
-            ),
-            html.Div([
-                dcc.Input(
-                    id='search-{}'.format(id),
-                    placeholder='search...',
-                    type="text",
-                    className='form-control')
-            ],
-                className='col-sm-11')
-        ],
-            className='form-group'))
     nodes = [
         dcc.Graph(
             id='scatter-{}'.format(id),
@@ -114,15 +97,46 @@ def configure_layout(app_wrapper):
         for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
     ]
 
+    scale_options = [
+        {'label': scale, 'value': scale}
+        for scale in ['log', 'linear']
+    ]
+
     app_wrapper.app.layout = html.Div([
         html.Div([
             html.Div([
                 dcc.Graph(
                     id='heatmap',
-                    style={'height': '100vh'}
+                    style={'height': '90vh'}
                 ),
-            ],
-                className='col-md-6'),
+                html.Div(
+                    [
+                        html.Div([
+                            html.Label(
+                                ['gene'],
+                                className='col-sm-1 control-label'
+                            ),
+                            html.Div([
+                                dcc.Input(
+                                    id='search-genes',
+                                    placeholder='search...',
+                                    type="text",
+                                    className='form-control')
+                            ], className='col-sm-5'),
+                            html.Label(
+                                ['scale'],
+                                className='col-sm-1 control-label'
+                            ),
+                            dcc.Dropdown(
+                                id='scale-select',
+                                options=scale_options,
+                                value='log',
+                                className='col-sm-5'
+                            )
+                        ], className='form-group'),
+                    ], className='form-horizontal'
+                )
+            ], className='col-md-6'),
             html.Div([
                 html.Br(),  # Top of tab was right against window top
                 tabs('PCA'),
@@ -131,7 +145,7 @@ def configure_layout(app_wrapper):
                 ]),
                 tabs('Genes', 'Volcano'),
                 html.Div([
-                    scatter('genes', conditions_options, search=True),
+                    scatter('genes', conditions_options),
                     scatter('volcano', conditions_options)
                 ], className='tab-content')
             ], className='col-md-6')
