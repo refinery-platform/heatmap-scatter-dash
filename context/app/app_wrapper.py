@@ -6,6 +6,8 @@ from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import (PLOTLY_SCALES, label_rgb, n_colors,
                                          unlabel_rgb)
 
+from base64 import urlsafe_b64encode
+
 from app.cluster import cluster
 from app.pca import pca
 
@@ -27,6 +29,12 @@ def _log_interpolate(color_scale):
     return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
 
 
+def _to_data_uri(s):
+    uri = ('data:application/javascript;base64,'.encode('utf8') +
+        urlsafe_b64encode(s.encode('utf8'))).decode("utf-8", "strict")
+    print(uri)
+    return uri
+
 class AppWrapper:
 
     def __init__(self, dataframe, clustering=False, colors='Greys'):
@@ -45,9 +53,26 @@ class AppWrapper:
                 'bootstrap/3.3.7/css/bootstrap.min.css'
         })
         self.app.scripts.append_script({
+           'external_url':
+                'https://code.jquery.com/jquery-3.1.1.slim.min.js'
+        })
+        self.app.scripts.append_script({
             'external_url':
                 'https://maxcdn.bootstrapcdn.com/'
                 'bootstrap/3.3.7/js/bootstrap.min.js'
+        })
+        self.app.scripts.append_script({
+            'external_url':
+                'https://maxcdn.bootstrapcdn.com/'
+                'bootstrap/3.3.7/js/bootstrap.min.js'
+        })
+        self.app.scripts.append_script({
+            'external_url': _to_data_uri("""
+                setTimeout(
+                    function() {
+                        console.log($("a[href=\'#genes\']"))
+                    }, 1000);
+            """)
         })
 
         conditions_options = [
@@ -119,15 +144,15 @@ class AppWrapper:
                 ],
                     className='col-md-6'),
                 html.Div([
+                    html.Br(),  # Top of tab was right against window top
                     html.Ul([
                         html.Li([
                             html.A([
                                 'PCA'
                             ],
-                                href='#pca',
-                                className='active'
+                                href='#pca'
                             )
-                        ])
+                        ], className='active')
                     ],
                         className='nav nav-tabs'),
                     html.Div([
@@ -138,10 +163,10 @@ class AppWrapper:
                             html.A([
                                 'Genes'
                             ],
-                                href='#genes',
-                                className='active'
+                                href='#genes'
                             )
-                        ]),
+                        ],
+                            className='active'),
                         html.Li([
                             html.A([
                                 'Volcano'
@@ -155,7 +180,6 @@ class AppWrapper:
                         scatter('volcano', conditions_options)
                     ],
                         className='tab-content')
-
                 ],
                     className='col-md-6')
             ],
