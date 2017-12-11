@@ -82,12 +82,8 @@ def configure_layout(app_wrapper):
     })
     app_wrapper.app.scripts.append_script({
         'external_url':
-            'https://code.jquery.com/jquery-3.1.1.slim.min.js'
-    })
-    app_wrapper.app.scripts.append_script({
-        'external_url':
-            'https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/js/bootstrap.min.js'
+            'https://code.jquery.com/'
+            'jquery-3.1.1.slim.min.js'
     })
     app_wrapper.app.scripts.append_script({
         'external_url':
