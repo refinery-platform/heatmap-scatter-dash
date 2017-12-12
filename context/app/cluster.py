@@ -4,15 +4,17 @@ from scipy.cluster.hierarchy import leaves_list, linkage
 # https://joernhees.de/blog/2015/08/26/scipy-hierarchical-clustering-and-dendrogram-tutorial/
 
 
-def cluster(dataframe):
-    cols_linkage = linkage(dataframe.T, 'ward')
-    cols_order = leaves_list(cols_linkage).tolist()
-    col_labels = dataframe.columns.tolist()
-    col_label_order = [col_labels[i] for i in cols_order]
-
-    rows_linkage = linkage(dataframe, 'ward')
-    rows_order = leaves_list(rows_linkage).tolist()
+def _order_rows(dataframe, clustering):
     row_labels = dataframe.index.tolist()
-    row_label_order = [row_labels[i] for i in rows_order]
+    if clustering:
+        rows_linkage = linkage(dataframe, 'ward')
+        rows_order = leaves_list(rows_linkage).tolist()
+        return [row_labels[i] for i in rows_order]
+    else:
+        return row_labels
 
+
+def cluster(dataframe, cluster_rows=False, cluster_cols=False):
+    col_label_order = _order_rows(dataframe.T, cluster_cols)
+    row_label_order = _order_rows(dataframe, cluster_rows)
     return dataframe[col_label_order].loc[row_label_order]

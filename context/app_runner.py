@@ -66,7 +66,8 @@ def main(args, parser=None):
                                     right_index=True,
                                     left_index=True)
     AppWrapper(merged_df,
-               clustering=args.cluster,
+               cluster_rows=args.cluster_rows,
+               cluster_cols=args.cluster_cols,
                colors=args.colors).app.run_server(
         debug=args.debug,
         port=args.port,
@@ -84,6 +85,7 @@ if __name__ == '__main__':
         '--colors', choices=list(PLOTLY_SCALES), default='Greys')
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
-    parser.add_argument('--cluster', action='store_true')
+    parser.add_argument('--cluster_rows', action='store_true')
+    parser.add_argument('--cluster_cols', action='store_true')
     args = parser.parse_args()
     main(args, parser)
