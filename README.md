@@ -7,8 +7,13 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 ## Development
 
 The best way to run the app during development is just as a Flask app.
-Read [`.travis.yml`](.travis.yml) for instructions on installing dependencies. 
-(You probably want a virtualenv.) Then try one of these:
+Set up a virtualenv and install dependencies:
+```
+$ pip install -r context/requirements.txt
+$ pip install -r requirements-dev.txt
+```
+
+Then try one of these:
 
 ```bash
   # Generates a random matrix:
