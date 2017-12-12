@@ -111,33 +111,29 @@ def configure_layout(app_wrapper):
                     id='heatmap',
                     style={'height': '90vh'}
                 ),
-                html.Div(
-                    [
+                html.Div([
+                    html.Div([
+                        html.Label(['gene'],
+                            className='col-sm-1 control-label'
+                        ),
                         html.Div([
-                            html.Label(
-                                ['gene'],
-                                className='col-sm-1 control-label'
-                            ),
-                            html.Div([
-                                dcc.Input(
-                                    id='search-genes',
-                                    placeholder='search...',
-                                    type="text",
-                                    className='form-control')
-                            ], className='col-sm-5'),
-                            html.Label(
-                                ['scale'],
-                                className='col-sm-1 control-label'
-                            ),
-                            dcc.Dropdown(
-                                id='scale-select',
-                                options=scale_options,
-                                value='log',
-                                className='col-sm-5'
-                            )
-                        ], className='form-group'),
-                    ], className='form-horizontal'
-                )
+                            dcc.Input(
+                                id='search-genes',
+                                placeholder='search...',
+                                type="text",
+                                className='form-control')
+                        ], className='col-sm-5'),
+                        html.Label(['scale'],
+                            className='col-sm-1 control-label'
+                        ),
+                        dcc.Dropdown(
+                            id='scale-select',
+                            options=scale_options,
+                            value='log',
+                            className='col-sm-5'
+                        )
+                    ], className='form-group'),
+                ], className='form-horizontal')
             ], className='col-md-6'),
             html.Div([
                 html.Br(),  # Top of tab was right against window top
