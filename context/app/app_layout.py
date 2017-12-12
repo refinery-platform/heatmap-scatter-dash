@@ -5,9 +5,9 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 
-def _to_data_uri(s):
+def _to_data_uri(s, mime):
     uri = (
-        'data:application/javascript;base64,'.encode('utf8') +
+        ('data:' + mime + ';base64,').encode('utf8') +
         urlsafe_b64encode(s.encode('utf8'))
     ).decode("utf-8", "strict")
     return uri
@@ -68,6 +68,12 @@ def configure_layout(app_wrapper):
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css'
     })
+    app_wrapper.app.css.append_css({
+        'external_url': _to_data_uri(
+            ".plotlyjsicon { display: none; }",
+            "text/css"
+        )
+    })
     app_wrapper.app.scripts.append_script({
         'external_url':
             'https://code.jquery.com/'
@@ -83,7 +89,7 @@ def configure_layout(app_wrapper):
             $('body').on('click', '.nav-tabs a', function(e) {
                 e.preventDefault();
                 $(this).tab('show');
-            });""")
+            });""", 'application/javascript')
         # TODO: This is not good.
         # Currently, there is no way to get data attributes in Dash.
         # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
