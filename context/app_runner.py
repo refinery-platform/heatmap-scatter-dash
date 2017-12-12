@@ -68,7 +68,8 @@ def main(args, parser=None):
     AppWrapper(merged_df,
                cluster_rows=args.cluster_rows,
                cluster_cols=args.cluster_cols,
-               colors=args.colors).app.run_server(
+               colors=args.colors,
+               heatmap_type=args.heatmap).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
@@ -81,11 +82,12 @@ if __name__ == '__main__':
     input_source.add_argument('--demo', type=dimensions_regex)
     input_source.add_argument('--files', nargs='+',
                               type=argparse.FileType('r'))
-    parser.add_argument(
-        '--colors', choices=list(PLOTLY_SCALES), default='Greys')
+    parser.add_argument('--heatmap', choices=['svg', 'canvas'], required=True)
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--cluster_rows', action='store_true')
     parser.add_argument('--cluster_cols', action='store_true')
+    parser.add_argument(
+        '--colors', choices=list(PLOTLY_SCALES), default='Greys')
     args = parser.parse_args()
     main(args, parser)

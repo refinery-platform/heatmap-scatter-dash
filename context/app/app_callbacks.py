@@ -72,9 +72,17 @@ def configure_callbacks(app_wrapper):
             gene_match_booleans(search_term)
         ]
 
+        heatmap_type = app_wrapper._heatmap_type
+        if heatmap_type == 'svg':
+            heatmap_constructor = go.Heatmap
+        elif heatmap_type == 'canvas':
+            heatmap_constructor = go.Heatmapgl
+        else:
+            raise Exception('Unknown heatmap type: ' + heatmap_type)
+
         return {
             'data': [
-                go.Heatmapgl(
+                heatmap_constructor(
                     x=selected_conditions_genes_df.columns.tolist(),
                     y=selected_conditions_genes_df.index.tolist(),
                     z=selected_conditions_genes_df.as_matrix(),
