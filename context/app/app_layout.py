@@ -30,7 +30,7 @@ def dropdown(id, options, axis, axis_index):
     )
 
 
-def scatter(id, options, log=False):
+def scatter(id, options, log=False, active=False):
     control_nodes = [
         html.Div([
             dropdown(id, options, 'x', 0),
@@ -44,7 +44,10 @@ def scatter(id, options, log=False):
         ),
         html.Div(control_nodes, className='form-horizontal')
     ]
-    return html.Div(nodes, className='tab-pane active', id=id)
+    className = 'tab-pane'
+    if active:
+        className += ' active'
+    return html.Div(nodes, className=className, id=id)
 
 
 def tabs(*names):
@@ -139,11 +142,11 @@ def configure_layout(app_wrapper):
                 html.Br(),  # Top of tab was right against window top
                 tabs('PCA'),
                 html.Div([
-                    scatter('pca', pc_options),
+                    scatter('pca', pc_options, active=True),
                 ]),
                 tabs('Genes', 'Volcano'),
                 html.Div([
-                    scatter('genes', conditions_options),
+                    scatter('genes', conditions_options, active=True),
                     scatter('volcano', conditions_options)
                 ], className='tab-content')
             ], className='col-md-6')
