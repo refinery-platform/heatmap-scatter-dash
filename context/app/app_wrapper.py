@@ -21,6 +21,7 @@ class AppWrapper:
         self._heatmap_type = heatmap_type
         self.app = dash.Dash()
         self.app.title = 'Heatmap + Scatterplots'
-        # Not officially supported: https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
+        # Not officially supported:
+        # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
         configure_layout(self)
         configure_callbacks(self)

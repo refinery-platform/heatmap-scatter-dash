@@ -74,6 +74,7 @@ def configure_layout(app_wrapper):
             "text/css"
         )
     })
+
     app_wrapper.app.scripts.append_script({
         'external_url':
             'https://code.jquery.com/'
@@ -89,7 +90,8 @@ def configure_layout(app_wrapper):
             $('body').on('click', '.nav-tabs a', function(e) {
                 e.preventDefault();
                 $(this).tab('show');
-            });""", 'application/javascript')
+            });""",
+                                     'application/javascript')
         # TODO: This is not good.
         # Currently, there is no way to get data attributes in Dash.
         # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
@@ -125,8 +127,8 @@ def configure_layout(app_wrapper):
                 html.Div([
                     html.Div([
                         html.Label(['gene'],
-                            className='col-sm-1 control-label'
-                        ),
+                                   className='col-sm-1 control-label'
+                                   ),
                         html.Div([
                             dcc.Input(
                                 id='search-genes',
@@ -135,8 +137,8 @@ def configure_layout(app_wrapper):
                                 className='form-control')
                         ], className='col-sm-5'),
                         html.Label(['scale'],
-                            className='col-sm-1 control-label'
-                        ),
+                                   className='col-sm-1 control-label'
+                                   ),
                         dcc.Dropdown(
                             id='scale-select',
                             options=scale_options,

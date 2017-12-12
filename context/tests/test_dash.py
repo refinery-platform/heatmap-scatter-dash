@@ -47,6 +47,7 @@ class TestDash(unittest.TestCase):
              for css
              in self.app.css.get_all_css()],
             ['dash_core_components',
+             None,
              None]
         )
 

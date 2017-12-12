@@ -23,11 +23,11 @@ class TestUtils(unittest.TestCase):
 
     def test_to_data_uri(self):
         orig = 'alert("testing 123?")'
-        uri = _to_data_uri(orig)
+        uri = _to_data_uri(orig, 'text/fake')
         encoded = 'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
         self.assertEqual(
             uri,
-            'data:application/javascript;base64,' + encoded
+            'data:text/fake;base64,' + encoded
         )
         self.assertEqual(
             b'alert("testing 123?")',
