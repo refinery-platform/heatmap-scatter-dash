@@ -1,10 +1,11 @@
 import dash
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
+from app.app_callbacks import configure_callbacks
+from app.app_layout import configure_layout
 from app.cluster import cluster
 from app.pca import pca
-from app.app_layout import configure_layout
-from app.app_callbacks import configure_callbacks
+
 
 class AppWrapper:
 

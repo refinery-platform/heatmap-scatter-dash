@@ -1,7 +1,8 @@
 
+from base64 import urlsafe_b64encode
+
 import dash_core_components as dcc
 import dash_html_components as html
-from base64 import urlsafe_b64encode
 
 
 def _to_data_uri(s):
@@ -45,13 +46,14 @@ def scatter(id, options, log=False):
     ]
     return html.Div(nodes, className='tab-pane active', id=id)
 
+
 def tabs(*names):
     tabs = html.Ul([
         html.Li([
             html.A([
                 name
-            ], href='#'+name.lower())
-        ], className=('active' if index==0 else ''))
+            ], href='#' + name.lower())
+        ], className=('active' if index == 0 else ''))
         for (index, name) in enumerate(names)],
         className='nav nav-tabs')
     return tabs

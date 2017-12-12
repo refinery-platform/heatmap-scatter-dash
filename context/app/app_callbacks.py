@@ -1,7 +1,7 @@
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
-from plotly.figure_factory.utils import (label_rgb, n_colors,
-                                         unlabel_rgb)
+from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
+
 
 def _log_interpolate(color_scale):
     if len(color_scale) > 2:
@@ -18,6 +18,7 @@ def _log_interpolate(color_scale):
     # Without a point at zero, Plotly gives a color scale
     # that is mostly greys. No idea why.
     return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
+
 
 def _linear(color_scale):
     return [[0, color_scale[0]], [1, color_scale[1]]]
@@ -47,13 +48,17 @@ def configure_callbacks(app_wrapper):
         ]
     )
     def update_heatmap(search_term, scale, pca_selected, genes_selected):
-        pca_points = ([point['pointNumber'] for point in pca_selected['points']]
-                      if pca_selected else None)
-        gene_points = ([point['pointNumber'] for point in genes_selected['points']]
-                      if genes_selected else None)  # TODO
+        pca_points = (
+            [point['pointNumber'] for point in pca_selected['points']]
+            if pca_selected else None)
+        # gene_points = ([point['pointNumber']
+        # for point in genes_selected['points']]
+        #                if genes_selected else None)  # TODO
 
-        selected_conditions = [condition for (i, condition) in enumerate(app_wrapper._conditions)
-                if i in pca_points] if pca_points else app_wrapper._conditions
+        selected_conditions = [
+            condition for (i, condition) in enumerate(app_wrapper._conditions)
+            if i in pca_points
+        ] if pca_points else app_wrapper._conditions
 
         selected_conditions_df = app_wrapper._dataframe[selected_conditions]
 
@@ -63,7 +68,9 @@ def configure_callbacks(app_wrapper):
 
         if not search_term:
             search_term = ''
-        selected_conditions_genes_df = selected_conditions_df[gene_match_booleans(search_term)]
+        selected_conditions_genes_df = selected_conditions_df[
+            gene_match_booleans(search_term)
+        ]
 
         return {
             'data': [
@@ -109,7 +116,7 @@ def configure_callbacks(app_wrapper):
             Input(
                 component_id='scatter-{}-{}-axis-select'.format(id, axis),
                 component_property='value') for axis in ['x', 'y']
-            ]
+        ]
         inputs.append(
             Input(
                 component_id='heatmap',
@@ -148,7 +155,9 @@ def configure_callbacks(app_wrapper):
         figure_output('scatter-genes'),
         scatter_inputs('genes', search=True, scale_select=True)
     )
-    def update_scatter_genes(x_axis, y_axis, heatmap_range, search_term, scale):
+    def update_scatter_genes(
+            x_axis, y_axis,
+            heatmap_range, search_term, scale):
         if not search_term:
             search_term = ''
         booleans = gene_match_booleans(search_term)
