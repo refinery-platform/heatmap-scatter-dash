@@ -14,7 +14,8 @@ def _order_rows(dataframe, clustering):
         return row_labels
 
 
-def cluster(dataframe, cluster_rows=False, cluster_cols=False):
+def cluster(dataframe, skip_zero=False, cluster_rows=False, cluster_cols=False):
+    # TODO: Implement skip_zero
     col_label_order = _order_rows(dataframe.T, cluster_cols)
     row_label_order = _order_rows(dataframe, cluster_rows)
     return dataframe[col_label_order].loc[row_label_order]

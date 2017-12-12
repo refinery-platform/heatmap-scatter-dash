@@ -69,6 +69,7 @@ def main(args, parser=None):
                cluster_rows=args.cluster_rows,
                cluster_cols=args.cluster_cols,
                colors=args.colors,
+               skip_zero=args.skip_zero,
                heatmap_type=args.heatmap).app.run_server(
         debug=args.debug,
         port=args.port,

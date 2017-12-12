@@ -11,9 +11,10 @@ class AppWrapper:
 
     def __init__(self, dataframe,
                  cluster_rows=False, cluster_cols=False,
-                 colors='Greys', heatmap_type='svg'):
+                 colors='Greys', heatmap_type='svg',
+                 skip_zero=False):
         self._dataframe = cluster(
-            dataframe,
+            dataframe, skip_zero=skip_zero,
             cluster_rows=cluster_rows, cluster_cols=cluster_cols)
         self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
