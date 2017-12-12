@@ -17,7 +17,7 @@ class RunnerArgs():
         self.port = refinery_args.port
         self.debug = False
         self.colors = 'Greys'
-        # Colors is not going to be configurable in Refinery,
+        # TODO: Colors is not going to be configurable in Refinery,
         # so pick the right value and set it here.
 
         input = json.loads(refinery_args.input.read(None))
@@ -25,9 +25,11 @@ class RunnerArgs():
         parameters = {
             p['name']: p['value'] for p in input['parameters']
         }
-        assert len(parameters) == 1
-        assert parameters['Cluster'] in ['true', 'false']
-        self.cluster = parameters['Cluster'] == 'true'
+        assert len(parameters) == 2
+        assert parameters['Cluster Rows'] in [True, False]
+        assert parameters['Cluster Cols'] in [True, False]
+        self.cluster_rows = parameters['Cluster Rows']
+        self.cluster_cols = parameters['Cluster Cols']
 
         self.files = self._download_files(
             input['file_relationships'],

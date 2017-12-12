@@ -9,8 +9,12 @@ from app.pca import pca
 
 class AppWrapper:
 
-    def __init__(self, dataframe, cluster_rows=False, cluster_cols=False, colors='Greys'):
-        self._dataframe = cluster(dataframe, cluster_rows=cluster_rows, cluster_cols=cluster_cols)
+    def __init__(self, dataframe,
+                 cluster_rows=False, cluster_cols=False,
+                 colors='Greys'):
+        self._dataframe = cluster(
+            dataframe,
+            cluster_rows=cluster_rows, cluster_cols=cluster_cols)
         self._dataframe_pca = pca(dataframe)
         self._conditions = self._dataframe.axes[1].tolist()
         self._color_scale = PLOTLY_SCALES[colors]
