@@ -60,7 +60,6 @@ class TestDash(unittest.TestCase):
              'dash_core_components',
              None,
              None,
-             None,
              None]
         )
 

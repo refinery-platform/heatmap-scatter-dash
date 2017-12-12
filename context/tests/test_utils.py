@@ -1,7 +1,8 @@
 import unittest
 from base64 import urlsafe_b64decode
 
-from app.app_wrapper import _log_interpolate, _to_data_uri
+from app.app_layout import _to_data_uri
+from app.app_callbacks import _log_interpolate
 
 
 class TestUtils(unittest.TestCase):
