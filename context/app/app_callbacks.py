@@ -46,7 +46,6 @@ def configure_callbacks(app_wrapper):
         adjusted_color_scale = (
             _linear(app_wrapper._color_scale) if scale != 'log'
             else _log_interpolate(app_wrapper._color_scale))
-        print(adjusted_color_scale)
         if not search_term:
             search_term = ''
         booleans = gene_match_booleans(search_term)
@@ -96,6 +95,12 @@ def configure_callbacks(app_wrapper):
                 component_id='scatter-{}-{}-axis-select'.format(id, axis),
                 component_property='value') for axis in ['x', 'y']
             ]
+        inputs.append(
+            Input(
+                component_id='heatmap',
+                component_property='relayoutData'
+            )
+        )
         if search:
             inputs.append(
                 Input(component_id='search-{}'.format(id),
@@ -112,7 +117,7 @@ def configure_callbacks(app_wrapper):
         figure_output('scatter-pca'),
         scatter_inputs('pca')
     )
-    def update_scatter_pca(x_axis, y_axis):
+    def update_scatter_pca(x_axis, y_axis, heatmap_range):
         return {
             'data': [
                 go.Scattergl(
@@ -128,7 +133,7 @@ def configure_callbacks(app_wrapper):
         figure_output('scatter-genes'),
         scatter_inputs('genes', search=True, scale_select=True)
     )
-    def update_scatter_genes(x_axis, y_axis, search_term, scale):
+    def update_scatter_genes(x_axis, y_axis, heatmap_range, search_term, scale):
         if not search_term:
             search_term = ''
         booleans = gene_match_booleans(search_term)
@@ -152,7 +157,7 @@ def configure_callbacks(app_wrapper):
         figure_output('scatter-volcano'),
         scatter_inputs('volcano')
     )
-    def update_scatter_volcano(x_axis, y_axis):
+    def update_scatter_volcano(x_axis, y_axis, heatmap_range):
         return {
             'data': [
                 go.Scattergl(
