@@ -141,16 +141,20 @@ def configure_layout(app_wrapper):
                 ], className='form-horizontal')
             ], className='col-md-6'),
             html.Div([
+
                 html.Br(),  # Top of tab was right against window top
+
                 tabs('PCA'),
                 html.Div([
                     scatter('pca', pc_options, active=True),
-                ]),
+                ], className='tab-content'),
+
                 tabs('Genes', 'Volcano'),
                 html.Div([
                     scatter('genes', conditions_options, active=True),
                     scatter('volcano', conditions_options)
                 ], className='tab-content')
+
             ], className='col-md-6')
         ], className='row')
     ], className='container')
