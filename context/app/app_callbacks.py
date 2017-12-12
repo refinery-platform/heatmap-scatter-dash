@@ -39,23 +39,38 @@ def configure_callbacks(app_wrapper):
             Input(component_id='search-genes',
                   component_property='value'),
             Input(component_id='scale-select',
-                  component_property='value')
+                  component_property='value'),
+            Input(component_id='scatter-pca',
+                  component_property='selectedData'),
+            Input(component_id='scatter-genes',
+                  component_property='selectedData')
         ]
     )
-    def update_heatmap(search_term, scale):
+    def update_heatmap(search_term, scale, pca_selected, genes_selected):
+        pca_points = ([point['pointNumber'] for point in pca_selected['points']]
+                      if pca_selected else None)
+        gene_points = ([point['pointNumber'] for point in genes_selected['points']]
+                      if genes_selected else None)  # TODO
+
+        selected_conditions = [condition for (i, condition) in enumerate(app_wrapper._conditions)
+                if i in pca_points] if pca_points else app_wrapper._conditions
+
+        selected_conditions_df = app_wrapper._dataframe[selected_conditions]
+
         adjusted_color_scale = (
             _linear(app_wrapper._color_scale) if scale != 'log'
             else _log_interpolate(app_wrapper._color_scale))
+
         if not search_term:
             search_term = ''
-        booleans = gene_match_booleans(search_term)
-        matching_genes = [gene for gene in genes if search_term in gene]
+        selected_conditions_genes_df = selected_conditions_df[gene_match_booleans(search_term)]
+
         return {
             'data': [
                 go.Heatmapgl(
-                    x=app_wrapper._conditions,
-                    y=matching_genes,
-                    z=app_wrapper._dataframe[booleans].as_matrix(),
+                    x=selected_conditions_genes_df.columns.tolist(),
+                    y=selected_conditions_genes_df.index.tolist(),
+                    z=selected_conditions_genes_df.as_matrix(),
                     colorscale=adjusted_color_scale)
             ],
             'layout': go.Layout(
