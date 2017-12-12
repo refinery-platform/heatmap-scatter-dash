@@ -90,6 +90,8 @@ def configure_layout(app_wrapper):
         # So, we need to register them by hand...
         # but when the JS loads, React hasn't yet
         # generated the DOM, so we use "on" instead.
+        # html.Script() does put an element in the DOM,
+        # but it doesn't execute.
     })
 
     conditions_options = [
