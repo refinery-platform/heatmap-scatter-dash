@@ -1,5 +1,26 @@
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
+from plotly.figure_factory.utils import (label_rgb, n_colors,
+                                         unlabel_rgb)
+
+def _log_interpolate(color_scale):
+    if len(color_scale) > 2:
+        raise Exception('Expected just two points on color scale')
+    points = 5  # TODO: We actually need to log the smallest value.
+    interpolated = n_colors(
+        unlabel_rgb(color_scale[1]),
+        unlabel_rgb(color_scale[0]),
+        points)
+    missing_zero = [
+        [10 ** -i, label_rgb(interpolated[i])]
+        for i in reversed(range(points))
+    ]
+    # Without a point at zero, Plotly gives a color scale
+    # that is mostly greys. No idea why.
+    return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
+
+def _linear(color_scale):
+    return [[0, color_scale[0]], [1, color_scale[1]]]
 
 
 def configure_callbacks(app_wrapper):
@@ -15,10 +36,17 @@ def configure_callbacks(app_wrapper):
     @callback(
         figure_output('heatmap'),
         [
-            Input(component_id='search-genes', component_property='value')
+            Input(component_id='search-genes',
+                  component_property='value'),
+            Input(component_id='scale-select',
+                  component_property='value')
         ]
     )
-    def update_heatmap(search_term):
+    def update_heatmap(search_term, scale):
+        adjusted_color_scale = (
+            _linear(app_wrapper._color_scale) if scale != 'log'
+            else _log_interpolate(app_wrapper._color_scale))
+        print(adjusted_color_scale)
         if not search_term:
             search_term = ''
         booleans = gene_match_booleans(search_term)
@@ -29,7 +57,7 @@ def configure_callbacks(app_wrapper):
                     x=app_wrapper._conditions,
                     y=matching_genes,
                     z=app_wrapper._dataframe[booleans].as_matrix(),
-                    colorscale=app_wrapper._color_scale)
+                    colorscale=adjusted_color_scale)
             ],
             'layout': go.Layout(
                 xaxis={
@@ -38,7 +66,7 @@ def configure_callbacks(app_wrapper):
                 yaxis={
                     'ticks': '',
                     'showticklabels': False},
-                margin={'l': 75, 'b': 100, 't': 30, 'r': 0}
+                margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
         }
@@ -62,7 +90,7 @@ def configure_callbacks(app_wrapper):
             )
         )
 
-    def scatter_inputs(id, search=False):
+    def scatter_inputs(id, search=False, scale_select=False):
         inputs = [
             Input(
                 component_id='scatter-{}-{}-axis-select'.format(id, axis),
@@ -71,6 +99,11 @@ def configure_callbacks(app_wrapper):
         if search:
             inputs.append(
                 Input(component_id='search-{}'.format(id),
+                      component_property='value')
+            )
+        if scale_select:
+            inputs.append(
+                Input(component_id='scale-select',
                       component_property='value')
             )
         return inputs
@@ -93,12 +126,13 @@ def configure_callbacks(app_wrapper):
 
     @callback(
         figure_output('scatter-genes'),
-        scatter_inputs('genes', search=True)
+        scatter_inputs('genes', search=True, scale_select=True)
     )
-    def update_scatter_genes(x_axis, y_axis, search_term):
+    def update_scatter_genes(x_axis, y_axis, search_term, scale):
         if not search_term:
             search_term = ''
         booleans = gene_match_booleans(search_term)
+        is_log = scale == 'log'
         return {
             'data': [
                 go.Scattergl(
@@ -110,7 +144,8 @@ def configure_callbacks(app_wrapper):
             ],
             'layout': scatter_layout(
                 x_axis, y_axis,
-                x_log=True, y_log=True)
+                x_log=is_log,
+                y_log=is_log)
         }
 
     @callback(
