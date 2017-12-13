@@ -17,6 +17,7 @@ class RunnerArgs():
         self.port = refinery_args.port
         self.debug = False
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
+        self.skip_zero = True
         self.colors = 'Greys'
         # TODO: Colors is not going to be configurable in Refinery,
         # so pick the right value and set it here.
