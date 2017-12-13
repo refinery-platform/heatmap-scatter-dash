@@ -40,7 +40,12 @@ def scatter(id, options, log=False, active=False):
     nodes = [
         dcc.Graph(
             id='scatter-{}'.format(id),
-            style={'height': '33vh'}
+            style={
+                'height': '33vh',
+                'width' : '40vw'
+                # Volcano was not getting the correct horizontal sizing...
+                # maybe because it's not on the screen at load time?
+            }
         ),
         html.Div(control_nodes, className='form-horizontal')
     ]
