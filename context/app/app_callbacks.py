@@ -26,13 +26,12 @@ def _linear(color_scale):
 
 def configure_callbacks(app_wrapper):
     callback = app_wrapper.app.callback
-    genes = app_wrapper._dataframe.axes[0].tolist()
 
     def figure_output(id):
         return Output(component_id=id, component_property='figure')
 
-    def gene_match_booleans(search_term):
-        return [search_term in gene for gene in genes]
+    def match_booleans(search_term, targets):
+        return [search_term in s for s in targets]
 
     @callback(
         figure_output('heatmap'),
@@ -47,7 +46,7 @@ def configure_callbacks(app_wrapper):
                   component_property='selectedData')
         ]
     )
-    def update_heatmap(search_term, scale, pca_selected, genes_selected):
+    def update_heatmap(gene_search_term, scale, pca_selected, genes_selected):
 
         # pca: TODO: Fix the copy and paste between these two.
 
@@ -65,17 +64,20 @@ def configure_callbacks(app_wrapper):
 
         # genes:
 
-        if genes_selected or search_term:
+        gene_search_term = gene_search_term or ''
+        if genes_selected:
             gene_points = [
                 point['pointNumber'] for point in genes_selected['points']
-            ] # TODO: if name match
+                if gene_search_term in point['text']
+            ]
             selected_genes = [
                 gene for (i, gene) in enumerate(app_wrapper._genes)
                 if i in gene_points
             ]
+            selected_conditions_genes_df = selected_conditions_df.loc[selected_genes]
         else:
-            selected_genes = app_wrapper._genes
-        selected_conditions_genes_df = selected_conditions_df.loc[selected_genes]
+            selected_conditions_genes_df = selected_conditions_df[match_booleans(gene_search_term, app_wrapper._genes)]
+        # TODO: Text search is being done two different ways. Unify.
 
         # style:
 
@@ -180,7 +182,7 @@ def configure_callbacks(app_wrapper):
             heatmap_range, search_term, scale):
         if not search_term:
             search_term = ''
-        booleans = gene_match_booleans(search_term)
+        booleans = match_booleans(search_term, app_wrapper._genes)
         is_log = scale == 'log'
         return {
             'data': [
