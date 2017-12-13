@@ -153,7 +153,8 @@ def configure_callbacks(app_wrapper):
                 go.Scattergl(
                     x=app_wrapper._dataframe_pca[x_axis],
                     y=app_wrapper._dataframe_pca[y_axis],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe_pca.index
                 )
             ],
             'layout': scatter_layout(x_axis, y_axis)
@@ -176,7 +177,8 @@ def configure_callbacks(app_wrapper):
                     # TODO: try go.pointcloud if we need something faster?
                     x=app_wrapper._dataframe[x_axis][booleans],
                     y=app_wrapper._dataframe[y_axis][booleans],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe.index
                 )
             ],
             'layout': scatter_layout(
@@ -195,7 +197,8 @@ def configure_callbacks(app_wrapper):
                 go.Scattergl(
                     x=app_wrapper._dataframe[x_axis],
                     y=app_wrapper._dataframe[y_axis],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe.index
                 )
             ],
             'layout': scatter_layout(x_axis, y_axis)
