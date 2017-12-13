@@ -48,29 +48,40 @@ def configure_callbacks(app_wrapper):
         ]
     )
     def update_heatmap(search_term, scale, pca_selected, genes_selected):
-        pca_points = (
-            [point['pointNumber'] for point in pca_selected['points']]
-            if pca_selected else None)
-        # gene_points = ([point['pointNumber']
-        # for point in genes_selected['points']]
-        #                if genes_selected else None)  # TODO
 
-        selected_conditions = [
-            condition for (i, condition) in enumerate(app_wrapper._conditions)
-            if i in pca_points
-        ] if pca_points else app_wrapper._conditions
+        # pca: TODO: Fix the copy and paste between these two.
 
+        if pca_selected:
+            pca_points = [
+                point['pointNumber'] for point in pca_selected['points']
+            ]
+            selected_conditions = [
+                condition for (i, condition) in enumerate(app_wrapper._conditions)
+                if i in pca_points
+            ]
+        else:
+            selected_conditions = app_wrapper._conditions
         selected_conditions_df = app_wrapper._dataframe[selected_conditions]
+
+        # genes:
+
+        if genes_selected or search_term:
+            gene_points = [
+                point['pointNumber'] for point in genes_selected['points']
+            ] # TODO: if name match
+            selected_genes = [
+                gene for (i, gene) in enumerate(app_wrapper._genes)
+                if i in gene_points
+            ]
+        else:
+            selected_genes = app_wrapper._genes
+        selected_conditions_genes_df = selected_conditions_df.loc[selected_genes]
+
+        # style:
 
         adjusted_color_scale = (
             _linear(app_wrapper._color_scale) if scale != 'log'
             else _log_interpolate(app_wrapper._color_scale))
-
-        if not search_term:
-            search_term = ''
-        selected_conditions_genes_df = selected_conditions_df[
-            gene_match_booleans(search_term)
-        ]
 
         heatmap_type = app_wrapper._heatmap_type
         if heatmap_type == 'svg':
