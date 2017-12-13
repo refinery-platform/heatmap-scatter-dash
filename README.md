@@ -7,8 +7,11 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 ## Development
 
 The best way to run the app during development is just as a Flask app.
-Set up a virtualenv and install dependencies:
-```
+Check out the project, set up a virtualenv and install dependencies:
+```bash
+$ git clone https://github.com/mccalluc/heatmap-scatter-dash.git
+$ cd heatmap-scatter-dash
+  # Set up a virtualenv, and then install dependencies:
 $ pip install -r context/requirements.txt
 $ pip install -r requirements-dev.txt
 ```
@@ -16,14 +19,16 @@ $ pip install -r requirements-dev.txt
 Then try one of these:
 
 ```bash
-  # Generates a random matrix:
-$ PYTHONPATH=context python context/app_runner.py --demo 1,10,10 --port 8888 --cluster
+$ cd context
+
+  # Generate a random matrix:
+$ python app_runner.py --demo 1,10,10 --port 8888 --cluster
 
   # Load data from disk:
-$ PYTHONPATH=context python context/app_runner.py --files fixtures/good/data/* --port 8888 --cluster
+$ python app_runner.py --files fixtures/good/data/* --port 8888 --cluster
 
   # Read an input.json like that created by Refinery:
-$ PYTHONPATH=context python context/app_runner_refinery.py --input fixtures/good/input.json --port 8888
+$ python app_runner_refinery.py --input fixtures/good/input.json --port 8888
 ```
 
 and visit `http://localhost:8888/`.
