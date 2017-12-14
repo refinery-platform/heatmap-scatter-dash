@@ -1,5 +1,6 @@
 *.pyc
 .idea/
 .ipynb_checkpoints/
+node_modules/
 temp-plot.html
 Untitled.ipynb

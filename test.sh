@@ -21,6 +21,13 @@ isort -r . --check-only || die "Run 'isort -rc .'"
 end isort
 
 
+start cypress
+python context/app_runner.py --files fixtures/good/data/counts.csv --port 8888 --heatmap svg &
+node_modules/.bin/cypress run --record
+kill `jobs -p`
+end cypress
+
+
 start docker
 source define_repo.sh
 

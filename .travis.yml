@@ -6,6 +6,19 @@ python:
 install:
 - pip install -r context/requirements.txt
 - pip install -r requirements-dev.txt
+- npm install cypress --save-dev
+
+# TODO: Is the Travis Node/NPM good enough?
+#  - node --version
+#  - NODE_VERSION=6.11.0
+#  - nvm install $NODE_VERSION
+#  - nvm use $NODE_VERSION
+#  - node --version
+#
+#  - npm --version
+#  - npm install -g npm@3.10.10
+#  - npm --version
+
 script:
 - ./test.sh
 after_success:
