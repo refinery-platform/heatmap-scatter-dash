@@ -6,7 +6,7 @@ import pandas
 from app.merge import merge
 
 
-class TestDataFrameMerge(unittest.TestCase):
+class TestMerge(unittest.TestCase):
 
     def setUp(self):
         self.dataframes = [pandas.DataFrame([

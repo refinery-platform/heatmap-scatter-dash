@@ -112,7 +112,7 @@ def configure_callbacks(app_wrapper):
                     'tickangle': 90},
                 yaxis={
                     'ticks': '',
-                    'showticklabels': False},
+                    'showticklabels': len(selected_conditions_genes_df.index.tolist()) < 40},
                 margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
