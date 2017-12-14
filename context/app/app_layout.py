@@ -162,12 +162,18 @@ def configure_layout(app_wrapper):
                     scatter('pca', pc_options, active=True),
                 ], className='tab-content'),
 
-                tabs('Genes', 'Volcano'),
+                tabs('Genes', 'Volcano', 'Table'),
                 html.Div([
                     scatter('genes', conditions_options, active=True),
-                    scatter('volcano', conditions_options)
+                    scatter('volcano', conditions_options),
+                    html.Div([
+                        html.Iframe(srcDoc=app_wrapper._dataframe.to_html())
+                        # or
+                        # dcc.Graph(id='gene-table', figure=ff.create_table())
+                        # or
+                        # https://community.plot.ly/t/display-tables-in-dash/4707/13
+                    ], className='tab-pane', id='table')
                 ], className='tab-content')
-
             ], className='col-md-6')
         ], className='row')
     ], className='container')

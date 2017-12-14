@@ -2,7 +2,7 @@ import unittest
 
 import pandas
 
-from app.cluster import cluster
+from app.utils.cluster import cluster
 
 
 class TestCluster(unittest.TestCase):

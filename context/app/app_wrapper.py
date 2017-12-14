@@ -3,9 +3,9 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import configure_callbacks
 from app.app_layout import configure_layout
-from app.cluster import cluster
-from app.merge import merge
-from app.pca import pca
+from app.utils.cluster import cluster
+from app.utils.merge import merge
+from app.utils.pca import pca
 
 
 class AppWrapper:
