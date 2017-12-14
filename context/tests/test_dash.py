@@ -17,8 +17,8 @@ class TestDash(unittest.TestCase):
             gene-five,0.6,0.9,0.4,0.8
             gene-six,0.6,0.9,0.5,0.8
             """)
-        dataframe = pandas.read_csv(csv, index_col=0)
-        self.app = AppWrapper(dataframe).app
+        dataframes = [pandas.read_csv(csv, index_col=0)]
+        self.app = AppWrapper(dataframes).app
 
     # This test was useful at first, but I think it's too hard to maintain now.
     # def test_layout(self):

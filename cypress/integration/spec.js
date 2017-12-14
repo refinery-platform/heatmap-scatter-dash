@@ -8,6 +8,7 @@ describe('App', function(){
     cy.contains('log').parent().click();
     cy.get('body').should('contain', 'linear').click();
 
+    // TODO: This has been flakey for me.
     // cy.get('body').should('not.contain', 'log');
     // cy.contains('linear').parent().click();
   });
