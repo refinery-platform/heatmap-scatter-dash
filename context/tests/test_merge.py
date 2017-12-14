@@ -1,19 +1,19 @@
 import unittest
-from io import StringIO
 
+import numpy as np
+import pandas
 
 from app.merge import merge
-import pandas
-import numpy as np
+
 
 class TestDataFrameMerge(unittest.TestCase):
 
     def setUp(self):
         self.dataframes = [pandas.DataFrame([
-                [1, 4, 1, 5],
-                [8, 4, 8, 5],
-                [2, 4, 2, 5],
-                [9, 4, 9, 5]],
+            [1, 4, 1, 5],
+            [8, 4, 8, 5],
+            [2, 4, 2, 5],
+            [9, 4, 9, 5]],
             columns=['c1', 'c2', 'c3', 'c4'],
             index=['r1', 'r2', 'r3', 'r4']
         )]
@@ -32,8 +32,8 @@ class TestDataFrameMerge(unittest.TestCase):
     def test_merge(self):
         self.dataframes.append(
             pandas.DataFrame([
-                    [11, 12],
-                    [21, 22]],
+                [11, 12],
+                [21, 22]],
                 columns=['c4', 'c5'],
                 index=['r4', 'r5']
             )

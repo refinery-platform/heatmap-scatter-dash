@@ -1,5 +1,6 @@
 import pandas
 
+
 def merge(count_frames, diff_frames=[]):
     count_frame = pandas.DataFrame()
     for frame in count_frames:

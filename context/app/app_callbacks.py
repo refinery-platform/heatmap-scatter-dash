@@ -55,7 +55,8 @@ def configure_callbacks(app_wrapper):
                 point['pointNumber'] for point in pca_selected['points']
             ]
             selected_conditions = [
-                condition for (i, condition) in enumerate(app_wrapper._conditions)
+                condition for (i, condition)
+                in enumerate(app_wrapper._conditions)
                 if i in pca_points
             ]
         else:
@@ -74,9 +75,13 @@ def configure_callbacks(app_wrapper):
                 gene for (i, gene) in enumerate(app_wrapper._genes)
                 if i in gene_points
             ]
-            selected_conditions_genes_df = selected_conditions_df.loc[selected_genes]
+            selected_conditions_genes_df = \
+                selected_conditions_df.loc[selected_genes]
         else:
-            selected_conditions_genes_df = selected_conditions_df[match_booleans(gene_search_term, app_wrapper._genes)]
+            selected_conditions_genes_df = \
+                selected_conditions_df[
+                    match_booleans(gene_search_term, app_wrapper._genes)
+                ]
         # TODO: Text search is being done two different ways. Unify.
 
         # style:
