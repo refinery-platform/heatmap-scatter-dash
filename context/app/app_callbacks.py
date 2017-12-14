@@ -221,3 +221,14 @@ def configure_callbacks(app_wrapper):
             ],
             'layout': scatter_layout(x_axis, y_axis)
         }
+
+    @callback(
+        Output(component_id='table-iframe', component_property='srcDoc'),
+        [
+            Input(component_id='search-genes',
+                  component_property='value')
+        ]
+    )
+    def update_table(search_term):
+        booleans = match_booleans(search_term, app_wrapper._genes)
+        return app_wrapper._dataframe[booleans].to_html()
