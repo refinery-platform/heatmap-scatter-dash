@@ -6,7 +6,7 @@ import pandas
 
 from io import StringIO
 
-from app.utils.merge import merge, reindex
+from app.utils.frames import merge, reindex
 
 
 class TestDataFrames(unittest.TestCase):
@@ -17,6 +17,7 @@ class TestDataFrames(unittest.TestCase):
         np.testing.assert_equal(a_np, b_np)
         self.assertEqual(a.columns.tolist(),     b.columns.tolist())
         self.assertEqual(a.index.tolist(),       b.index.tolist())
+
 
 class TestMerge(TestDataFrames):
 
@@ -54,6 +55,7 @@ class TestMerge(TestDataFrames):
             index=['r1', 'r2', 'r3', 'r4', 'r5']
         ))
 
+
 class TestReindex(TestDataFrames):
 
     def setUp(self):
@@ -88,4 +90,5 @@ class TestReindex(TestDataFrames):
                 "None of the values \['multiple' 'matches' 'X' 'Y' 'here'\] "
                 "in row 0 were recognized keys: "
                 "\['something', 'entirely', 'different'\]"):
-            reindex(self.dataframe, keys=['something', 'entirely', 'different'])
+            reindex(self.dataframe, keys=[
+                    'something', 'entirely', 'different'])

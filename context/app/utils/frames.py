@@ -14,6 +14,7 @@ def merge(frames):
             left_index=True)
     return accumulator
 
+
 def reindex(frame, keys):
     """
     Given a dataframe that came in with no explicit index,
@@ -28,13 +29,13 @@ def reindex(frame, keys):
             break
         if len(matches) == 0:
             raise Exception(
-                'None of the values {} in row {} were recognized keys: {}'.format(
+                'No values {} in row {} were recognized keys: {}'.format(
                     row.values, index, keys
-            ))
+                ))
         # Multiple matches: try the next row
     if len(matches) != 1:
-        raise Exception('Could not find a row where exactly one column matched keys: {}'.format(
+        raise Exception(
+            'No row where exactly one column matched keys: {}'.format(
             keys
         ))
     return frame.set_index(matches)
-
