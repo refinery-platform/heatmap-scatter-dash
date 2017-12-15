@@ -73,7 +73,8 @@ def main(args, parser=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Light-weight webapp for visualizing differential expression')
+    parser = argparse.ArgumentParser(
+        description='Light-weight visualization for differential expression')
 
     input_source = parser.add_mutually_exclusive_group(required=True)
     input_source.add_argument(

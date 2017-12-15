@@ -4,6 +4,7 @@ from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.app_layout import AppLayout
 
+
 def _log_interpolate(color_scale):
     if len(color_scale) > 2:
         raise Exception('Expected just two points on color scale')

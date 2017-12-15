@@ -113,8 +113,7 @@ class AppLayout(AppWrapper):
                 $('body').on('click', '.nav-tabs a', function(e) {
                     e.preventDefault();
                     $(this).tab('show');
-                });""",
-                                         'application/javascript')
+                });""", 'application/javascript')
             # TODO: This is not good.
             # Currently, there is no way to get data attributes in Dash.
             # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
@@ -143,60 +142,72 @@ class AppLayout(AppWrapper):
 
         self.app.layout = html.Div([
             html.Div([
-                html.Div([
-                    dcc.Graph(
-                        id='heatmap',
-                        style={'height': '90vh'}
-                    ),
-                    html.Div([
-                        html.Div([
-                            html.Label(['gene'],
-                                       className='col-sm-1 control-label'
-                                       ),
-                            html.Div([
-                                dcc.Input(
-                                    id='search-genes',
-                                    placeholder='search...',
-                                    type="text",
-                                    className='form-control')
-                            ], className='col-sm-5'),
-                            html.Label(['scale'],
-                                       className='col-sm-1 control-label'
-                                       ),
-                            dcc.Dropdown(
-                                id='scale-select',
-                                options=scale_options,
-                                value='log',
-                                className='col-sm-5'
-                            )
-                        ], className='form-group'),
-                    ], className='form-horizontal')
-                ], className='col-md-6'),
-                html.Div([
-
-                    html.Br(),  # Top of tab was right against window top
-
-                    tabs('PCA'),
-                    html.Div([
-                        scatter('pca', pc_options, active=True),
-                    ], className='tab-content'),
-
-                    tabs('Genes', 'Volcano', 'Table'),
-                    html.Div([
-                        scatter('genes', conditions_options, active=True),
-                        scatter('volcano', conditions_options),
-                        html.Div([
-                            html.Br(),
-                            html.Iframe(id='table-iframe',
-                                        srcDoc='First select a subset')
-                            # or
-                            #   dcc.Graph(id='gene-table',
-                            #   figure=ff.create_table(self._dataframe.to_html()))
-                            #   (but that's slow)
-                            # or
-                            #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-                        ], className='tab-pane', id='table')
-                    ], className='tab-content')
-                ], className='col-md-6')
+                html.Div(
+                    self._left_column(
+                        scale_options=scale_options),
+                    className='col-md-6'),
+                html.Div(
+                    self._right_column(
+                        pc_options=pc_options,
+                        conditions_options=conditions_options),
+                    className='col-md-6')
             ], className='row')
         ], className='container')
+
+    def _left_column(self, scale_options):
+        return [
+            dcc.Graph(
+                id='heatmap',
+                style={'height': '90vh'}
+            ),
+            html.Div([
+                html.Div([
+                    html.Label(['gene'],
+                               className='col-sm-1 control-label'
+                               ),
+                    html.Div([
+                        dcc.Input(
+                            id='search-genes',
+                            placeholder='search...',
+                            type="text",
+                            className='form-control')
+                    ], className='col-sm-5'),
+                    html.Label(['scale'],
+                               className='col-sm-1 control-label'
+                               ),
+                    dcc.Dropdown(
+                        id='scale-select',
+                        options=scale_options,
+                        value='log',
+                        className='col-sm-5'
+                    )
+                ], className='form-group'),
+            ], className='form-horizontal')
+        ]
+
+    def _right_column(self, pc_options, conditions_options):
+        return [
+            html.Br(),  # Top of tab was right against window top
+
+            tabs('PCA'),
+            html.Div([
+                scatter('pca', pc_options, active=True),
+            ], className='tab-content'),
+
+            tabs('Genes', 'Volcano', 'Table'),
+            html.Div([
+                scatter('genes', conditions_options, active=True),
+                scatter('volcano', conditions_options),
+                html.Div([
+                    html.Br(),
+                    html.Iframe(id='table-iframe',
+                                srcDoc='First select a subset')
+                    # or
+                    #   dcc.Graph(id='gene-table',
+                    #   figure=ff.create_table(self._dataframe.to_html()))
+                    #   (but that's slow)
+                    # or
+                    #   https://community.plot.ly/t/display-tables-in-dash/4707/13
+                ], className='tab-pane', id='table')
+            ], className='tab-content')
+        ]
