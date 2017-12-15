@@ -98,6 +98,7 @@ def configure_callbacks(app_wrapper):
         else:
             raise Exception('Unknown heatmap type: ' + heatmap_type)
 
+        show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
         return {
             'data': [
                 heatmap_constructor(
@@ -112,7 +113,7 @@ def configure_callbacks(app_wrapper):
                     'tickangle': 90},
                 yaxis={
                     'ticks': '',
-                    'showticklabels': len(selected_conditions_genes_df.index.tolist()) < 40},
+                    'showticklabels': show_genes},
                 margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
@@ -231,8 +232,9 @@ def configure_callbacks(app_wrapper):
     )
     def update_table(search_term):
         booleans = match_booleans(search_term, app_wrapper._genes)
-        return ''.join([
-            '<link rel="stylesheet" property="stylesheet" href="https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/css/bootstrap.min.css">',
-            app_wrapper._dataframe[booleans].to_html()
-        ])
+        return ''.join(
+            [
+                '<link rel="stylesheet" property="stylesheet" href="{}">'
+                .format(url) for url in app_wrapper.css_urls
+            ] + [app_wrapper._dataframe[booleans].to_html()]
+        )

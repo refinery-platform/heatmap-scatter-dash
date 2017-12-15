@@ -68,11 +68,10 @@ def tabs(*names):
 
 
 def configure_layout(app_wrapper):
-    app_wrapper.app.css.append_css({
-        'external_url':
-            'https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/css/bootstrap.min.css'
-    })
+    for url in app_wrapper.css_urls:
+        app_wrapper.app.css.append_css({
+            'external_url': url
+        })
     app_wrapper.app.css.append_css({
         'external_url': _to_data_uri("""
             .plotlyjsicon {
@@ -84,8 +83,8 @@ def configure_layout(app_wrapper):
                 height: 33vh;
             }
             """,
-            "text/css"
-        )
+                                     "text/css"
+                                     )
     })
 
     app_wrapper.app.scripts.append_script({
@@ -176,10 +175,12 @@ def configure_layout(app_wrapper):
                     scatter('volcano', conditions_options),
                     html.Div([
                         html.Br(),
-                        html.Iframe(id='table-iframe', srcDoc='First select a subset of the genes')
+                        html.Iframe(id='table-iframe',
+                                    srcDoc='First select a subset')
                         # or
-                        #   dcc.Graph(id='gene-table', figure=ff.create_table(app_wrapper._dataframe.to_html()))
-                        #   (but that is much slower for the same size data set)
+                        #   dcc.Graph(id='gene-table',
+                        #   figure=ff.create_table(app_wrapper._dataframe.to_html()))
+                        #   (but that's slow)
                         # or
                         #   https://community.plot.ly/t/display-tables-in-dash/4707/13
                     ], className='tab-pane', id='table')

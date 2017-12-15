@@ -37,6 +37,7 @@ class TestDash(unittest.TestCase):
             list(self.app.callback_map.keys()),
             ['heatmap.figure']
             + ['scatter-%s.figure' % s for s in ['pca', 'genes', 'volcano']]
+            + ['table-iframe.srcDoc']
         )
 
     # Outside resource tests:

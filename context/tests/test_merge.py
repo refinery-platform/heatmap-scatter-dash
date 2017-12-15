@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pandas
 
-from app.merge import merge
+from app.utils.merge import merge
 
 
 class TestMerge(unittest.TestCase):

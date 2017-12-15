@@ -3,7 +3,7 @@ from math import copysign
 
 import pandas
 
-from app.pca import pca
+from app.utils.pca import pca
 
 
 class TestPCA(unittest.TestCase):
