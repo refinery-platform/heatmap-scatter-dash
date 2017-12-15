@@ -7,7 +7,7 @@ import numpy as np
 import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.app_wrapper import AppWrapper
+from app.app_callbacks import AppCallbacks
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -59,7 +59,8 @@ def main(args, parser=None):
             exit(1)
         else:
             raise Exception(message)
-    AppWrapper(dataframes,
+    AppCallbacks(
+               dataframes=dataframes,
                cluster_rows=args.cluster_rows,
                cluster_cols=args.cluster_cols,
                colors=args.colors,

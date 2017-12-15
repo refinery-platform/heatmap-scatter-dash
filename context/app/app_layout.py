@@ -4,6 +4,8 @@ from base64 import urlsafe_b64encode
 import dash_core_components as dcc
 import dash_html_components as html
 
+from app.app_wrapper import AppWrapper
+
 
 def _to_data_uri(s, mime):
     uri = (
@@ -67,6 +69,13 @@ def tabs(*names):
     return tabs
 
 
+class AppLayout(AppWrapper):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        configure_layout(self)
+
+
+# TODO: move into init
 def configure_layout(app_wrapper):
     for url in app_wrapper.css_urls:
         app_wrapper.app.css.append_css({

@@ -2,6 +2,7 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
+from app.app_layout import AppLayout
 
 def _log_interpolate(color_scale):
     if len(color_scale) > 2:
@@ -24,6 +25,13 @@ def _linear(color_scale):
     return [[0, color_scale[0]], [1, color_scale[1]]]
 
 
+class AppCallbacks(AppLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        configure_callbacks(self)
+
+
+# TODO: move this into init
 def configure_callbacks(app_wrapper):
     callback = app_wrapper.app.callback
 
