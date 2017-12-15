@@ -40,7 +40,12 @@ def scatter(id, options, log=False, active=False):
     nodes = [
         dcc.Graph(
             id='scatter-{}'.format(id),
-            style={'height': '33vh'}
+            style={
+                'height': '33vh',
+                'width': '40vw'
+                # Volcano was not getting the correct horizontal sizing...
+                # maybe because it's not on the screen at load time?
+            }
         ),
         html.Div(control_nodes, className='form-horizontal')
     ]
@@ -63,16 +68,23 @@ def tabs(*names):
 
 
 def configure_layout(app_wrapper):
+    for url in app_wrapper.css_urls:
+        app_wrapper.app.css.append_css({
+            'external_url': url
+        })
     app_wrapper.app.css.append_css({
-        'external_url':
-            'https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/css/bootstrap.min.css'
-    })
-    app_wrapper.app.css.append_css({
-        'external_url': _to_data_uri(
-            ".plotlyjsicon { display: none; }",
-            "text/css"
-        )
+        'external_url': _to_data_uri("""
+            .plotlyjsicon {
+                display: none;
+            }
+            iframe {
+                border: none;
+                width: 100%;
+                height: 33vh;
+            }
+            """,
+                                     "text/css"
+                                     )
     })
 
     app_wrapper.app.scripts.append_script({
@@ -157,12 +169,22 @@ def configure_layout(app_wrapper):
                     scatter('pca', pc_options, active=True),
                 ], className='tab-content'),
 
-                tabs('Genes', 'Volcano'),
+                tabs('Genes', 'Volcano', 'Table'),
                 html.Div([
                     scatter('genes', conditions_options, active=True),
-                    scatter('volcano', conditions_options)
+                    scatter('volcano', conditions_options),
+                    html.Div([
+                        html.Br(),
+                        html.Iframe(id='table-iframe',
+                                    srcDoc='First select a subset')
+                        # or
+                        #   dcc.Graph(id='gene-table',
+                        #   figure=ff.create_table(app_wrapper._dataframe.to_html()))
+                        #   (but that's slow)
+                        # or
+                        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
+                    ], className='tab-pane', id='table')
                 ], className='tab-content')
-
             ], className='col-md-6')
         ], className='row')
     ], className='container')

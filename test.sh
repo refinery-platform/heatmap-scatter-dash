@@ -12,13 +12,20 @@ end test
 
 
 start format
-flake8 || die "Run 'autopep8 --in-place -r .'"
+flake8 context || die "Run 'autopep8 --in-place -r context'"
 end format
 
 
 start isort
-isort -r . --check-only || die "Run 'isort -rc .'"
+isort -r context --check-only || die "Run 'isort -rc context'"
 end isort
+
+
+start cypress
+python context/app_runner.py --files fixtures/good/data/counts.csv --port 8888 --heatmap svg &
+node_modules/.bin/cypress run
+kill `jobs -p`
+end cypress
 
 
 start docker

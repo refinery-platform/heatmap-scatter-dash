@@ -26,13 +26,12 @@ def _linear(color_scale):
 
 def configure_callbacks(app_wrapper):
     callback = app_wrapper.app.callback
-    genes = app_wrapper._dataframe.axes[0].tolist()
 
     def figure_output(id):
         return Output(component_id=id, component_property='figure')
 
-    def gene_match_booleans(search_term):
-        return [search_term in gene for gene in genes]
+    def match_booleans(search_term, targets):
+        return [search_term in s for s in targets]
 
     @callback(
         figure_output('heatmap'),
@@ -47,30 +46,49 @@ def configure_callbacks(app_wrapper):
                   component_property='selectedData')
         ]
     )
-    def update_heatmap(search_term, scale, pca_selected, genes_selected):
-        pca_points = (
-            [point['pointNumber'] for point in pca_selected['points']]
-            if pca_selected else None)
-        # gene_points = ([point['pointNumber']
-        # for point in genes_selected['points']]
-        #                if genes_selected else None)  # TODO
+    def update_heatmap(gene_search_term, scale, pca_selected, genes_selected):
 
-        selected_conditions = [
-            condition for (i, condition) in enumerate(app_wrapper._conditions)
-            if i in pca_points
-        ] if pca_points else app_wrapper._conditions
+        # pca: TODO: Fix the copy and paste between these two.
 
+        if pca_selected:
+            pca_points = [
+                point['pointNumber'] for point in pca_selected['points']
+            ]
+            selected_conditions = [
+                condition for (i, condition)
+                in enumerate(app_wrapper._conditions)
+                if i in pca_points
+            ]
+        else:
+            selected_conditions = app_wrapper._conditions
         selected_conditions_df = app_wrapper._dataframe[selected_conditions]
+
+        # genes:
+
+        gene_search_term = gene_search_term or ''
+        if genes_selected:
+            gene_points = [
+                point['pointNumber'] for point in genes_selected['points']
+                if gene_search_term in point['text']
+            ]
+            selected_genes = [
+                gene for (i, gene) in enumerate(app_wrapper._genes)
+                if i in gene_points
+            ]
+            selected_conditions_genes_df = \
+                selected_conditions_df.loc[selected_genes]
+        else:
+            selected_conditions_genes_df = \
+                selected_conditions_df[
+                    match_booleans(gene_search_term, app_wrapper._genes)
+                ]
+        # TODO: Text search is being done two different ways. Unify.
+
+        # style:
 
         adjusted_color_scale = (
             _linear(app_wrapper._color_scale) if scale != 'log'
             else _log_interpolate(app_wrapper._color_scale))
-
-        if not search_term:
-            search_term = ''
-        selected_conditions_genes_df = selected_conditions_df[
-            gene_match_booleans(search_term)
-        ]
 
         heatmap_type = app_wrapper._heatmap_type
         if heatmap_type == 'svg':
@@ -80,6 +98,7 @@ def configure_callbacks(app_wrapper):
         else:
             raise Exception('Unknown heatmap type: ' + heatmap_type)
 
+        show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
         return {
             'data': [
                 heatmap_constructor(
@@ -94,7 +113,7 @@ def configure_callbacks(app_wrapper):
                     'tickangle': 90},
                 yaxis={
                     'ticks': '',
-                    'showticklabels': False},
+                    'showticklabels': show_genes},
                 margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
@@ -153,7 +172,8 @@ def configure_callbacks(app_wrapper):
                 go.Scattergl(
                     x=app_wrapper._dataframe_pca[x_axis],
                     y=app_wrapper._dataframe_pca[y_axis],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe_pca.index
                 )
             ],
             'layout': scatter_layout(x_axis, y_axis)
@@ -168,7 +188,7 @@ def configure_callbacks(app_wrapper):
             heatmap_range, search_term, scale):
         if not search_term:
             search_term = ''
-        booleans = gene_match_booleans(search_term)
+        booleans = match_booleans(search_term, app_wrapper._genes)
         is_log = scale == 'log'
         return {
             'data': [
@@ -176,7 +196,8 @@ def configure_callbacks(app_wrapper):
                     # TODO: try go.pointcloud if we need something faster?
                     x=app_wrapper._dataframe[x_axis][booleans],
                     y=app_wrapper._dataframe[y_axis][booleans],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe.index
                 )
             ],
             'layout': scatter_layout(
@@ -195,8 +216,25 @@ def configure_callbacks(app_wrapper):
                 go.Scattergl(
                     x=app_wrapper._dataframe[x_axis],
                     y=app_wrapper._dataframe[y_axis],
-                    mode='markers'
+                    mode='markers',
+                    text=app_wrapper._dataframe.index
                 )
             ],
             'layout': scatter_layout(x_axis, y_axis)
         }
+
+    @callback(
+        Output(component_id='table-iframe', component_property='srcDoc'),
+        [
+            Input(component_id='search-genes',
+                  component_property='value')
+        ]
+    )
+    def update_table(search_term):
+        booleans = match_booleans(search_term, app_wrapper._genes)
+        return ''.join(
+            [
+                '<link rel="stylesheet" property="stylesheet" href="{}">'
+                .format(url) for url in app_wrapper.css_urls
+            ] + [app_wrapper._dataframe[booleans].to_html()]
+        )

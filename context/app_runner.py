@@ -58,14 +58,7 @@ def main(args, parser=None):
             exit(1)
         else:
             raise Exception(message)
-
-    merged_df = pandas.DataFrame()
-    for frame in dataframes:
-        merged_df = merged_df.merge(frame,
-                                    how='outer',
-                                    right_index=True,
-                                    left_index=True)
-    AppWrapper(merged_df,
+    AppWrapper(dataframes,
                cluster_rows=args.cluster_rows,
                cluster_cols=args.cluster_cols,
                colors=args.colors,
