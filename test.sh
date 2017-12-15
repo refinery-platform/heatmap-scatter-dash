@@ -21,6 +21,14 @@ isort -r context --check-only || die "Run 'isort -rc context'"
 end isort
 
 
+start usage
+diff <(perl -ne 'print if /^usage:/../  --debug/' README.md) <(cd context; ./app_runner.py -h) || \
+die '
+Update README.md:
+  perl -ne '"'"'print unless /^usage:/../  --debug/; print `cd context; ./app_runner.py -h` if /^usage:/'"'"' -i README.md'
+end usage
+
+
 start cypress
 python context/app_runner.py --files fixtures/good/data/counts.csv --port 8888 --heatmap svg &
 node_modules/.bin/cypress run

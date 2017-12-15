@@ -2,7 +2,7 @@ import unittest
 from base64 import urlsafe_b64decode
 
 from app.app_callbacks import _log_interpolate
-from app.app_layout import _to_data_uri
+from app.app_layout import to_data_uri
 
 
 class TestUtils(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestUtils(unittest.TestCase):
 
     def test_to_data_uri(self):
         orig = 'alert("testing 123?")'
-        uri = _to_data_uri(orig, 'text/fake')
+        uri = to_data_uri(orig, 'text/fake')
         encoded = 'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
         self.assertEqual(
             uri,

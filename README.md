@@ -14,7 +14,7 @@ usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...]) --heatmap
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--port PORT] [--debug]
 
-Plotly Dash visualization
+Light-weight visualization for differential expression
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -23,12 +23,12 @@ optional arguments:
                         matrix.
   --files FILES [FILES ...]
                         Read CSV files. Multiple files will be joined based on
-                        their first column values
+                        the values in the first column
   --heatmap {svg,canvas}
                         The canvas-based heatmap will render much more quickly
                         for large data sets, but the image is blurry, rather
-                        than having sharp edges.
-  --skip_zero           Rows in the CSV with are all zero will be skipped.
+                        than having sharp edges. TODO.
+  --skip_zero           Rows in the CSV which are all zero will be skipped.
   --cluster_rows        Hierarchically cluster rows
   --cluster_cols        Hierarchically cluster columns
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import re
 from sys import exit
@@ -6,7 +7,7 @@ import numpy as np
 import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.app_wrapper import AppWrapper
+from app.app_callbacks import AppCallbacks
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -58,12 +59,13 @@ def main(args, parser=None):
             exit(1)
         else:
             raise Exception(message)
-    AppWrapper(dataframes,
-               cluster_rows=args.cluster_rows,
-               cluster_cols=args.cluster_cols,
-               colors=args.colors,
-               skip_zero=args.skip_zero,
-               heatmap_type=args.heatmap).app.run_server(
+    AppCallbacks(
+        dataframes=dataframes,
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols,
+        colors=args.colors,
+        skip_zero=args.skip_zero,
+        heatmap_type=args.heatmap).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
@@ -71,7 +73,8 @@ def main(args, parser=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+    parser = argparse.ArgumentParser(
+        description='Light-weight visualization for differential expression')
 
     input_source = parser.add_mutually_exclusive_group(required=True)
     input_source.add_argument(
@@ -81,16 +84,16 @@ if __name__ == '__main__':
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
-             'based on their first column values')
+             'based on the values in the first column')
 
     parser.add_argument(
         '--heatmap', choices=['svg', 'canvas'], required=True,
         help='The canvas-based heatmap will render much more quickly '
         'for large data sets, but the image is blurry, '
-        'rather than having sharp edges.')
+        'rather than having sharp edges. TODO.')
     parser.add_argument(
         '--skip_zero', action='store_true',
-        help='Rows in the CSV with are all zero will be skipped.')
+        help='Rows in the CSV which are all zero will be skipped.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',

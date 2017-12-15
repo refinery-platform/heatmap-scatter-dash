@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import json
 
@@ -68,7 +69,7 @@ class RunnerArgs():
 
 
 parser = argparse.ArgumentParser(
-    description='Plotly Dash visualization for Refinery')
+    description='Light-weight webapp for visualizing differential expression')
 parser.add_argument('--input',
                     type=argparse.FileType('r'), required=True)
 parser.add_argument('--port',

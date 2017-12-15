@@ -1,16 +1,14 @@
 import dash
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.app_callbacks import configure_callbacks
-from app.app_layout import configure_layout
 from app.utils.cluster import cluster
 from app.utils.merge import merge
 from app.utils.pca import pca
 
 
-class AppWrapper:
+class AppBase:
 
-    def __init__(self, dataframes,
+    def __init__(self, dataframes=[],
                  cluster_rows=False, cluster_cols=False,
                  colors='Greys', heatmap_type='svg',
                  skip_zero=False):
@@ -30,5 +28,3 @@ class AppWrapper:
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
-        configure_layout(self)
-        configure_callbacks(self)
