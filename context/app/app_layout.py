@@ -7,68 +7,6 @@ import dash_html_components as html
 from app.app_base import AppBase
 
 
-def to_data_uri(s, mime):
-    uri = (
-        ('data:' + mime + ';base64,').encode('utf8') +
-        urlsafe_b64encode(s.encode('utf8'))
-    ).decode("utf-8", "strict")
-    return uri
-
-
-def dropdown(id, options, axis, axis_index):
-    return html.Span(
-        [
-            html.Label(
-                [axis],
-                className='col-sm-1 control-label'
-            ),
-            dcc.Dropdown(
-                id='scatter-{}-{}-axis-select'.format(id, axis),
-                options=options,
-                value=options[axis_index]['value'],
-                className='col-sm-5'
-            )
-        ]
-    )
-
-
-def scatter(id, options, log=False, active=False):
-    control_nodes = [
-        html.Div([
-            dropdown(id, options, 'x', 0),
-            dropdown(id, options, 'y', 1)
-        ], className='form-group')
-    ]
-    nodes = [
-        dcc.Graph(
-            id='scatter-{}'.format(id),
-            style={
-                'height': '33vh',
-                'width': '40vw'
-                # Volcano was not getting the correct horizontal sizing...
-                # maybe because it's not on the screen at load time?
-            }
-        ),
-        html.Div(control_nodes, className='form-horizontal')
-    ]
-    className = 'tab-pane'
-    if active:
-        className += ' active'
-    return html.Div(nodes, className=className, id=id)
-
-
-def tabs(*names):
-    tabs = html.Ul([
-        html.Li([
-            html.A([
-                name
-            ], href='#' + name.lower())
-        ], className=('active' if index == 0 else ''))
-        for (index, name) in enumerate(names)],
-        className='nav nav-tabs')
-    return tabs
-
-
 class AppLayout(AppBase):
 
     def __init__(self, **kwargs):
@@ -78,12 +16,12 @@ class AppLayout(AppBase):
         self._add_dom()
 
     def _add_css(self):
-        for url in self.css_urls:
+        for url in self._css_urls:
             self.app.css.append_css({
                 'external_url': url
             })
         self.app.css.append_css({
-            'external_url': to_data_uri(
+            'external_url': _to_data_uri(
                 """
                 .plotlyjsicon {
                     display: none;
@@ -109,7 +47,7 @@ class AppLayout(AppBase):
                 'bootstrap/3.3.7/js/bootstrap.min.js'
         })
         self.app.scripts.append_script({
-            'external_url': to_data_uri("""
+            'external_url': _to_data_uri("""
                 $('body').on('click', '.nav-tabs a', function(e) {
                     e.preventDefault();
                     $(this).tab('show');
@@ -189,15 +127,15 @@ class AppLayout(AppBase):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            tabs('PCA'),
+            _tabs('PCA'),
             html.Div([
-                scatter('pca', pc_options, active=True),
+                _scatter('pca', pc_options, active=True),
             ], className='tab-content'),
 
-            tabs('Genes', 'Volcano', 'Table'),
+            _tabs('Genes', 'Volcano', 'Table'),
             html.Div([
-                scatter('genes', conditions_options, active=True),
-                scatter('volcano', conditions_options),
+                _scatter('genes', conditions_options, active=True),
+                _scatter('volcano', conditions_options),
                 html.Div([
                     html.Br(),
                     html.Iframe(id='table-iframe',
@@ -211,3 +149,65 @@ class AppLayout(AppBase):
                 ], className='tab-pane', id='table')
             ], className='tab-content')
         ]
+
+
+def _to_data_uri(s, mime):
+    uri = (
+        ('data:' + mime + ';base64,').encode('utf8') +
+        urlsafe_b64encode(s.encode('utf8'))
+    ).decode("utf-8", "strict")
+    return uri
+
+
+def _dropdown(id, options, axis, axis_index):
+    return html.Span(
+        [
+            html.Label(
+                [axis],
+                className='col-sm-1 control-label'
+            ),
+            dcc.Dropdown(
+                id='scatter-{}-{}-axis-select'.format(id, axis),
+                options=options,
+                value=options[axis_index]['value'],
+                className='col-sm-5'
+            )
+        ]
+    )
+
+
+def _scatter(id, options, log=False, active=False):
+    control_nodes = [
+        html.Div([
+            _dropdown(id, options, 'x', 0),
+            _dropdown(id, options, 'y', 1)
+        ], className='form-group')
+    ]
+    nodes = [
+        dcc.Graph(
+            id='scatter-{}'.format(id),
+            style={
+                'height': '33vh',
+                'width': '40vw'
+                # Volcano was not getting the correct horizontal sizing...
+                # maybe because it's not on the screen at load time?
+            }
+        ),
+        html.Div(control_nodes, className='form-horizontal')
+    ]
+    className = 'tab-pane'
+    if active:
+        className += ' active'
+    return html.Div(nodes, className=className, id=id)
+
+
+def _tabs(*names):
+    tabs = html.Ul([
+        html.Li([
+            html.A([
+                name
+            ], href='#' + name.lower())
+        ], className=('active' if index == 0 else ''))
+        for (index, name) in enumerate(names)],
+        className='nav nav-tabs')
+    return tabs

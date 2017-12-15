@@ -20,7 +20,7 @@ class AppBase:
         self._genes = self._dataframe.axes[0].tolist()
         self._color_scale = PLOTLY_SCALES[colors]
         self._heatmap_type = heatmap_type
-        self.css_urls = [
+        self._css_urls = [
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css'
         ]

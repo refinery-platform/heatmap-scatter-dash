@@ -35,7 +35,7 @@ optional arguments:
                         Color scale for the heatmap
   --port PORT
   --debug
-  ```
+```
 
 ## Getting Started
 
@@ -54,10 +54,10 @@ Then try one of these:
 $ cd context
 
   # Generate a random matrix:
-$ python app_runner.py --demo 1,10,10 --port 8888 --cluster
+$ python app_runner.py --demo 1,10,10 --port 8888
 
   # Load data from disk:
-$ python app_runner.py --files fixtures/good/data/* --port 8888 --cluster
+$ python app_runner.py --files fixtures/good/data/* --port 8888
 
   # Read an input.json like that created by Refinery:
 $ python app_runner_refinery.py --input fixtures/good/input.json --port 8888

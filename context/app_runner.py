@@ -59,8 +59,15 @@ def main(args, parser=None):
             exit(1)
         else:
             raise Exception(message)
+
+    if args.diffs:
+        diff_dataframes = real_dataframes(args.diffs)
+    else:
+        diff_dataframes = []
+
     AppCallbacks(
         dataframes=dataframes,
+        diff_dataframes=diff_dataframes,
         cluster_rows=args.cluster_rows,
         cluster_cols=args.cluster_cols,
         colors=args.colors,
@@ -85,6 +92,10 @@ if __name__ == '__main__':
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
              'based on the values in the first column')
+
+    input_source.add_argument(
+        '--diffs', nargs='+', type=argparse.FileType('r'),
+        help='Read CSV files containing differential analysis data.')
 
     parser.add_argument(
         '--heatmap', choices=['svg', 'canvas'], required=True,
