@@ -4,7 +4,7 @@ from base64 import urlsafe_b64encode
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.app_wrapper import AppWrapper
+from app.app_base import AppBase
 
 
 def to_data_uri(s, mime):
@@ -69,7 +69,7 @@ def tabs(*names):
     return tabs
 
 
-class AppLayout(AppWrapper):
+class AppLayout(AppBase):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -6,7 +6,7 @@ from app.utils.merge import merge
 from app.utils.pca import pca
 
 
-class AppWrapper:
+class AppBase:
 
     def __init__(self, dataframes=[],
                  cluster_rows=False, cluster_cols=False,
