@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import re
 from sys import exit
@@ -71,7 +72,7 @@ def main(args, parser=None):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Plotly Dash visualization')
+    parser = argparse.ArgumentParser(description='Light-weight webapp for visualizing differential expression')
 
     input_source = parser.add_mutually_exclusive_group(required=True)
     input_source.add_argument(

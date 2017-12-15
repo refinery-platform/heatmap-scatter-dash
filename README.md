@@ -14,7 +14,7 @@ usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...]) --heatmap
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--port PORT] [--debug]
 
-Plotly Dash visualization
+Light-weight webapp for visualizing differential expression
 
 optional arguments:
   -h, --help            show this help message and exit
