@@ -10,7 +10,8 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 from app.app_callbacks import AppCallbacks
 
 from app.utils.cluster import cluster
-from app.utils.merge import merge
+from app.utils.merge import merge, reindex
+from os.path import basename
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     if not pattern.match(s):
@@ -26,7 +27,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     }
 
 
-def real_dataframes(files):
+def file_dataframes(files):
     return [
         pandas.read_csv(file, index_col=0)
         for file in files
@@ -49,7 +50,7 @@ def demo_dataframes(frames, rows, cols):
 
 def main(args, parser=None):
     if args.files:
-        dataframes = real_dataframes(args.files)
+        dataframes = file_dataframes(args.files)
     elif args.demo:
         dataframes = demo_dataframes(**args.demo)
     else:
@@ -68,14 +69,15 @@ def main(args, parser=None):
         cluster_rows=args.cluster_rows,
         cluster_cols=args.cluster_cols)
 
-    # if args.diffs:
-    #     diff_dataframes = diff_dataframes(args.diffs, index=)
-    # else:
-    #     diff_dataframes = []
+    keys = set(dataframe.index.tolist())
+    diff_dataframes = {
+        basename(handle.name): reindex(pandas.read_csv(handle), keys)
+        for handle in args.diffs
+    }
 
     AppCallbacks(
         dataframe=dataframe,
-        #diff_dataframes=diff_dataframes,
+        diff_dataframes=diff_dataframes,
         colors=args.colors,
         heatmap_type=args.heatmap
     ).app.run_server(
@@ -99,8 +101,8 @@ if __name__ == '__main__':
         help='Read CSV files. Multiple files will be joined '
              'based on the values in the first column')
 
-    input_source.add_argument(
-        '--diffs', nargs='+', type=argparse.FileType('r'),
+    parser.add_argument(
+        '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
         help='Read CSV files containing differential analysis data.')
 
     parser.add_argument(

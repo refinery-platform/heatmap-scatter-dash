@@ -3,10 +3,22 @@ import unittest
 import numpy as np
 import pandas
 
-from app.utils.merge import merge
+
+from io import StringIO
+
+from app.utils.merge import merge, reindex
 
 
-class TestMerge(unittest.TestCase):
+class TestDataFrames(unittest.TestCase):
+
+    def assertEqualDataFrames(self, a, b):
+        a_np = np.array(a.as_matrix().tolist())
+        b_np = np.array(b.as_matrix().tolist())
+        np.testing.assert_equal(a_np, b_np)
+        self.assertEqual(a.columns.tolist(),     b.columns.tolist())
+        self.assertEqual(a.index.tolist(),       b.index.tolist())
+
+class TestMerge(TestDataFrames):
 
     def setUp(self):
         self.dataframes = [pandas.DataFrame([
@@ -17,13 +29,6 @@ class TestMerge(unittest.TestCase):
             columns=['c1', 'c2', 'c3', 'c4'],
             index=['r1', 'r2', 'r3', 'r4']
         )]
-
-    def assertEqualDataFrames(self, a, b):
-        a_np = np.array(a.as_matrix().tolist())
-        b_np = np.array(b.as_matrix().tolist())
-        np.testing.assert_equal(a_np, b_np)
-        self.assertEqual(a.columns.tolist(),     b.columns.tolist())
-        self.assertEqual(a.index.tolist(),       b.index.tolist())
 
     def test_no_change(self):
         merged_frame = merge(self.dataframes)
@@ -48,3 +53,39 @@ class TestMerge(unittest.TestCase):
             columns=['c1', 'c2', 'c3', 'c4_x', 'c4_y', 'c5'],
             index=['r1', 'r2', 'r3', 'r4', 'r5']
         ))
+
+class TestReindex(TestDataFrames):
+
+    def setUp(self):
+        csv = StringIO(
+            '\n'.join([
+                'a,b,hidden-id,c,d',
+                'multiple,matches,X,Y,here',
+                'multiple,matches,Z,W,maybe']))
+        self.dataframe = pandas.read_csv(csv)
+
+    # TODO: Separate class
+    def test_reindex_good(self):
+        indexed_df = reindex(self.dataframe, keys=['X', 'Y', 'Z'])
+        target = pandas.DataFrame([
+            ['multiple', 'matches', 'Y', 'here'],
+            ['multiple', 'matches', 'W', 'maybe']],
+            columns=['a', 'b', 'c', 'd'],
+            index=['X', 'Z']
+        )
+        self.assertEqualDataFrames(target, indexed_df)
+
+    def test_reindex_multiple(self):
+        with self.assertRaisesRegex(
+                Exception,
+                r"Could not find a row where exactly one column matched keys: "
+                "\['W', 'X', 'Y', 'Z'\]"):
+            reindex(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
+
+    def test_reindex_none(self):
+        with self.assertRaisesRegex(
+                Exception,
+                "None of the values \['multiple' 'matches' 'X' 'Y' 'here'\] "
+                "in row 0 were recognized keys: "
+                "\['something', 'entirely', 'different'\]"):
+            reindex(self.dataframe, keys=['something', 'entirely', 'different'])
