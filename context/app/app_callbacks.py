@@ -231,4 +231,8 @@ def configure_callbacks(app_wrapper):
     )
     def update_table(search_term):
         booleans = match_booleans(search_term, app_wrapper._genes)
-        return app_wrapper._dataframe[booleans].to_html()
+        return ''.join([
+            '<link rel="stylesheet" property="stylesheet" href="https://maxcdn.bootstrapcdn.com/'
+            'bootstrap/3.3.7/css/bootstrap.min.css">',
+            app_wrapper._dataframe[booleans].to_html()
+        ])

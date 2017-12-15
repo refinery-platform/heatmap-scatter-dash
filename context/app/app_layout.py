@@ -74,8 +74,16 @@ def configure_layout(app_wrapper):
             'bootstrap/3.3.7/css/bootstrap.min.css'
     })
     app_wrapper.app.css.append_css({
-        'external_url': _to_data_uri(
-            ".plotlyjsicon { display: none; }",
+        'external_url': _to_data_uri("""
+            .plotlyjsicon {
+                display: none;
+            }
+            iframe {
+                border: none;
+                width: 100%;
+                height: 33vh;
+            }
+            """,
             "text/css"
         )
     })
@@ -167,7 +175,8 @@ def configure_layout(app_wrapper):
                     scatter('genes', conditions_options, active=True),
                     scatter('volcano', conditions_options),
                     html.Div([
-                        html.Iframe(id='table-iframe', srcDoc='asdf')
+                        html.Br(),
+                        html.Iframe(id='table-iframe', srcDoc='First select a subset of the genes')
                         # or
                         #   dcc.Graph(id='gene-table', figure=ff.create_table(app_wrapper._dataframe.to_html()))
                         #   (but that is much slower for the same size data set)
