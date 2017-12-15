@@ -9,6 +9,8 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 
+from app.utils.cluster import cluster
+from app.utils.merge import merge
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     if not pattern.match(s):
@@ -60,19 +62,23 @@ def main(args, parser=None):
         else:
             raise Exception(message)
 
-    if args.diffs:
-        diff_dataframes = real_dataframes(args.diffs)
-    else:
-        diff_dataframes = []
+    dataframe = cluster(
+        merge(dataframes),
+        skip_zero=args.skip_zero,
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols)
+
+    # if args.diffs:
+    #     diff_dataframes = diff_dataframes(args.diffs, index=)
+    # else:
+    #     diff_dataframes = []
 
     AppCallbacks(
-        dataframes=dataframes,
-        diff_dataframes=diff_dataframes,
-        cluster_rows=args.cluster_rows,
-        cluster_cols=args.cluster_cols,
+        dataframe=dataframe,
+        #diff_dataframes=diff_dataframes,
         colors=args.colors,
-        skip_zero=args.skip_zero,
-        heatmap_type=args.heatmap).app.run_server(
+        heatmap_type=args.heatmap
+    ).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
