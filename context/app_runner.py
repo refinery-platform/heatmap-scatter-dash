@@ -82,16 +82,16 @@ if __name__ == '__main__':
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
-             'based on their first column values')
+             'based on the values in the first column')
 
     parser.add_argument(
         '--heatmap', choices=['svg', 'canvas'], required=True,
         help='The canvas-based heatmap will render much more quickly '
         'for large data sets, but the image is blurry, '
-        'rather than having sharp edges.')
+        'rather than having sharp edges. TODO.')
     parser.add_argument(
         '--skip_zero', action='store_true',
-        help='Rows in the CSV with are all zero will be skipped.')
+        help='Rows in the CSV which are all zero will be skipped.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',

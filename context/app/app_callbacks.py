@@ -119,24 +119,25 @@ def configure_callbacks(app_wrapper):
             )
         }
 
-    def scatter_layout(x_axis, y_axis, x_log=False, y_log=False):
-        x_axis_config = {'title': x_axis}
-        y_axis_config = {'title': y_axis}
-        if x_log:
-            x_axis_config['type'] = 'log'
-        if y_log:
-            y_axis_config['type'] = 'log'
-        return go.Layout(
-            xaxis=x_axis_config,
-            yaxis=y_axis_config,
-            margin=go.Margin(
-                l=80,  # noqa: E741
-                r=20,
-                b=60,
-                t=20,
-                pad=5
+    class ScatterLayout(go.Layout):
+        def __init__(self, x_axis, y_axis, x_log=False, y_log=False):
+            x_axis_config = {'title': x_axis}
+            y_axis_config = {'title': y_axis}
+            if x_log:
+                x_axis_config['type'] = 'log'
+            if y_log:
+                y_axis_config['type'] = 'log'
+            super().__init__(
+                xaxis=x_axis_config,
+                yaxis=y_axis_config,
+                margin=go.Margin(
+                    l=80,  # noqa: E741
+                    r=20,
+                    b=60,
+                    t=20,
+                    pad=5
+                )
             )
-        )
 
     def scatter_inputs(id, search=False, scale_select=False):
         inputs = [
@@ -176,7 +177,7 @@ def configure_callbacks(app_wrapper):
                     text=app_wrapper._dataframe_pca.index
                 )
             ],
-            'layout': scatter_layout(x_axis, y_axis)
+            'layout': ScatterLayout(x_axis, y_axis)
         }
 
     @callback(
@@ -200,7 +201,7 @@ def configure_callbacks(app_wrapper):
                     text=app_wrapper._dataframe.index
                 )
             ],
-            'layout': scatter_layout(
+            'layout': ScatterLayout(
                 x_axis, y_axis,
                 x_log=is_log,
                 y_log=is_log)
@@ -220,7 +221,7 @@ def configure_callbacks(app_wrapper):
                     text=app_wrapper._dataframe.index
                 )
             ],
-            'layout': scatter_layout(x_axis, y_axis)
+            'layout': ScatterLayout(x_axis, y_axis)
         }
 
     @callback(
