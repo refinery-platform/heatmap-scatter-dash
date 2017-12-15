@@ -60,12 +60,12 @@ def main(args, parser=None):
         else:
             raise Exception(message)
     AppCallbacks(
-               dataframes=dataframes,
-               cluster_rows=args.cluster_rows,
-               cluster_cols=args.cluster_cols,
-               colors=args.colors,
-               skip_zero=args.skip_zero,
-               heatmap_type=args.heatmap).app.run_server(
+        dataframes=dataframes,
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols,
+        colors=args.colors,
+        skip_zero=args.skip_zero,
+        heatmap_type=args.heatmap).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'

@@ -25,7 +25,7 @@ start usage
 diff <(perl -ne 'print if /^usage:/../  --debug/' README.md) <(cd context; ./app_runner.py -h) || \
 die '
 Update README.md:
-  perl -ne '"'"'print unless /^usage:/../  --debug/; print `cd context; ./app_runner.py -h` if /^usage:/'"'"' README.md > README.md'
+  perl -ne '"'"'print unless /^usage:/../  --debug/; print `cd context; ./app_runner.py -h` if /^usage:/'"'"' -i README.md'
 end usage
 
 
