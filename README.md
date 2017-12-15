@@ -4,6 +4,39 @@ A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
 Can be run as a Flask app from the commandline,
 or as Docker container for [Refinery](https://github.com/refinery-platform/refinery-platform) visualizations.
 
+<img width="657" alt="heatmap-scatterplot" src="https://user-images.githubusercontent.com/730388/34022648-6bd1bd7c-e10e-11e7-8b8a-ee9dfca981ed.png">
+
+```
+$ python app_runner.py -h
+usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...]) --heatmap
+                     {svg,canvas} [--skip_zero] [--cluster_rows]
+                     [--cluster_cols]
+                     [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
+                     [--port PORT] [--debug]
+
+Plotly Dash visualization
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --demo DEMO           Generates random data rather than reading files. The
+                        argument determines the dimensions of the random
+                        matrix.
+  --files FILES [FILES ...]
+                        Read CSV files. Multiple files will be joined based on
+                        their first column values
+  --heatmap {svg,canvas}
+                        The canvas-based heatmap will render much more quickly
+                        for large data sets, but the image is blurry, rather
+                        than having sharp edges.
+  --skip_zero           Rows in the CSV with are all zero will be skipped.
+  --cluster_rows        Hierarchically cluster rows
+  --cluster_cols        Hierarchically cluster columns
+  --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
+                        Color scale for the heatmap
+  --port PORT
+  --debug
+  ```
+
 ## Getting Started
 
 The best way to run the app during development is just as a Flask app.
