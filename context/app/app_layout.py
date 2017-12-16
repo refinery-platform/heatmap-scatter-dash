@@ -73,16 +73,20 @@ class AppLayout(AppBase):
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
-        scale_options = [
+        self.scale_options = [
             {'label': scale, 'value': scale}
             for scale in ['log', 'linear']
+        ]
+
+        self.file_options = [
+            {'label': file, 'value': file}
+            for file in self._diff_dataframes
         ]
 
         self.app.layout = html.Div([
             html.Div([
                 html.Div(
-                    self._left_column(
-                        scale_options=scale_options),
+                    self._left_column(),
                     className='col-md-6'),
                 html.Div(
                     self._right_column(
@@ -92,7 +96,7 @@ class AppLayout(AppBase):
             ], className='row')
         ], className='container')
 
-    def _left_column(self, scale_options):
+    def _left_column(self):
         return [
             dcc.Graph(
                 id='heatmap',
@@ -115,7 +119,7 @@ class AppLayout(AppBase):
                                ),
                     dcc.Dropdown(
                         id='scale-select',
-                        options=scale_options,
+                        options=self.scale_options,
                         value='log',
                         className='col-sm-5'
                     )
@@ -129,13 +133,13 @@ class AppLayout(AppBase):
 
             _tabs('PCA'),
             html.Div([
-                _scatter('pca', pc_options, active=True),
+                self._scatter('pca', pc_options, active=True),
             ], className='tab-content'),
 
             _tabs('Genes', 'Volcano', 'Table'),
             html.Div([
-                _scatter('genes', conditions_options, active=True),
-                _scatter('volcano', conditions_options),
+                self._scatter('genes', conditions_options, active=True),
+                self._scatter('volcano', conditions_options, volcano=True),
                 html.Div([
                     html.Br(),
                     html.Iframe(id='table-iframe',
@@ -150,6 +154,36 @@ class AppLayout(AppBase):
             ], className='tab-content')
         ]
 
+    def _scatter(self, id, options, active=False, volcano=False):
+        dropdowns = [
+            _dropdown(id, options, 'x', 0),
+            _dropdown(id, options, 'y', 1)
+        ]
+        if volcano:
+            dropdowns.append(_dropdown(
+                id, self.file_options, 'file', 1, full_width=True))
+            # TODO: scale selector for volcano?
+        control_nodes = [
+            html.Div(dropdowns, className='form-group')
+        ]
+        nodes = [
+            dcc.Graph(
+                id='scatter-{}'.format(id),
+                style={
+                    'height': '33vh',
+                    'width': '40vw'
+                    # Shouldn't need to specify manually, but
+                    # volcano was not getting the correct horizontal sizing...
+                    # maybe because it's not on the screen at load time?
+                }
+            ),
+            html.Div(control_nodes, className='form-horizontal')
+        ]
+        className = 'tab-pane'
+        if active:
+            className += ' active'
+        return html.Div(nodes, className=className, id=id)
+
 
 def _to_data_uri(s, mime):
     uri = (
@@ -159,7 +193,7 @@ def _to_data_uri(s, mime):
     return uri
 
 
-def _dropdown(id, options, axis, axis_index):
+def _dropdown(id, options, axis, axis_index, full_width=False):
     return html.Span(
         [
             html.Label(
@@ -170,35 +204,10 @@ def _dropdown(id, options, axis, axis_index):
                 id='scatter-{}-{}-axis-select'.format(id, axis),
                 options=options,
                 value=options[axis_index]['value'],
-                className='col-sm-5'
+                className='col-sm-11' if full_width else 'col-sm-5'
             )
         ]
     )
-
-
-def _scatter(id, options, log=False, active=False):
-    control_nodes = [
-        html.Div([
-            _dropdown(id, options, 'x', 0),
-            _dropdown(id, options, 'y', 1)
-        ], className='form-group')
-    ]
-    nodes = [
-        dcc.Graph(
-            id='scatter-{}'.format(id),
-            style={
-                'height': '33vh',
-                'width': '40vw'
-                # Volcano was not getting the correct horizontal sizing...
-                # maybe because it's not on the screen at load time?
-            }
-        ),
-        html.Div(control_nodes, className='form-horizontal')
-    ]
-    className = 'tab-pane'
-    if active:
-        className += ' active'
-    return html.Div(nodes, className=className, id=id)
 
 
 def _tabs(*names):

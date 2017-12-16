@@ -7,10 +7,12 @@ from app.utils.pca import pca
 class AppBase:
 
     def __init__(self, dataframe,
+                 diff_dataframes={},
                  colors='Greys',
                  heatmap_type='svg'):
         self._dataframe = dataframe
         self._dataframe_pca = pca(self._dataframe)
+        self._diff_dataframes = diff_dataframes
         self._conditions = self._dataframe.axes[1].tolist()
         self._genes = self._dataframe.axes[0].tolist()
         self._color_scale = PLOTLY_SCALES[colors]
