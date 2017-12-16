@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import re
+from os.path import basename
 from sys import exit
 
 import numpy as np
@@ -8,10 +9,8 @@ import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
-
 from app.utils.cluster import cluster
 from app.utils.frames import merge, reindex
-from os.path import basename
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):

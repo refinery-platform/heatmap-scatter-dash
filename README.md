@@ -8,9 +8,9 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 
 ```
 $ python app_runner.py -h
-usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...]) --heatmap
-                     {svg,canvas} [--skip_zero] [--cluster_rows]
-                     [--cluster_cols]
+usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
+                     [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
+                     [--skip_zero] [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--port PORT] [--debug]
 
@@ -24,6 +24,8 @@ optional arguments:
   --files FILES [FILES ...]
                         Read CSV files. Multiple files will be joined based on
                         the values in the first column
+  --diffs DIFFS [DIFFS ...]
+                        Read CSV files containing differential analysis data.
   --heatmap {svg,canvas}
                         The canvas-based heatmap will render much more quickly
                         for large data sets, but the image is blurry, rather

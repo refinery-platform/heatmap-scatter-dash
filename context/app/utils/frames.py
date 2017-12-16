@@ -36,6 +36,6 @@ def reindex(frame, keys):
     if len(matches) != 1:
         raise Exception(
             'No row where exactly one column matched keys: {}'.format(
-            keys
-        ))
+                keys
+            ))
     return frame.set_index(matches)

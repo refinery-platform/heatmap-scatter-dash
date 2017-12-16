@@ -1,10 +1,8 @@
 import unittest
+from io import StringIO
 
 import numpy as np
 import pandas
-
-
-from io import StringIO
 
 from app.utils.frames import merge, reindex
 
@@ -80,14 +78,14 @@ class TestReindex(TestDataFrames):
     def test_reindex_multiple(self):
         with self.assertRaisesRegex(
                 Exception,
-                r"Could not find a row where exactly one column matched keys: "
+                r"No row where exactly one column matched keys: "
                 "\['W', 'X', 'Y', 'Z'\]"):
             reindex(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
 
     def test_reindex_none(self):
         with self.assertRaisesRegex(
                 Exception,
-                "None of the values \['multiple' 'matches' 'X' 'Y' 'here'\] "
+                "No values \['multiple' 'matches' 'X' 'Y' 'here'\] "
                 "in row 0 were recognized keys: "
                 "\['something', 'entirely', 'different'\]"):
             reindex(self.dataframe, keys=[

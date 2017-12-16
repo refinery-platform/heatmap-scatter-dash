@@ -160,8 +160,17 @@ class AppLayout(AppBase):
             _dropdown(id, options, 'y', 1)
         ]
         if volcano:
-            dropdowns.append(_dropdown(
-                id, self.file_options, 'file', 1, full_width=True))
+            dropdowns.append(
+                html.Label(['file'], className='col-sm-1 control-label')
+            )
+            dropdowns.append(
+                dcc.Dropdown(
+                    id='file-select',
+                    options=self.file_options,
+                    value=self.file_options[0]['value']
+                    if self.file_options else None,
+                    className='col-sm-11'
+                ))
             # TODO: scale selector for volcano?
         control_nodes = [
             html.Div(dropdowns, className='form-group')
