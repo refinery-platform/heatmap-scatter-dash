@@ -73,10 +73,10 @@ class AppLayout(AppBase):
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
-        diff_heads = set.intersection(
-            *[set(df.columns.tolist())
+        list_of_sets = [set(df.columns.tolist())
               for df in self._diff_dataframes.values()]
-        )
+        diff_heads = ({} if not list_of_sets
+            else set.intersection(*list_of_sets))
         volcano_options = [
             {'label': diff_head, 'value': diff_head}
             for diff_head in diff_heads
