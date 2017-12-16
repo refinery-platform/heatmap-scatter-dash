@@ -20,8 +20,6 @@ class RunnerArgs():
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
         self.skip_zero = True
         self.colors = 'Greys'
-        # TODO: Colors is not going to be configurable in Refinery,
-        # so pick the right value and set it here.
 
         input = json.loads(refinery_args.input.read(None))
 
@@ -35,7 +33,11 @@ class RunnerArgs():
         self.cluster_cols = parameters['Cluster Cols']
 
         self.files = self._download_files(
-            input['file_relationships'],
+            input['file_relationships'][0],
+            input['extra_directories'][0]
+        )
+        self.diffs = self._download_files(
+            input['file_relationships'][1],
             input['extra_directories'][0]
         )
 

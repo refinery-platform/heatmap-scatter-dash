@@ -1,28 +1,28 @@
 {
   "file_relationships": [
-    "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/counts.csv"
-  ],
-  "TODO: Pin URL to version + add back to file_relationships when we can merge files": [
-    "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-1.csv",
-    "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-2.csv"
+    ["https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/counts.csv"],
+    [
+      "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-1.csv",
+      "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-2.csv"
+    ]
   ],
   "extra_directories": [
     "/refinery-data/"
   ],
   "node_info": {
     "some-refinery-uuid-1": {
-      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/mccalluc/interaction/fixtures/good/data/counts.csv",
+      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/counts.csv",
       "node_solr_info": {
         "A lot of data here...": "but I feel uncomfortable binding myself to these ugly internal names.",
         "It needs a clean API": "True!"
       }
     },
     "some-refinery-uuid-2": {
-      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/mccalluc/interaction/fixtures/good/data/stats-with-genes-in-col-1.csv",
+      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-1.csv",
       "node_solr_info": {}
     },
     "some-refinery-uuid-3": {
-      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/mccalluc/interaction/fixtures/good/data/stats-with-genes-in-col-2.csv",
+      "file_url": "https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.2/fixtures/good/data/stats-with-genes-in-col-2.csv",
       "node_solr_info": {}
     }
   },
