@@ -146,14 +146,16 @@ class AppCallbacks(AppLayout):
 
         @callback(
             _figure_output('scatter-volcano'),
-            _scatter_inputs('volcano')
+            _scatter_inputs('volcano') +
+                [ Input(component_id='file-select',
+                      component_property='value') ]
         )
-        def update_scatter_volcano(x_axis, y_axis, heatmap_range):
+        def update_scatter_volcano(x_axis, y_axis, heatmap_range, file):
             return {
                 'data': [
                     go.Scattergl(
-                        x=self._dataframe[x_axis],
-                        y=self._dataframe[y_axis],
+                        x=self._diff_dataframes[file][x_axis],
+                        y=self._diff_dataframes[file][y_axis],
                         mode='markers',
                         text=self._dataframe.index
                     )

@@ -73,6 +73,15 @@ class AppLayout(AppBase):
             for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
         ]
 
+        diff_heads = set.intersection(
+            *[set(df.columns.tolist())
+              for df in self._diff_dataframes.values()]
+        )
+        volcano_options = [
+            {'label': diff_head, 'value': diff_head}
+            for diff_head in diff_heads
+        ]
+
         self.scale_options = [
             {'label': scale, 'value': scale}
             for scale in ['log', 'linear']
@@ -91,7 +100,8 @@ class AppLayout(AppBase):
                 html.Div(
                     self._right_column(
                         pc_options=pc_options,
-                        conditions_options=conditions_options),
+                        conditions_options=conditions_options,
+                        volcano_options=volcano_options),
                     className='col-md-6')
             ], className='row')
         ], className='container')
@@ -127,7 +137,7 @@ class AppLayout(AppBase):
             ], className='form-horizontal')
         ]
 
-    def _right_column(self, pc_options, conditions_options):
+    def _right_column(self, pc_options, conditions_options, volcano_options):
         return [
             html.Br(),  # Top of tab was right against window top
 
@@ -139,7 +149,7 @@ class AppLayout(AppBase):
             _tabs('Genes', 'Volcano', 'Table'),
             html.Div([
                 self._scatter('genes', conditions_options, active=True),
-                self._scatter('volcano', conditions_options, volcano=True),
+                self._scatter('volcano', volcano_options, volcano=True),
                 html.Div([
                     html.Br(),
                     html.Iframe(id='table-iframe',
