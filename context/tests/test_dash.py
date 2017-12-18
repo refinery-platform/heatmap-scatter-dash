@@ -1,11 +1,8 @@
 import unittest
-from io import StringIO
 
 import pandas
 
 from app.app_callbacks import AppCallbacks
-
-
 
 
 class TestDash():
@@ -101,12 +98,14 @@ class TestDash():
             index=['r1', 'r2']
         )
 
+
 class TestDashNoDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
         self.app = AppCallbacks(
             dataframe=self.counts_dataframe()
         ).app
+
 
 class TestDashWithDifferentials(TestDash, unittest.TestCase):
 
@@ -118,5 +117,3 @@ class TestDashWithDifferentials(TestDash, unittest.TestCase):
                 'B': self.diff_dataframe(),
             }
         ).app
-
-

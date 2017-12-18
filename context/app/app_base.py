@@ -1,7 +1,7 @@
 import dash
+import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-import pandas
 from app.utils.pca import pca
 
 

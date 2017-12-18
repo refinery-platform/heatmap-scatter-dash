@@ -147,8 +147,8 @@ class AppCallbacks(AppLayout):
         @callback(
             _figure_output('scatter-volcano'),
             _scatter_inputs('volcano') +
-                [ Input(component_id='file-select',
-                      component_property='value') ]
+            [Input(component_id='file-select',
+                   component_property='value')]
         )
         def update_scatter_volcano(x_axis, y_axis, heatmap_range, file):
             return {

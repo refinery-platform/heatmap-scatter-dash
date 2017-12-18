@@ -2,7 +2,6 @@
 import argparse
 import re
 from os.path import basename
-from sys import exit
 
 import numpy as np
 import pandas
@@ -101,8 +100,9 @@ if __name__ == '__main__':
              'based on the values in the first column')
 
     parser.add_argument(
-        '--diffs', nargs='*', type=argparse.FileType('r'), default=[],
+        '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
         help='Read CSV files containing differential analysis data.')
+    # --diffs itself is optional... but if present, files must be given.
 
     parser.add_argument(
         '--heatmap', choices=['svg', 'canvas'], required=True,
