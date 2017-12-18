@@ -54,14 +54,8 @@ def main(args, parser=None):
     elif args.demo:
         dataframes = demo_dataframes(**args.demo)
     else:
-        message = 'Either "--demo FRAMES,ROWS,COLS" '\
-                  'or "--files FILE" is required'
-        if parser:
-            print(message)
-            parser.print_help()
-            exit(1)
-        else:
-            raise Exception(message)
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
 
     dataframe = cluster(
         merge(dataframes),
