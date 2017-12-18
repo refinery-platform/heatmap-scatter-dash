@@ -32,14 +32,18 @@ class RunnerArgs():
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
 
-        self.files = self._download_files(
-            input['file_relationships'][0],
-            input['extra_directories'][0]
-        )
-        self.diffs = self._download_files(
-            input['file_relationships'][1],
-            input['extra_directories'][0]
-        )
+        data_directory = input['extra_directories'][0]
+        try:
+            self.files = self._download_files(
+                input['file_relationships'][0],
+                data_directory
+            )
+            self.diffs = self._download_files(
+                input['file_relationships'][1],
+                data_directory
+            )
+        except OSError as e:
+            raise Exception('Does {} exist?'.format(data_directory)) from e
 
     def _download_files(self, urls, data_dir):
         """
