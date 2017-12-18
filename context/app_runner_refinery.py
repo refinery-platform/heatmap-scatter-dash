@@ -27,8 +27,8 @@ class RunnerArgs():
             p['name']: p['value'] for p in input['parameters']
         }
         assert len(parameters) == 2
-        assert parameters['Cluster Rows'] in [True, False]
-        assert parameters['Cluster Cols'] in [True, False]
+        assert type(parameters['Cluster Rows']) == bool
+        assert type(parameters['Cluster Cols']) == bool
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
 
