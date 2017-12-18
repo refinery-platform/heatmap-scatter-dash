@@ -213,6 +213,10 @@ def _to_data_uri(s, mime):
 
 
 def _dropdown(id, options, axis, axis_index, full_width=False):
+    if options:
+        value = options[axis_index]['value']
+    else:
+        value = None
     return html.Span(
         [
             html.Label(
@@ -222,7 +226,7 @@ def _dropdown(id, options, axis, axis_index, full_width=False):
             dcc.Dropdown(
                 id='scatter-{}-{}-axis-select'.format(id, axis),
                 options=options,
-                value=options[axis_index]['value'],
+                value=value,
                 className='col-sm-11' if full_width else 'col-sm-5'
             )
         ]

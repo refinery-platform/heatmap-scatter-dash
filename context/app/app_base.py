@@ -1,13 +1,14 @@
 import dash
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
+import pandas
 from app.utils.pca import pca
 
 
 class AppBase:
 
     def __init__(self, dataframe,
-                 diff_dataframes={},
+                 diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
                  heatmap_type='svg'):
         self._dataframe = dataframe

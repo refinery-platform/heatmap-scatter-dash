@@ -64,10 +64,15 @@ def main(args, parser=None):
         cluster_cols=args.cluster_cols)
 
     keys = set(dataframe.index.tolist())
-    diff_dataframes = {
-        basename(handle.name): reindex(pandas.read_csv(handle), keys)
-        for handle in args.diffs
-    }
+    if args.diffs:
+        diff_dataframes = {
+            basename(handle.name): reindex(pandas.read_csv(handle), keys)
+            for handle in args.diffs
+        }
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
 
     AppCallbacks(
         dataframe=dataframe,
@@ -96,7 +101,7 @@ if __name__ == '__main__':
              'based on the values in the first column')
 
     parser.add_argument(
-        '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
+        '--diffs', nargs='*', type=argparse.FileType('r'), default=[],
         help='Read CSV files containing differential analysis data.')
 
     parser.add_argument(
