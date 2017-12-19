@@ -40,3 +40,12 @@ def find_index(frame, keys):
                 keys
             ))
     return frame.set_index(matches)
+
+
+def sort_by_variance(frame):
+    """
+    Given a dataframe,
+    reorder by variance, descending.
+    """
+    new_order = frame.var('columns').sort_values(ascending=False).index
+    return frame.reindex(labels=new_order, axis='rows')

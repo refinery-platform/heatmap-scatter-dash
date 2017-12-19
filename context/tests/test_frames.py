@@ -4,7 +4,7 @@ from io import StringIO
 import numpy as np
 import pandas
 
-from app.utils.frames import merge, find_index
+from app.utils.frames import merge, find_index, sort_by_variance
 
 
 class TestDataFrames(unittest.TestCase):
@@ -90,3 +90,28 @@ class TestFindIndex(TestDataFrames):
                 "\['something', 'entirely', 'different'\]"):
             find_index(self.dataframe, keys=[
                     'something', 'entirely', 'different'])
+
+
+class SortByVariance(TestDataFrames):
+
+    def test_sort_by_variance(self):
+        dataframe = pandas.DataFrame([
+            [1, 1, 1, 1],
+            [2, 4, 2, 5],
+            [8, 4, 8, 5],
+            [9, 9, 9, 8]],
+            columns=['c1', 'c2', 'c3', 'c4'],
+            index=['r1', 'r2', 'r3', 'r4']
+        )
+        sorted = sort_by_variance(dataframe)
+        self.assertEqualDataFrames(
+            sorted,
+            pandas.DataFrame([
+                [8, 4, 8, 5],
+                [2, 4, 2, 5],
+                [9, 9, 9, 8],
+                [1, 1, 1, 1]],
+                columns=['c1', 'c2', 'c3', 'c4'],
+                index=['r3', 'r2', 'r4', 'r1']
+            )
+        )
