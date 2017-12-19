@@ -11,7 +11,7 @@ class AppBase:
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
                  heatmap_type='svg',
-                 api_prefix=''):
+                 api_prefix='/'):
         self._dataframe = dataframe
         self._dataframe_pca = pca(self._dataframe)
         self._diff_dataframes = diff_dataframes
