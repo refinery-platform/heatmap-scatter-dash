@@ -9,7 +9,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 from app.utils.cluster import cluster
-from app.utils.frames import merge, find_index
+from app.utils.frames import merge, find_index, sort_by_variance
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -56,9 +56,12 @@ def main(args, parser=None):
         # Argparser validation should keep us from reaching this point.
         raise Exception('Either "demo" or "files" is required')
 
+    merged = merge(dataframes)
+    if args.top:
+        merged = sort_by_variance(merged).head(args.top)
+
     dataframe = cluster(
-        merge(dataframes),
-        skip_zero=args.skip_zero,
+        merged,
         cluster_rows=args.cluster_rows,
         cluster_cols=args.cluster_cols)
 
@@ -97,7 +100,7 @@ if __name__ == '__main__':
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
-             'based on the values in the first column')
+             'based on the values in the first column.')
 
     parser.add_argument(
         '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
@@ -108,20 +111,20 @@ if __name__ == '__main__':
         '--heatmap', choices=['svg', 'canvas'], required=True,
         help='The canvas-based heatmap will render much more quickly '
         'for large data sets, but the image is blurry, '
-        'rather than having sharp edges. TODO.')
+        'rather than having sharp edges; TODO.')
     parser.add_argument(
-        '--skip_zero', action='store_true',
-        help='Rows in the CSV which are all zero will be skipped.')
+        '--top', type=int,
+        help='Sort by row variance, descending, and take the top n.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',
-        help='Hierarchically cluster rows')
+        help='Hierarchically cluster rows.')
     parser.add_argument(
         '--cluster_cols', action='store_true',
-        help='Hierarchically cluster columns')
+        help='Hierarchically cluster columns.')
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
-        help='Color scale for the heatmap')
+        help='Color scale for the heatmap.')
 
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
