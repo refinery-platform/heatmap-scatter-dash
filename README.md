@@ -59,7 +59,7 @@ $ cd context
 $ python app_runner.py --demo 1,10,10 --port 8888
 
   # Load data from disk:
-$ python app_runner.py --files fixtures/good/data/* --port 8888
+$ python app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888
 
   # Read an input.json like that created by Refinery:
 $ python app_runner_refinery.py --input fixtures/good/input.json --port 8888
