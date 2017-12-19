@@ -1,6 +1,7 @@
 import re
 from math import log10
 
+
 def vulcanize(dataframe):
     """
     Given a dataframe,
@@ -15,13 +16,15 @@ def vulcanize(dataframe):
         dataframe[p_value_col].apply(_neg_log)
     return dataframe[[log_fold_col, log_p_value_col]]
 
+
 def _pick_col(name_re, df):
     match_cols = [
         col for col in df.columns
         if re.search(name_re, col, flags=re.IGNORECASE)
-        ]
+    ]
     assert len(match_cols) == 1
     return match_cols[0]
+
 
 def _neg_log(x):
     try:

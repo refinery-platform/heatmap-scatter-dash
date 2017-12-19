@@ -5,8 +5,8 @@ import numpy as np
 import pandas
 
 from app.utils.frames import find_index, merge, sort_by_variance
-
 from app.utils.vulcanize import vulcanize
+
 
 class TestDataFrames(unittest.TestCase):
 
@@ -123,6 +123,7 @@ class SortByVariance(TestDataFrames):
                 index=['r3', 'r2', 'r4', 'r1']
             )
         )
+
 
 class TestVulcanize(TestDataFrames):
 
