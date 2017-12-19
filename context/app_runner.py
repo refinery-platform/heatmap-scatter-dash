@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 import argparse
 import re
-from sys import exit
+from os.path import basename
 
 import numpy as np
 import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
+from app.utils.cluster import cluster
+from app.utils.frames import merge, reindex
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -24,7 +26,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
     }
 
 
-def real_dataframes(files):
+def file_dataframes(files):
     return [
         pandas.read_csv(file, index_col=0)
         for file in files
@@ -47,25 +49,36 @@ def demo_dataframes(frames, rows, cols):
 
 def main(args, parser=None):
     if args.files:
-        dataframes = real_dataframes(args.files)
+        dataframes = file_dataframes(args.files)
     elif args.demo:
         dataframes = demo_dataframes(**args.demo)
     else:
-        message = 'Either "--demo FRAMES,ROWS,COLS" '\
-                  'or "--files FILE" is required'
-        if parser:
-            print(message)
-            parser.print_help()
-            exit(1)
-        else:
-            raise Exception(message)
-    AppCallbacks(
-        dataframes=dataframes,
-        cluster_rows=args.cluster_rows,
-        cluster_cols=args.cluster_cols,
-        colors=args.colors,
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
+
+    dataframe = cluster(
+        merge(dataframes),
         skip_zero=args.skip_zero,
-        heatmap_type=args.heatmap).app.run_server(
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols)
+
+    keys = set(dataframe.index.tolist())
+    if args.diffs:
+        diff_dataframes = {
+            basename(file): reindex(pandas.read_csv(file), keys)
+            for file in args.diffs
+        }
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
+
+    AppCallbacks(
+        dataframe=dataframe,
+        diff_dataframes=diff_dataframes,
+        colors=args.colors,
+        heatmap_type=args.heatmap
+    ).app.run_server(
         debug=args.debug,
         port=args.port,
         host='0.0.0.0'
@@ -85,6 +98,11 @@ if __name__ == '__main__':
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
              'based on the values in the first column')
+
+    parser.add_argument(
+        '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
+        help='Read CSV files containing differential analysis data.')
+    # --diffs itself is optional... but if present, files must be given.
 
     parser.add_argument(
         '--heatmap', choices=['svg', 'canvas'], required=True,

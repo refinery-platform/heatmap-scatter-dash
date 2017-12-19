@@ -11,7 +11,7 @@ class AppCallbacks(AppLayout):
         callback = self.app.callback
 
         @callback(
-            figure_output('heatmap'),
+            _figure_output('heatmap'),
             [
                 Input(component_id='search-genes',
                       component_property='value'),
@@ -61,7 +61,7 @@ class AppCallbacks(AppLayout):
             else:
                 selected_conditions_genes_df = \
                     selected_conditions_df[
-                        match_booleans(gene_search_term, self._genes)
+                        _match_booleans(gene_search_term, self._genes)
                     ]
             # TODO: Text search is being done two different ways. Unify.
 
@@ -101,8 +101,8 @@ class AppCallbacks(AppLayout):
             }
 
         @callback(
-            figure_output('scatter-pca'),
-            scatter_inputs('pca')
+            _figure_output('scatter-pca'),
+            _scatter_inputs('pca')
         )
         def update_scatter_pca(x_axis, y_axis, heatmap_range):
             return {
@@ -114,19 +114,19 @@ class AppCallbacks(AppLayout):
                         text=self._dataframe_pca.index
                     )
                 ],
-                'layout': ScatterLayout(x_axis, y_axis)
+                'layout': _ScatterLayout(x_axis, y_axis)
             }
 
         @callback(
-            figure_output('scatter-genes'),
-            scatter_inputs('genes', search=True, scale_select=True)
+            _figure_output('scatter-genes'),
+            _scatter_inputs('genes', search=True, scale_select=True)
         )
         def update_scatter_genes(
                 x_axis, y_axis,
                 heatmap_range, search_term, scale):
             if not search_term:
                 search_term = ''
-            booleans = match_booleans(search_term, self._genes)
+            booleans = _match_booleans(search_term, self._genes)
             is_log = scale == 'log'
             return {
                 'data': [
@@ -138,27 +138,29 @@ class AppCallbacks(AppLayout):
                         text=self._dataframe.index
                     )
                 ],
-                'layout': ScatterLayout(
+                'layout': _ScatterLayout(
                     x_axis, y_axis,
                     x_log=is_log,
                     y_log=is_log)
             }
 
         @callback(
-            figure_output('scatter-volcano'),
-            scatter_inputs('volcano')
+            _figure_output('scatter-volcano'),
+            _scatter_inputs('volcano') +
+            [Input(component_id='file-select',
+                   component_property='value')]
         )
-        def update_scatter_volcano(x_axis, y_axis, heatmap_range):
+        def update_scatter_volcano(x_axis, y_axis, heatmap_range, file):
             return {
                 'data': [
                     go.Scattergl(
-                        x=self._dataframe[x_axis],
-                        y=self._dataframe[y_axis],
+                        x=self._diff_dataframes[file][x_axis],
+                        y=self._diff_dataframes[file][y_axis],
                         mode='markers',
                         text=self._dataframe.index
                     )
                 ],
-                'layout': ScatterLayout(x_axis, y_axis)
+                'layout': _ScatterLayout(x_axis, y_axis)
             }
 
         @callback(
@@ -169,11 +171,11 @@ class AppCallbacks(AppLayout):
             ]
         )
         def update_table(search_term):
-            booleans = match_booleans(search_term, self._genes)
+            booleans = _match_booleans(search_term, self._genes)
             return ''.join(
                 [
                     '<link rel="stylesheet" property="stylesheet" href="{}">'
-                    .format(url) for url in self.css_urls
+                    .format(url) for url in self._css_urls
                 ] + [self._dataframe[booleans].to_html()]
             )
 
@@ -199,15 +201,15 @@ def _linear(color_scale):
     return [[0, color_scale[0]], [1, color_scale[1]]]
 
 
-def figure_output(id):
+def _figure_output(id):
     return Output(component_id=id, component_property='figure')
 
 
-def match_booleans(search_term, targets):
+def _match_booleans(search_term, targets):
     return [search_term in s for s in targets]
 
 
-class ScatterLayout(go.Layout):
+class _ScatterLayout(go.Layout):
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):
         x_axis_config = {'title': x_axis}
         y_axis_config = {'title': y_axis}
@@ -228,7 +230,7 @@ class ScatterLayout(go.Layout):
         )
 
 
-def scatter_inputs(id, search=False, scale_select=False):
+def _scatter_inputs(id, search=False, scale_select=False):
     inputs = [
         Input(
             component_id='scatter-{}-{}-axis-select'.format(id, axis),

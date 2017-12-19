@@ -1,24 +1,11 @@
 import unittest
-from io import StringIO
 
 import pandas
 
 from app.app_callbacks import AppCallbacks
 
 
-class TestDash(unittest.TestCase):
-
-    def setUp(self):
-        csv = StringIO("""gene,cond1,cond2,cond3,cond4
-            gene-one,0.2,0.7,0.2,0.7
-            gene-two,0.4,0.8,0.2,0.8
-            gene-three,0.5,0.8,0.1,0.9
-            gene-four,0.6,0.8,0.3,0.8
-            gene-five,0.6,0.9,0.4,0.8
-            gene-six,0.6,0.9,0.5,0.8
-            """)
-        dataframes = [pandas.read_csv(csv, index_col=0)]
-        self.app = AppCallbacks(dataframes=dataframes).app
+class TestDash():
 
     # This test was useful at first, but I think it's too hard to maintain now.
     # def test_layout(self):
@@ -94,3 +81,39 @@ class TestDash(unittest.TestCase):
             self.app.url_base_pathname,
             '/'
         )
+
+    def counts_dataframe(self):
+        return pandas.DataFrame([
+            [1, 2],
+            [3, 4]],
+            columns=['c1', 'c2'],
+            index=['r1', 'r2']
+        )
+
+    def diff_dataframe(self):
+        return pandas.DataFrame([
+            [1, 2],
+            [3, 4]],
+            columns=['log_fold_change', 'p_value'],
+            index=['r1', 'r2']
+        )
+
+
+class TestDashNoDifferentials(TestDash, unittest.TestCase):
+
+    def setUp(self):
+        self.app = AppCallbacks(
+            dataframe=self.counts_dataframe()
+        ).app
+
+
+class TestDashWithDifferentials(TestDash, unittest.TestCase):
+
+    def setUp(self):
+        self.app = AppCallbacks(
+            dataframe=self.counts_dataframe(),
+            diff_dataframes={
+                'A': self.diff_dataframe(),
+                'B': self.diff_dataframe(),
+            }
+        ).app
