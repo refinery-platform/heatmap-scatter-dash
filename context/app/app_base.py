@@ -10,7 +10,8 @@ class AppBase:
     def __init__(self, dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
-                 heatmap_type='svg'):
+                 heatmap_type='svg',
+                 api_prefix=''):
         self._dataframe = dataframe
         self._dataframe_pca = pca(self._dataframe)
         self._diff_dataframes = diff_dataframes
@@ -26,8 +27,7 @@ class AppBase:
             # This did not work:
             # url_base_pathname=''
 
-            # TODO: Will this get it to make API requests to relative URLs?
-            requests_pathname_prefix=''
+            requests_pathname_prefix=api_prefix
             # https://community.plot.ly/t/deploy-dash-on-apache-server-solved/4855
         )
         self.app.title = 'Heatmap + Scatterplots'

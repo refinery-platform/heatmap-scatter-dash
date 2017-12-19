@@ -27,11 +27,15 @@ class RunnerArgs():
         parameters = {
             p['name']: p['value'] for p in input['parameters']
         }
-        assert len(parameters) == 2
+        assert len(parameters) == 3
+
         assert type(parameters['Cluster Rows']) == bool
         assert type(parameters['Cluster Cols']) == bool
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
+
+        assert type(parameters['api_prefix']) == str
+        self.api_prefix = parameters['api_prefix']
 
         data_directory = input['extra_directories'][0]
         try:

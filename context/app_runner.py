@@ -84,7 +84,8 @@ def main(args, parser=None):
         dataframe=dataframe,
         diff_dataframes=diff_dataframes,
         colors=args.colors,
-        heatmap_type=args.heatmap
+        heatmap_type=args.heatmap,
+        api_prefix=args.api_prefix
     ).app.run_server(
         debug=args.debug,
         port=args.port,
@@ -131,6 +132,10 @@ if __name__ == '__main__':
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
         help='Color scale for the heatmap.')
+    parser.add_argument(
+        '--api_prefix', default='',
+        help='Prefix for API URLs. '
+        '(This is only useful inside Refinery.)')
 
     parser.add_argument('--port', type=int, default=8050)
     parser.add_argument('--debug', action='store_true')
