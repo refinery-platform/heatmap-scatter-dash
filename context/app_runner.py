@@ -68,7 +68,10 @@ def main(args, parser=None):
     keys = set(dataframe.index.tolist())
     if args.diffs:
         diff_dataframes = {
-            basename(file): find_index(pandas.read_csv(file), keys)
+            # app_runner and refinery pass different things in here...
+            # TODO:  Get rid of "if / else"
+            basename(file.name if hasattr(file, 'name') else file):
+                find_index(pandas.read_csv(file), keys)
             for file in args.diffs
         }
     else:

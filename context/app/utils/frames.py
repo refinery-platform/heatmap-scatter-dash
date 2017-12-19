@@ -28,12 +28,8 @@ def find_index(frame, keys):
                 matches.append(column_name)
         if len(matches) == 1:
             break
-        if len(matches) == 0:
-            raise Exception(
-                'No values {} in row {} were recognized keys: {}'.format(
-                    row.values, index, keys
-                ))
-        # Multiple matches: try the next row
+        # Multiple matches or no matches: try the next row.
+        # (No matches is possible because the frame may be truncated.)
     if len(matches) != 1:
         raise Exception(
             'No row where exactly one column matched keys: {}'.format(
