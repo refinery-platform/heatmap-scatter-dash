@@ -6,6 +6,7 @@ import pandas
 
 from app.utils.frames import find_index, merge, sort_by_variance
 
+from app.utils.vulcanize import vulcanize
 
 class TestDataFrames(unittest.TestCase):
 
@@ -120,5 +121,27 @@ class SortByVariance(TestDataFrames):
                 [1, 1, 1, 1]],
                 columns=['c1', 'c2', 'c3', 'c4'],
                 index=['r3', 'r2', 'r4', 'r1']
+            )
+        )
+
+class TestVulcanize(TestDataFrames):
+
+    def test_vulcanize(self):
+        df = pandas.DataFrame([
+            [0, 0, 1, 0, 0.1],
+            [0, 0, -1, 0, 10]],
+            columns=['log-fold-fake', 'fake-fold-change', 'xLOGxFOLDxCHANGEx',
+                     'fake-p-val', 'p-value!'],
+            index=['gene1', 'gene2']
+        )
+        v = vulcanize(df)
+        self.assertEqualDataFrames(
+            v,
+            pandas.DataFrame(
+                [
+                    [1, 1],
+                    [-1, -1]],
+                columns=['xLOGxFOLDxCHANGEx', '-log10(p-value!)'],
+                index=['gene1', 'gene2']
             )
         )
