@@ -20,6 +20,7 @@ class RunnerArgs():
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
         self.skip_zero = True
         self.colors = 'Greys'
+        self.top = 500
 
         input = json.loads(refinery_args.input.read(None))
 

@@ -4,7 +4,7 @@ from io import StringIO
 import numpy as np
 import pandas
 
-from app.utils.frames import merge, reindex
+from app.utils.frames import find_index, merge, sort_by_variance
 
 
 class TestDataFrames(unittest.TestCase):
@@ -54,7 +54,7 @@ class TestMerge(TestDataFrames):
         ))
 
 
-class TestReindex(TestDataFrames):
+class TestFindIndex(TestDataFrames):
 
     def setUp(self):
         csv = StringIO(
@@ -64,9 +64,8 @@ class TestReindex(TestDataFrames):
                 'multiple,matches,Z,W,maybe']))
         self.dataframe = pandas.read_csv(csv)
 
-    # TODO: Separate class
-    def test_reindex_good(self):
-        indexed_df = reindex(self.dataframe, keys=['X', 'Y', 'Z'])
+    def test_find_index_good(self):
+        indexed_df = find_index(self.dataframe, keys=['X', 'Y', 'Z'])
         target = pandas.DataFrame([
             ['multiple', 'matches', 'Y', 'here'],
             ['multiple', 'matches', 'W', 'maybe']],
@@ -75,18 +74,51 @@ class TestReindex(TestDataFrames):
         )
         self.assertEqualDataFrames(target, indexed_df)
 
-    def test_reindex_multiple(self):
+    def test_find_index_drop(self):
+        indexed_df = find_index(self.dataframe, keys=['X'])
+        target = pandas.DataFrame([
+            ['multiple', 'matches', 'Y', 'here']],
+            columns=['a', 'b', 'c', 'd'],
+            index=['X']
+        )
+        self.assertEqualDataFrames(target, indexed_df)
+
+    def test_find_index_multiple(self):
         with self.assertRaisesRegex(
                 Exception,
                 r"No row where exactly one column matched keys: "
                 "\['W', 'X', 'Y', 'Z'\]"):
-            reindex(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
+            find_index(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
 
-    def test_reindex_none(self):
+    def test_find_index_none(self):
         with self.assertRaisesRegex(
                 Exception,
-                "No values \['multiple' 'matches' 'X' 'Y' 'here'\] "
-                "in row 0 were recognized keys: "
+                "No row where exactly one column matched keys: "
                 "\['something', 'entirely', 'different'\]"):
-            reindex(self.dataframe, keys=[
-                    'something', 'entirely', 'different'])
+            find_index(self.dataframe, keys=[
+                'something', 'entirely', 'different'])
+
+
+class SortByVariance(TestDataFrames):
+
+    def test_sort_by_variance(self):
+        dataframe = pandas.DataFrame([
+            [1, 1, 1, 1],
+            [2, 4, 2, 5],
+            [8, 4, 8, 5],
+            [9, 9, 9, 8]],
+            columns=['c1', 'c2', 'c3', 'c4'],
+            index=['r1', 'r2', 'r3', 'r4']
+        )
+        sorted = sort_by_variance(dataframe)
+        self.assertEqualDataFrames(
+            sorted,
+            pandas.DataFrame([
+                [8, 4, 8, 5],
+                [2, 4, 2, 5],
+                [9, 9, 9, 8],
+                [1, 1, 1, 1]],
+                columns=['c1', 'c2', 'c3', 'c4'],
+                index=['r3', 'r2', 'r4', 'r1']
+            )
+        )
