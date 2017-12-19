@@ -89,7 +89,7 @@ class TestFindIndex(TestDataFrames):
                 "in row 0 were recognized keys: "
                 "\['something', 'entirely', 'different'\]"):
             find_index(self.dataframe, keys=[
-                    'something', 'entirely', 'different'])
+                'something', 'entirely', 'different'])
 
 
 class SortByVariance(TestDataFrames):
