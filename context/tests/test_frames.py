@@ -85,8 +85,7 @@ class TestFindIndex(TestDataFrames):
     def test_find_index_none(self):
         with self.assertRaisesRegex(
                 Exception,
-                "No values \['multiple' 'matches' 'X' 'Y' 'here'\] "
-                "in row 0 were recognized keys: "
+                "No row where exactly one column matched keys: "
                 "\['something', 'entirely', 'different'\]"):
             find_index(self.dataframe, keys=[
                 'something', 'entirely', 'different'])
