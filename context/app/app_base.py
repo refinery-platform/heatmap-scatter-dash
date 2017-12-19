@@ -28,6 +28,7 @@ class AppBase:
 
             # TODO: Will this get it to make API requests to relative URLs?
             requests_pathname_prefix=''
+            # see: https://community.plot.ly/t/deploy-dash-on-apache-server-solved/4855
         )
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
