@@ -10,7 +10,7 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
-                     [--skip_zero] [--cluster_rows] [--cluster_cols]
+                     [--top TOP] [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--port PORT] [--debug]
 
@@ -23,18 +23,20 @@ optional arguments:
                         matrix.
   --files FILES [FILES ...]
                         Read CSV files. Multiple files will be joined based on
-                        the values in the first column
+                        the values in the first column. Compressed files are
+                        also handled, if correct extension is given. (ie
+                        ".csv.gz")
   --diffs DIFFS [DIFFS ...]
                         Read CSV files containing differential analysis data.
   --heatmap {svg,canvas}
                         The canvas-based heatmap will render much more quickly
                         for large data sets, but the image is blurry, rather
-                        than having sharp edges. TODO.
-  --skip_zero           Rows in the CSV which are all zero will be skipped.
-  --cluster_rows        Hierarchically cluster rows
-  --cluster_cols        Hierarchically cluster columns
+                        than having sharp edges; TODO.
+  --top TOP             Sort by row variance, descending, and take the top n.
+  --cluster_rows        Hierarchically cluster rows.
+  --cluster_cols        Hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
-                        Color scale for the heatmap
+                        Color scale for the heatmap.
   --port PORT
   --debug
 ```

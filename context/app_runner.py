@@ -9,7 +9,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 from app.utils.cluster import cluster
-from app.utils.frames import merge, find_index, sort_by_variance
+from app.utils.frames import find_index, merge, sort_by_variance
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):

@@ -4,7 +4,7 @@ from io import StringIO
 import numpy as np
 import pandas
 
-from app.utils.frames import merge, find_index, sort_by_variance
+from app.utils.frames import find_index, merge, sort_by_variance
 
 
 class TestDataFrames(unittest.TestCase):
