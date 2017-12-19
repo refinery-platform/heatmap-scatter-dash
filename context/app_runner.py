@@ -100,7 +100,9 @@ if __name__ == '__main__':
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
         help='Read CSV files. Multiple files will be joined '
-             'based on the values in the first column.')
+             'based on the values in the first column. '
+             'Compressed files are also handled, '
+             'if correct extension is given. (ie ".csv.gz")')
 
     parser.add_argument(
         '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
