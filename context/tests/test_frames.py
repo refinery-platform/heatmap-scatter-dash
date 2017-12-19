@@ -4,7 +4,7 @@ from io import StringIO
 import numpy as np
 import pandas
 
-from app.utils.frames import merge, reindex
+from app.utils.frames import merge, find_index
 
 
 class TestDataFrames(unittest.TestCase):
@@ -54,7 +54,7 @@ class TestMerge(TestDataFrames):
         ))
 
 
-class TestReindex(TestDataFrames):
+class TestFindIndex(TestDataFrames):
 
     def setUp(self):
         csv = StringIO(
@@ -65,8 +65,8 @@ class TestReindex(TestDataFrames):
         self.dataframe = pandas.read_csv(csv)
 
     # TODO: Separate class
-    def test_reindex_good(self):
-        indexed_df = reindex(self.dataframe, keys=['X', 'Y', 'Z'])
+    def test_find_index_good(self):
+        indexed_df = find_index(self.dataframe, keys=['X', 'Y', 'Z'])
         target = pandas.DataFrame([
             ['multiple', 'matches', 'Y', 'here'],
             ['multiple', 'matches', 'W', 'maybe']],
@@ -75,18 +75,18 @@ class TestReindex(TestDataFrames):
         )
         self.assertEqualDataFrames(target, indexed_df)
 
-    def test_reindex_multiple(self):
+    def test_find_index_multiple(self):
         with self.assertRaisesRegex(
                 Exception,
                 r"No row where exactly one column matched keys: "
                 "\['W', 'X', 'Y', 'Z'\]"):
-            reindex(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
+            find_index(self.dataframe, keys=['W', 'X', 'Y', 'Z'])
 
-    def test_reindex_none(self):
+    def test_find_index_none(self):
         with self.assertRaisesRegex(
                 Exception,
                 "No values \['multiple' 'matches' 'X' 'Y' 'here'\] "
                 "in row 0 were recognized keys: "
                 "\['something', 'entirely', 'different'\]"):
-            reindex(self.dataframe, keys=[
+            find_index(self.dataframe, keys=[
                     'something', 'entirely', 'different'])

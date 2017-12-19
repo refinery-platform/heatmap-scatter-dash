@@ -9,7 +9,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 from app.utils.cluster import cluster
-from app.utils.frames import merge, reindex
+from app.utils.frames import merge, find_index
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -65,7 +65,7 @@ def main(args, parser=None):
     keys = set(dataframe.index.tolist())
     if args.diffs:
         diff_dataframes = {
-            basename(file): reindex(pandas.read_csv(file), keys)
+            basename(file): find_index(pandas.read_csv(file), keys)
             for file in args.diffs
         }
     else:

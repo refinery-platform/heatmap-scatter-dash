@@ -15,10 +15,11 @@ def merge(frames):
     return accumulator
 
 
-def reindex(frame, keys):
+def find_index(frame, keys):
     """
     Given a dataframe that came in with no explicit index,
-    identify a column whose values come from keys, and use that.
+    and a set of keys,
+    identify a column whose values come from keys, and use that as the index.
     """
     for index, row in frame.iterrows():
         matches = []
