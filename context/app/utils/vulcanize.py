@@ -12,7 +12,7 @@ def vulcanize(dataframe):
     p_value_col = _pick_col(r'p.*value', dataframe)
     log_p_value_col = '-log10({})'.format(p_value_col)
     dataframe[log_p_value_col] =\
-        dataframe[p_value_col].apply(lambda x: -log10(x))
+        dataframe[p_value_col].apply(_neg_log)
     return dataframe[[log_fold_col, log_p_value_col]]
 
 def _pick_col(name_re, df):
@@ -22,3 +22,9 @@ def _pick_col(name_re, df):
         ]
     assert len(match_cols) == 1
     return match_cols[0]
+
+def _neg_log(x):
+    try:
+        return -log10(x)
+    except ValueError:
+        return None
