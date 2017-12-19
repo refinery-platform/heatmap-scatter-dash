@@ -10,6 +10,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 from app.app_callbacks import AppCallbacks
 from app.utils.cluster import cluster
 from app.utils.frames import find_index, merge, sort_by_variance
+from app.utils.vulcanize import vulcanize
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
@@ -71,7 +72,7 @@ def main(args, parser=None):
             # app_runner and refinery pass different things in here...
             # TODO:  Get rid of "if / else"
             basename(file.name if hasattr(file, 'name') else file):
-                find_index(pandas.read_csv(file), keys)
+                vulcanize(find_index(pandas.read_csv(file), keys))
             for file in args.diffs
         }
     else:

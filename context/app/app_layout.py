@@ -79,7 +79,8 @@ class AppLayout(AppBase):
                       else set.intersection(*list_of_sets))
         volcano_options = [
             {'label': diff_head, 'value': diff_head}
-            for diff_head in diff_heads
+            for diff_head in sorted(diff_heads, reverse=True)
+            # reveresed, because the y axis label begins with "-"
         ]
 
         self.scale_options = [
