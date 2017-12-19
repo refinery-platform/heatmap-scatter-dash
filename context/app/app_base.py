@@ -22,7 +22,13 @@ class AppBase:
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css'
         ]
-        self.app = dash.Dash()
+        self.app = dash.Dash(
+            # This did not work:
+            # url_base_pathname=''
+
+            # TODO: Will this get it to make API requests to relative URLs?
+            requests_pathname_prefix=''
+        )
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
