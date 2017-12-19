@@ -19,7 +19,8 @@ def find_index(frame, keys):
     """
     Given a dataframe that came in with no explicit index,
     and a set of keys,
-    identify a column whose values come from keys, and use that as the index.
+    identify a column whose values come from keys, and use that as the index,
+    and remove rows that do not correspond to keys.
     """
     for index, row in frame.iterrows():
         matches = []

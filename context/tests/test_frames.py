@@ -64,7 +64,6 @@ class TestFindIndex(TestDataFrames):
                 'multiple,matches,Z,W,maybe']))
         self.dataframe = pandas.read_csv(csv)
 
-    # TODO: Separate class
     def test_find_index_good(self):
         indexed_df = find_index(self.dataframe, keys=['X', 'Y', 'Z'])
         target = pandas.DataFrame([
@@ -72,6 +71,15 @@ class TestFindIndex(TestDataFrames):
             ['multiple', 'matches', 'W', 'maybe']],
             columns=['a', 'b', 'c', 'd'],
             index=['X', 'Z']
+        )
+        self.assertEqualDataFrames(target, indexed_df)
+
+    def test_find_index_drop(self):
+        indexed_df = find_index(self.dataframe, keys=['X'])
+        target = pandas.DataFrame([
+            ['multiple', 'matches', 'Y', 'here']],
+            columns=['a', 'b', 'c', 'd'],
+            index=['X']
         )
         self.assertEqualDataFrames(target, indexed_df)
 
