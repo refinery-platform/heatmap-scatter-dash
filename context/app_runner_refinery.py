@@ -71,7 +71,7 @@ class RunnerArgs():
                             f.write(chunk)
             finally:
                 response.close()
-            return files
+        return files
 
 
 parser = argparse.ArgumentParser(

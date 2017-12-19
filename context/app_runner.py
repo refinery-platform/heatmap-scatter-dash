@@ -65,8 +65,8 @@ def main(args, parser=None):
     keys = set(dataframe.index.tolist())
     if args.diffs:
         diff_dataframes = {
-            basename(handle.name): reindex(pandas.read_csv(handle), keys)
-            for handle in args.diffs
+            basename(file): reindex(pandas.read_csv(file), keys)
+            for file in args.diffs
         }
     else:
         diff_dataframes = {
