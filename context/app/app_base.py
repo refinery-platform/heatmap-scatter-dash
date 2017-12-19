@@ -23,13 +23,10 @@ class AppBase:
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css'
         ]
-        self.app = dash.Dash(
-            # This did not work:
-            # url_base_pathname=''
-
-            requests_pathname_prefix=api_prefix
-            # https://community.plot.ly/t/deploy-dash-on-apache-server-solved/4855
-        )
+        self.app = dash.Dash()
+        self.app.config.update({
+            'requests_pathname_prefix': api_prefix
+        })
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
