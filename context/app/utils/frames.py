@@ -36,7 +36,9 @@ def find_index(frame, keys):
             'No row where exactly one column matched keys: {}'.format(
                 keys
             ))
-    return frame.set_index(matches)
+    reindexed = frame.set_index(matches)
+    unmatched_indexes = set(reindexed.index) - set(keys)
+    return reindexed.drop(unmatched_indexes)
 
 
 def sort_by_variance(frame):
