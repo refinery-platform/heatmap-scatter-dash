@@ -81,7 +81,7 @@ One bash script, `test.sh`, handles all our tests:
 - Docker container build and launch
 
 A few more dependencies are required for this to work locally:
-```
+```bash
   # Install Docker: https://www.docker.com/community-edition
 $ pip install -r requirements-dev.txt
 $ npm install cypress --save-dev
