@@ -84,6 +84,7 @@ def main(args, parser=None):
         dataframe=dataframe,
         diff_dataframes=diff_dataframes,
         colors=args.colors,
+        reverse_colors=args.reverse_colors,
         heatmap_type=args.heatmap,
         api_prefix=args.api_prefix
     ).app.run_server(
@@ -129,9 +130,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--cluster_cols', action='store_true',
         help='Hierarchically cluster columns.')
+
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
         help='Color scale for the heatmap.')
+    parser.add_argument(
+        '--reverse_colors', action='store_true',
+        help='Reverse the color scale of the heatmap.')
+
     parser.add_argument(
         '--api_prefix', default='',
         help='Prefix for API URLs. '

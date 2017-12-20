@@ -21,6 +21,7 @@ class RunnerArgs():
         self.skip_zero = True
         self.colors = 'Greys'
         self.top = 500
+        self.reverse_colors = True
 
         input = json.loads(refinery_args.input.read(None))
 
