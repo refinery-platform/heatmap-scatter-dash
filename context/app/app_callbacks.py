@@ -206,7 +206,8 @@ def _figure_output(id):
 
 
 def _match_booleans(search_term, targets):
-    return [search_term in s for s in targets]
+    # search_term may be None on first load.
+    return [(search_term or '') in s for s in targets]
 
 
 class _ScatterLayout(go.Layout):
