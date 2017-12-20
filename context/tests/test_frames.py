@@ -1,14 +1,12 @@
+import tempfile
 import unittest
 from io import StringIO
 
 import numpy as np
 import pandas
 
-import tempfile
 from app.utils.frames import find_index, merge, sort_by_variance
 from app.utils.vulcanize import vulcanize
-
-
 from app_runner import file_dataframes
 
 
