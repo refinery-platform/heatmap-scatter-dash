@@ -29,7 +29,8 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
 
 def file_dataframes(files):
     return [
-        pandas.read_csv(file, index_col=0)
+        pandas.read_csv(file, index_col=0, sep=None, engine='python')
+        # With sep=None, csv.Sniffer is used to detect filetype.
         for file in files
     ]
 

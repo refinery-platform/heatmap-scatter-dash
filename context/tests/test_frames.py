@@ -4,8 +4,12 @@ from io import StringIO
 import numpy as np
 import pandas
 
+import tempfile
 from app.utils.frames import find_index, merge, sort_by_variance
 from app.utils.vulcanize import vulcanize
+
+
+from app_runner import file_dataframes
 
 
 class TestDataFrames(unittest.TestCase):
@@ -16,6 +20,36 @@ class TestDataFrames(unittest.TestCase):
         np.testing.assert_equal(a_np, b_np)
         self.assertEqual(a.columns.tolist(),     b.columns.tolist())
         self.assertEqual(a.index.tolist(),       b.index.tolist())
+
+
+class TestRead(TestDataFrames):
+
+    def assertFileRead(self, input_text, output_df):
+        file = tempfile.NamedTemporaryFile(mode='w+')
+        file.write(input_text)
+        file.seek(0)
+        dfs = file_dataframes([file.name])
+        self.assertEqualDataFrames(dfs[0], output_df)
+
+    def test_read_csv(self):
+        self.assertFileRead(
+            'a,b,c\n1,2,3',
+            pandas.DataFrame([
+                [2, 3]],
+                columns=['b', 'c'],
+                index=[1]
+            )
+        )
+
+    def test_read_tsv(self):
+        self.assertFileRead(
+            'a\tb\tc\n1\t2\t3',
+            pandas.DataFrame([
+                [2, 3]],
+                columns=['b', 'c'],
+                index=[1]
+            )
+        )
 
 
 class TestMerge(TestDataFrames):
