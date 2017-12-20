@@ -12,7 +12,8 @@ usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
                      [--top TOP] [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
-                     [--api_prefix API_PREFIX] [--port PORT] [--debug]
+                     [--reverse_colors] [--api_prefix API_PREFIX]
+                     [--port PORT] [--debug]
 
 Light-weight visualization for differential expression
 
@@ -37,6 +38,7 @@ optional arguments:
   --cluster_cols        Hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap.
+  --reverse_colors      Reverse the color scale of the heatmap.
   --api_prefix API_PREFIX
                         Prefix for API URLs. (This is only useful inside
                         Refinery.)

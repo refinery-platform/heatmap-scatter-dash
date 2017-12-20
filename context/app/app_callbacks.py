@@ -1,3 +1,5 @@
+from math import log10
+
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
@@ -69,7 +71,12 @@ class AppCallbacks(AppLayout):
 
             adjusted_color_scale = (
                 _linear(self._color_scale) if scale != 'log'
-                else _log_interpolate(self._color_scale))
+                else _log_interpolate(
+                    self._color_scale,
+                    min([x for x in
+                         selected_conditions_genes_df.values.flatten()
+                         if x > 0]),  # We will take the log, so exclude zeros.
+                    selected_conditions_genes_df.max().max()))
 
             heatmap_type = self._heatmap_type
             if heatmap_type == 'svg':
@@ -180,10 +187,11 @@ class AppCallbacks(AppLayout):
             )
 
 
-def _log_interpolate(color_scale):
+def _log_interpolate(color_scale, min, max):
     if len(color_scale) > 2:
         raise Exception('Expected just two points on color scale')
-    points = 5  # TODO: We actually need to log the smallest value.
+    log10(min)
+    points = int(log10(max) - log10(min)) + 2
     interpolated = n_colors(
         unlabel_rgb(color_scale[1]),
         unlabel_rgb(color_scale[0]),
