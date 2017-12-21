@@ -115,6 +115,17 @@ class TestFindIndex(TestDataFrames):
         )
         self.assertEqualDataFrames(target, indexed_df)
 
+    def test_find_index_drop_false(self):
+        indexed_df = find_index(self.dataframe, keys=['X'],
+                                drop_unmatched=False)
+        target = pandas.DataFrame([
+            ['multiple', 'matches', 'Y', 'here'],
+            ['multiple', 'matches', 'W', 'maybe']],
+            columns=['a', 'b', 'c', 'd'],
+            index=['X', 'Z']
+        )
+        self.assertEqualDataFrames(target, indexed_df)
+
     def test_find_index_multiple(self):
         with self.assertRaisesRegex(
                 Exception,
