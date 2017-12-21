@@ -73,7 +73,8 @@ def main(args, parser=None):
             # app_runner and refinery pass different things in here...
             # TODO:  Get rid of "if / else"
             basename(file.name if hasattr(file, 'name') else file):
-                vulcanize(find_index(pandas.read_csv(file), keys))
+                vulcanize(find_index(pandas.read_csv(file), keys,
+                                     drop_unmatched=args.scatterplot_top))
             for file in args.diffs
         }
     else:
@@ -124,6 +125,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--top', type=int,
         help='Sort by row variance, descending, and take the top n.')
+    parser.add_argument(
+        '--scatterplot_top', action='store_true', default=False,
+        help='In the scatterplots, show only items corresponding '
+        'to rows in the heatmap. (Only used together with --top.)'
+    )
 
     parser.add_argument(
         '--cluster_rows', action='store_true',

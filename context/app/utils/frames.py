@@ -15,7 +15,7 @@ def merge(frames):
     return accumulator
 
 
-def find_index(frame, keys, drop_unmatched=True):
+def find_index(frame, keys, drop_unmatched=False):
     """
     Given a dataframe that came in with no explicit index,
     and a set of keys,

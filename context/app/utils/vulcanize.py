@@ -1,7 +1,6 @@
 import re
 from math import log10
 
-
 def vulcanize(dataframe):
     """
     Given a dataframe,
@@ -14,7 +13,10 @@ def vulcanize(dataframe):
     log_p_value_col = '-log10({})'.format(p_value_col)
     dataframe[log_p_value_col] =\
         dataframe[p_value_col].apply(_neg_log)
-    return dataframe[[log_fold_col, log_p_value_col]]
+    two_columns = dataframe[[log_fold_col, log_p_value_col]]
+    return two_columns.dropna(axis='rows', how='all')
+    # Plotly fails to show anything if rows with missing data are present,
+    # (I think.)
 
 
 def _pick_col(name_re, df):
