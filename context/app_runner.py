@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
-        help='Read CSV files containing differential analysis data.')
+        help='Read CSV or TSV files containing differential analysis data.')
     # --diffs itself is optional... but if present, files must be given.
 
     parser.add_argument(

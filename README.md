@@ -29,7 +29,8 @@ optional arguments:
                         files are also handled, if correct extension is given.
                         (ie ".csv.gz")
   --diffs DIFFS [DIFFS ...]
-                        Read CSV files containing differential analysis data.
+                        Read CSV or TSV files containing differential analysis
+                        data.
   --heatmap {svg,canvas}
                         The canvas-based heatmap will render much more quickly
                         for large data sets, but the image is blurry, rather
