@@ -22,6 +22,13 @@ class TestDataFrames(unittest.TestCase):
 
 class TestRead(TestDataFrames):
 
+    def setUp(self):
+        self.target = pandas.DataFrame([
+            [2, 3]],
+            columns=['b', 'c'],
+            index=[1]
+        )
+
     def assertFileRead(self, input_text, output_df):
         file = tempfile.NamedTemporaryFile(mode='w+')
         file.write(input_text)
@@ -31,22 +38,14 @@ class TestRead(TestDataFrames):
 
     def test_read_csv(self):
         self.assertFileRead(
-            'a,b,c\n1,2,3',
-            pandas.DataFrame([
-                [2, 3]],
-                columns=['b', 'c'],
-                index=[1]
-            )
+            ',b,c\n1,2,3',
+            self.target
         )
 
     def test_read_tsv(self):
         self.assertFileRead(
-            'a\tb\tc\n1\t2\t3',
-            pandas.DataFrame([
-                [2, 3]],
-                columns=['b', 'c'],
-                index=[1]
-            )
+            '\tb\tc\n1\t2\t3',
+            self.target
         )
 
 
