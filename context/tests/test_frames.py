@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 from io import StringIO
 
@@ -6,6 +7,7 @@ import pandas
 
 from app.utils.frames import find_index, merge, sort_by_variance
 from app.utils.vulcanize import vulcanize
+from app_runner import file_dataframes
 
 
 class TestDataFrames(unittest.TestCase):
@@ -16,6 +18,35 @@ class TestDataFrames(unittest.TestCase):
         np.testing.assert_equal(a_np, b_np)
         self.assertEqual(a.columns.tolist(),     b.columns.tolist())
         self.assertEqual(a.index.tolist(),       b.index.tolist())
+
+
+class TestRead(TestDataFrames):
+
+    def setUp(self):
+        self.target = pandas.DataFrame([
+            [2, 3]],
+            columns=['b', 'c'],
+            index=[1]
+        )
+
+    def assertFileRead(self, input_text, output_df):
+        file = tempfile.NamedTemporaryFile(mode='w+')
+        file.write(input_text)
+        file.seek(0)
+        dfs = file_dataframes([file.name])
+        self.assertEqualDataFrames(dfs[0], output_df)
+
+    def test_read_csv(self):
+        self.assertFileRead(
+            ',b,c\n1,2,3',
+            self.target
+        )
+
+    def test_read_tsv(self):
+        self.assertFileRead(
+            '\tb\tc\n1\t2\t3',
+            self.target
+        )
 
 
 class TestMerge(TestDataFrames):
@@ -75,12 +106,23 @@ class TestFindIndex(TestDataFrames):
         )
         self.assertEqualDataFrames(target, indexed_df)
 
-    def test_find_index_drop(self):
-        indexed_df = find_index(self.dataframe, keys=['X'])
+    def test_find_index_drop_true(self):
+        indexed_df = find_index(self.dataframe, keys=['X'],
+                                drop_unmatched=True)
         target = pandas.DataFrame([
             ['multiple', 'matches', 'Y', 'here']],
             columns=['a', 'b', 'c', 'd'],
             index=['X']
+        )
+        self.assertEqualDataFrames(target, indexed_df)
+
+    def test_find_index_drop_false(self):
+        indexed_df = find_index(self.dataframe, keys=['X'])
+        target = pandas.DataFrame([
+            ['multiple', 'matches', 'Y', 'here'],
+            ['multiple', 'matches', 'W', 'maybe']],
+            columns=['a', 'b', 'c', 'd'],
+            index=['X', 'Z']
         )
         self.assertEqualDataFrames(target, indexed_df)
 

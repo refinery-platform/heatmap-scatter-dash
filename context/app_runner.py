@@ -29,7 +29,8 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+,\d+")):
 
 def file_dataframes(files):
     return [
-        pandas.read_csv(file, index_col=0)
+        pandas.read_csv(file, index_col=0, sep=None, engine='python')
+        # With sep=None, csv.Sniffer is used to detect filetype.
         for file in files
     ]
 
@@ -72,7 +73,8 @@ def main(args, parser=None):
             # app_runner and refinery pass different things in here...
             # TODO:  Get rid of "if / else"
             basename(file.name if hasattr(file, 'name') else file):
-                vulcanize(find_index(pandas.read_csv(file), keys))
+                vulcanize(find_index(pandas.read_csv(file), keys,
+                                     drop_unmatched=args.scatterplot_top))
             for file in args.diffs
         }
     else:
@@ -84,6 +86,7 @@ def main(args, parser=None):
         dataframe=dataframe,
         diff_dataframes=diff_dataframes,
         colors=args.colors,
+        reverse_colors=args.reverse_colors,
         heatmap_type=args.heatmap,
         api_prefix=args.api_prefix
     ).app.run_server(
@@ -104,7 +107,7 @@ if __name__ == '__main__':
         'The argument determines the dimensions of the random matrix.')
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
-        help='Read CSV files. Multiple files will be joined '
+        help='Read CSV or TSV files. Multiple files will be joined '
              'based on the values in the first column. '
              'Compressed files are also handled, '
              'if correct extension is given. (ie ".csv.gz")')
@@ -122,6 +125,11 @@ if __name__ == '__main__':
     parser.add_argument(
         '--top', type=int,
         help='Sort by row variance, descending, and take the top n.')
+    parser.add_argument(
+        '--scatterplot_top', action='store_true', default=False,
+        help='For scatterplots, include only the genes in the heatmap. '
+        '(Used together with --top.)'
+    )
 
     parser.add_argument(
         '--cluster_rows', action='store_true',
@@ -129,9 +137,14 @@ if __name__ == '__main__':
     parser.add_argument(
         '--cluster_cols', action='store_true',
         help='Hierarchically cluster columns.')
+
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
         help='Color scale for the heatmap.')
+    parser.add_argument(
+        '--reverse_colors', action='store_true',
+        help='Reverse the color scale of the heatmap.')
+
     parser.add_argument(
         '--api_prefix', default='',
         help='Prefix for API URLs. '

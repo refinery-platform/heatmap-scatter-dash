@@ -10,6 +10,7 @@ class AppBase:
     def __init__(self, dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
+                 reverse_colors=False,
                  heatmap_type='svg',
                  api_prefix='/'):
         self._dataframe = dataframe
@@ -17,7 +18,10 @@ class AppBase:
         self._diff_dataframes = diff_dataframes
         self._conditions = self._dataframe.axes[1].tolist()
         self._genes = self._dataframe.axes[0].tolist()
-        self._color_scale = PLOTLY_SCALES[colors]
+        if reverse_colors:
+            self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
+        else:
+            self._color_scale = PLOTLY_SCALES[colors]
         self._heatmap_type = heatmap_type
         self._css_urls = [
             'https://maxcdn.bootstrapcdn.com/'

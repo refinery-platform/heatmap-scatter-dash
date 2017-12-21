@@ -10,9 +10,11 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
-                     [--top TOP] [--cluster_rows] [--cluster_cols]
+                     [--top TOP] [--scatterplot_top] [--cluster_rows]
+                     [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
-                     [--api_prefix API_PREFIX] [--port PORT] [--debug]
+                     [--reverse_colors] [--api_prefix API_PREFIX]
+                     [--port PORT] [--debug]
 
 Light-weight visualization for differential expression
 
@@ -22,10 +24,10 @@ optional arguments:
                         argument determines the dimensions of the random
                         matrix.
   --files FILES [FILES ...]
-                        Read CSV files. Multiple files will be joined based on
-                        the values in the first column. Compressed files are
-                        also handled, if correct extension is given. (ie
-                        ".csv.gz")
+                        Read CSV or TSV files. Multiple files will be joined
+                        based on the values in the first column. Compressed
+                        files are also handled, if correct extension is given.
+                        (ie ".csv.gz")
   --diffs DIFFS [DIFFS ...]
                         Read CSV files containing differential analysis data.
   --heatmap {svg,canvas}
@@ -33,10 +35,13 @@ optional arguments:
                         for large data sets, but the image is blurry, rather
                         than having sharp edges; TODO.
   --top TOP             Sort by row variance, descending, and take the top n.
+  --scatterplot_top     For scatterplots, include only the genes in the
+                        heatmap. (Used together with --top.)
   --cluster_rows        Hierarchically cluster rows.
   --cluster_cols        Hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap.
+  --reverse_colors      Reverse the color scale of the heatmap.
   --api_prefix API_PREFIX
                         Prefix for API URLs. (This is only useful inside
                         Refinery.)
@@ -81,7 +86,7 @@ One bash script, `test.sh`, handles all our tests:
 - Docker container build and launch
 
 A few more dependencies are required for this to work locally:
-```
+```bash
   # Install Docker: https://www.docker.com/community-edition
 $ pip install -r requirements-dev.txt
 $ npm install cypress --save-dev
