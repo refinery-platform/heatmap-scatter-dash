@@ -10,7 +10,8 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
-                     [--top TOP] [--cluster_rows] [--cluster_cols]
+                     [--top TOP] [--scatterplot_top] [--cluster_rows]
+                     [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--reverse_colors] [--api_prefix API_PREFIX]
                      [--port PORT] [--debug]
@@ -34,6 +35,8 @@ optional arguments:
                         for large data sets, but the image is blurry, rather
                         than having sharp edges; TODO.
   --top TOP             Sort by row variance, descending, and take the top n.
+  --scatterplot_top     For scatterplots, include only the genes in the
+                        heatmap. (Used together with --top.)
   --cluster_rows        Hierarchically cluster rows.
   --cluster_cols        Hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}

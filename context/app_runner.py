@@ -127,8 +127,8 @@ if __name__ == '__main__':
         help='Sort by row variance, descending, and take the top n.')
     parser.add_argument(
         '--scatterplot_top', action='store_true', default=False,
-        help='In the scatterplots, show only items corresponding '
-        'to rows in the heatmap. (Only used together with --top.)'
+        help='For scatterplots, include only the genes in the heatmap. '
+        '(Used together with --top.)'
     )
 
     parser.add_argument(

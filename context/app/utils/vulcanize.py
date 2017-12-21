@@ -1,6 +1,7 @@
 import re
 from math import log10
 
+
 def vulcanize(dataframe):
     """
     Given a dataframe,
