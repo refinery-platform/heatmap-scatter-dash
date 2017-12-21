@@ -24,10 +24,10 @@ optional arguments:
                         argument determines the dimensions of the random
                         matrix.
   --files FILES [FILES ...]
-                        Read CSV files. Multiple files will be joined based on
-                        the values in the first column. Compressed files are
-                        also handled, if correct extension is given. (ie
-                        ".csv.gz")
+                        Read CSV or TSV files. Multiple files will be joined
+                        based on the values in the first column. Compressed
+                        files are also handled, if correct extension is given.
+                        (ie ".csv.gz")
   --diffs DIFFS [DIFFS ...]
                         Read CSV files containing differential analysis data.
   --heatmap {svg,canvas}

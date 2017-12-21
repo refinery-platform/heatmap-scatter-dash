@@ -107,7 +107,7 @@ if __name__ == '__main__':
         'The argument determines the dimensions of the random matrix.')
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
-        help='Read CSV files. Multiple files will be joined '
+        help='Read CSV or TSV files. Multiple files will be joined '
              'based on the values in the first column. '
              'Compressed files are also handled, '
              'if correct extension is given. (ie ".csv.gz")')
