@@ -46,7 +46,7 @@ class AppCallbacks(AppLayout):
         callback(
             Output(component_id='table-iframe', component_property='srcDoc'),
             [Input(component_id='search-genes',
-                      component_property='value')]
+                   component_property='value')]
         )(self._update_table)
 
     def _update_heatmap(
@@ -61,12 +61,12 @@ class AppCallbacks(AppLayout):
         if pca_selected:
             pca_points = [
                 point['pointNumber'] for point in pca_selected['points']
-                ]
+            ]
             selected_conditions = [
                 condition for (i, condition)
                 in enumerate(self._conditions)
                 if i in pca_points
-                ]
+            ]
         else:
             selected_conditions = self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
@@ -78,11 +78,11 @@ class AppCallbacks(AppLayout):
             gene_points = [
                 point['pointNumber'] for point in genes_selected['points']
                 if gene_search_term in point['text']
-                ]
+            ]
             selected_genes = [
                 gene for (i, gene) in enumerate(self._genes)
                 if i in gene_points
-                ]
+            ]
             selected_conditions_genes_df = \
                 selected_conditions_df.loc[selected_genes]
         else:
