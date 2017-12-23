@@ -115,12 +115,8 @@ class AppCallbacks(AppLayout):
                     colorscale=adjusted_color_scale)
             ],
             'layout': go.Layout(
-                xaxis={
-                    'ticks': '',
-                    'tickangle': 90},
-                yaxis={
-                    'ticks': '',
-                    'showticklabels': show_genes},
+                xaxis={'ticks': '', 'tickangle': 90},
+                yaxis={'ticks': '', 'showticklabels': show_genes},
                 margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
@@ -159,8 +155,7 @@ class AppCallbacks(AppLayout):
             ],
             'layout': _ScatterLayout(
                 x_axis, y_axis,
-                x_log=is_log,
-                y_log=is_log)
+                x_log=is_log, y_log=is_log)
         }
 
     def _update_scatter_volcano(self, x_axis, y_axis, heatmap_range, file):
