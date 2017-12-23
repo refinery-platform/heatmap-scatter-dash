@@ -50,33 +50,20 @@ class AppCallbacks(AppLayout):
             pca_selected,
             genes_selected):
 
-        # pca: TODO: Fix the copy and paste between these two.
+        # pca:
 
         if pca_selected:
-            pca_points = [
-                point['pointNumber'] for point in pca_selected['points']
-            ]
-            selected_conditions = [
-                condition for (i, condition)
-                in enumerate(self._conditions)
-                if i in pca_points
-            ]
+            selected_conditions = _select(
+                pca_selected['points'], self._conditions)
         else:
             selected_conditions = self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
 
         # genes:
 
-        gene_search_term = gene_search_term or ''
         if genes_selected:
-            gene_points = [
-                point['pointNumber'] for point in genes_selected['points']
-                if gene_search_term in point['text']
-            ]
-            selected_genes = [
-                gene for (i, gene) in enumerate(self._genes)
-                if i in gene_points
-            ]
+            selected_genes = _select(
+                genes_selected['points'], self._genes, gene_search_term)
             selected_conditions_genes_df = \
                 selected_conditions_df.loc[selected_genes]
         else:
@@ -84,7 +71,6 @@ class AppCallbacks(AppLayout):
                 selected_conditions_df[
                     _match_booleans(gene_search_term, self._genes)
                 ]
-        # TODO: Text search is being done two different ways. Unify.
 
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
         return {
@@ -178,6 +164,18 @@ class AppCallbacks(AppLayout):
                 .format(url) for url in self._css_urls
             ] + [self._dataframe[booleans].to_html()]
         )
+
+
+def _select(points, target, search_term=None):
+    point_numbers = [
+        point['pointNumber'] for point in points
+        if not search_term or search_term in point['text']
+    ]
+    return [
+        gene for (i, gene)
+        in enumerate(target)
+        if i in point_numbers
+    ]
 
 
 def _log_interpolate(color_scale, min, max):
