@@ -49,17 +49,12 @@ class AppCallbacks(AppLayout):
             scale,
             pca_selected,
             genes_selected):
-
-        # pca:
-
         if pca_selected:
             selected_conditions = _select(
                 pca_selected['points'], self._conditions)
         else:
             selected_conditions = self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
-
-        # genes:
 
         if genes_selected:
             selected_genes = _select(
@@ -171,8 +166,9 @@ def _select(points, target, search_term=None):
         point['pointNumber'] for point in points
         if not search_term or search_term in point['text']
     ]
+    # TODO: Why not just return point['text'] here?
     return [
-        gene for (i, gene)
+        item for (i, item)
         in enumerate(target)
         if i in point_numbers
     ]
