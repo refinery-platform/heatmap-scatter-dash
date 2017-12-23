@@ -19,9 +19,9 @@ class TestCallbacks(unittest.TestCase):
         self.assertEqual(selected, ['ENSMUSG001', 'ENSMUSG002'])
 
     def test_select_conditions(self):
-        points =[
-         {'pointNumber': 0, 'x': -3, 'y': -2, 'text': 'kmc05'},
-         {'pointNumber': 1, 'x': -2, 'y': 4, 'text': 'kmc07'}]
+        points = [
+            {'pointNumber': 0, 'x': -3, 'y': -2, 'text': 'kmc05'},
+            {'pointNumber': 1, 'x': -2, 'y': 4, 'text': 'kmc07'}]
         target = ['kmc05', 'kmc07']
         search_term = None
         selected = _select(points, target, search_term)
