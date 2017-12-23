@@ -240,8 +240,8 @@ class _ScatterLayout(go.Layout):
 
 def _scatter_inputs(id, search=False, scale_select=False):
     inputs = [
-        Input(
-            'scatter-{}-{}-axis-select'.format(id, axis), 'value') for axis in ['x', 'y']
+        Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
+        for axis in ['x', 'y']
     ]
     inputs.append(
         Input(
