@@ -86,33 +86,10 @@ class AppCallbacks(AppLayout):
                 ]
         # TODO: Text search is being done two different ways. Unify.
 
-        # style:
-
-        adjusted_color_scale = (
-            _linear(self._color_scale) if scale != 'log'
-            else _log_interpolate(
-                self._color_scale,
-                min([x for x in
-                     selected_conditions_genes_df.values.flatten()
-                     if x > 0]),  # We will take the log, so exclude zeros.
-                selected_conditions_genes_df.max().max()))
-
-        heatmap_type = self._heatmap_type
-        if heatmap_type == 'svg':
-            heatmap_constructor = go.Heatmap
-        elif heatmap_type == 'canvas':
-            heatmap_constructor = go.Heatmapgl
-        else:
-            raise Exception('Unknown heatmap type: ' + heatmap_type)
-
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
         return {
             'data': [
-                heatmap_constructor(
-                    x=selected_conditions_genes_df.columns.tolist(),
-                    y=selected_conditions_genes_df.index.tolist(),
-                    z=selected_conditions_genes_df.as_matrix(),
-                    colorscale=adjusted_color_scale)
+                self._heatmap(selected_conditions_genes_df, scale == 'log')
             ],
             'layout': go.Layout(
                 xaxis={'ticks': '', 'tickangle': 90},
@@ -121,6 +98,28 @@ class AppCallbacks(AppLayout):
                 # Need top margin so infobox on hover is not truncated
             )
         }
+
+    def _heatmap(self, dataframe, is_log_scale):
+        adjusted_color_scale = (
+            _linear(self._color_scale) if not is_log_scale
+            else _log_interpolate(
+                self._color_scale,
+                min([x for x in
+                     dataframe.values.flatten()
+                     if x > 0]),  # We will take the log, so exclude zeros.
+                dataframe.max().max()))
+
+        if self._heatmap_type == 'svg':
+            constructor = go.Heatmap
+        elif self._heatmap_type == 'canvas':
+            constructor = go.Heatmapgl
+        else:
+            raise Exception('Unknown heatmap type: ' + self._heatmap_type)
+        return constructor(
+            x=dataframe.columns.tolist(),
+            y=dataframe.index.tolist(),
+            z=dataframe.as_matrix(),
+            colorscale=adjusted_color_scale)
 
     def _update_scatter_pca(self, x_axis, y_axis, heatmap_range):
         return {
