@@ -139,6 +139,10 @@ class AppCallbacks(AppLayout):
         }
 
     def _update_scatter_volcano(self, x_axis, y_axis, heatmap_range, file):
+        if not x_axis:
+            # ie, there are no differential files.
+            # "file" itself is (mis)used for messaging.
+            return {}
         return {
             'data': [
                 go.Scattergl(
