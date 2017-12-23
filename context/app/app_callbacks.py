@@ -15,14 +15,10 @@ class AppCallbacks(AppLayout):
         callback(
             _figure_output('heatmap'),
             [
-                Input(component_id='search-genes',
-                      component_property='value'),
-                Input(component_id='scale-select',
-                      component_property='value'),
-                Input(component_id='scatter-pca',
-                      component_property='selectedData'),
-                Input(component_id='scatter-genes',
-                      component_property='selectedData')
+                Input('search-genes', 'value'),
+                Input('scale-select', 'value'),
+                Input('scatter-pca', 'selectedData'),
+                Input('scatter-genes', 'selectedData')
             ]
         )(self._update_heatmap)
 
@@ -39,14 +35,12 @@ class AppCallbacks(AppLayout):
         callback(
             _figure_output('scatter-volcano'),
             _scatter_inputs('volcano') +
-            [Input(component_id='file-select',
-                   component_property='value')]
+            [Input('file-select', 'value')]
         )(self._update_scatter_volcano)
 
         callback(
-            Output(component_id='table-iframe', component_property='srcDoc'),
-            [Input(component_id='search-genes',
-                   component_property='value')]
+            Output('table-iframe', 'srcDoc'),
+            [Input('search-genes', 'value')]
         )(self._update_table)
 
     def _update_heatmap(
@@ -215,7 +209,7 @@ def _linear(color_scale):
 
 
 def _figure_output(id):
-    return Output(component_id=id, component_property='figure')
+    return Output(id, 'figure')
 
 
 def _match_booleans(search_term, targets):
@@ -247,23 +241,19 @@ class _ScatterLayout(go.Layout):
 def _scatter_inputs(id, search=False, scale_select=False):
     inputs = [
         Input(
-            component_id='scatter-{}-{}-axis-select'.format(id, axis),
-            component_property='value') for axis in ['x', 'y']
+            'scatter-{}-{}-axis-select'.format(id, axis), 'value') for axis in ['x', 'y']
     ]
     inputs.append(
         Input(
-            component_id='heatmap',
-            component_property='relayoutData'
+            'heatmap', 'relayoutData'
         )
     )
     if search:
         inputs.append(
-            Input(component_id='search-{}'.format(id),
-                  component_property='value')
+            Input('search-{}'.format(id), 'value')
         )
     if scale_select:
         inputs.append(
-            Input(component_id='scale-select',
-                  component_property='value')
+            Input('scale-select', 'value')
         )
     return inputs
