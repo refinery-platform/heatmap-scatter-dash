@@ -10,9 +10,8 @@ from app.app_layout import AppLayout
 class AppCallbacks(AppLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        callback = self.app.callback
 
-        callback(
+        self.app.callback(
             _figure_output('heatmap'),
             [
                 Input('search-genes', 'value'),
@@ -22,23 +21,23 @@ class AppCallbacks(AppLayout):
             ]
         )(self._update_heatmap)
 
-        callback(
+        self.app.callback(
             _figure_output('scatter-pca'),
             _scatter_inputs('pca')
         )(self._update_scatter_pca)
 
-        callback(
+        self.app.callback(
             _figure_output('scatter-genes'),
             _scatter_inputs('genes', search=True, scale_select=True)
         )(self._update_scatter_genes)
 
-        callback(
+        self.app.callback(
             _figure_output('scatter-volcano'),
             _scatter_inputs('volcano') +
             [Input('file-select', 'value')]
         )(self._update_scatter_volcano)
 
-        callback(
+        self.app.callback(
             Output('table-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
         )(self._update_table)
