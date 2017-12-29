@@ -12,7 +12,7 @@ class AppBase:
                  colors='Greys',
                  reverse_colors=False,
                  heatmap_type='svg',
-                 api_prefix='/'):
+                 api_prefix=None):
         self._dataframe = dataframe
         self._dataframe_pca = pca(self._dataframe)
         self._diff_dataframes = diff_dataframes
@@ -28,9 +28,10 @@ class AppBase:
             'bootstrap/3.3.7/css/bootstrap.min.css'
         ]
         self.app = dash.Dash()
-        self.app.config.update({
-            'requests_pathname_prefix': api_prefix
-        })
+        if api_prefix:
+            self.app.config.update({
+                'requests_pathname_prefix': api_prefix
+            })
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
