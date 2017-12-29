@@ -34,7 +34,7 @@ class AppCallbacks(AppLayout):
 
         self.app.callback(
             _figure_output('scatter-volcano'),
-            _scatter_inputs('volcano') +
+            _scatter_inputs('volcano', search=True) +
             [Input('file-select', 'value')]
         )(self._update_scatter_volcano)
 
@@ -121,7 +121,7 @@ class AppCallbacks(AppLayout):
             x_axis, y_axis,
             heatmap_range, search_term, scale,
             volcano_selected):
-        print(volcano_selected)
+        print(volcano_selected)  # TODO: do something with this
         if not search_term:
             search_term = ''
         booleans = _match_booleans(search_term, self._genes)
@@ -151,16 +151,31 @@ class AppCallbacks(AppLayout):
                 x_log=is_log, y_log=is_log)
         }
 
-    def _update_scatter_volcano(self, x_axis, y_axis, heatmap_range, file):
+    def _update_scatter_volcano(
+            self,
+            x_axis, y_axis,
+            heatmap_range, search_term,
+            file):
         if not x_axis:
             # ie, there are no differential files.
             # "file" itself is (mis)used for messaging.
             return {}
+        booleans = _match_booleans(search_term, self._genes)
         return {
             'data': [
                 go.Scattergl(
+                    # All points
                     x=self._diff_dataframes[file][x_axis],
                     y=self._diff_dataframes[file][y_axis],
+                    mode='markers',
+                    text=self._dataframe.index,
+                    marker=_dot,
+                    opacity=0.1
+                ),
+                go.Scattergl(
+                    # Only the selected ones
+                    x=self._diff_dataframes[file][x_axis][booleans],
+                    y=self._diff_dataframes[file][y_axis][booleans],
                     mode='markers',
                     text=self._dataframe.index,
                     marker=_dot
@@ -261,7 +276,7 @@ def _scatter_inputs(id, search=False, scale_select=False):
     )
     if search:
         inputs.append(
-            Input('search-{}'.format(id), 'value')
+            Input('search-genes'.format(id), 'value')
         )
     if scale_select:
         inputs.append(
