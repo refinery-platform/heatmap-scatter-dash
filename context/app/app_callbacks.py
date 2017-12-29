@@ -109,7 +109,8 @@ class AppCallbacks(AppLayout):
                     x=self._dataframe_pca[x_axis],
                     y=self._dataframe_pca[y_axis],
                     mode='markers',
-                    text=self._dataframe_pca.index
+                    text=self._dataframe_pca.index,
+                    marker=_dot
                 )
             ],
             'layout': _ScatterLayout(x_axis, y_axis)
@@ -125,10 +126,6 @@ class AppCallbacks(AppLayout):
             search_term = ''
         booleans = _match_booleans(search_term, self._genes)
         is_log = scale == 'log'
-        blue_dot = {
-            'color': 'rgb(0,0,255)',
-            'size': 5
-        }
         return {
             'data': [
                 go.Scattergl(
@@ -137,7 +134,7 @@ class AppCallbacks(AppLayout):
                     y=self._dataframe[y_axis],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=blue_dot,
+                    marker=_dot,
                     opacity=0.1
                 ),
                 go.Scattergl(
@@ -146,7 +143,7 @@ class AppCallbacks(AppLayout):
                     y=self._dataframe[y_axis][booleans],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=blue_dot
+                    marker=_dot
                 )
             ],
             'layout': _ScatterLayout(
@@ -165,7 +162,8 @@ class AppCallbacks(AppLayout):
                     x=self._diff_dataframes[file][x_axis],
                     y=self._diff_dataframes[file][y_axis],
                     mode='markers',
-                    text=self._dataframe.index
+                    text=self._dataframe.index,
+                    marker=_dot
                 )
             ],
             'layout': _ScatterLayout(x_axis, y_axis)
@@ -180,6 +178,10 @@ class AppCallbacks(AppLayout):
             ] + [self._dataframe[booleans].to_html()]
         )
 
+_dot = {
+    'color': 'rgb(0,0,255)',
+    'size': 5
+}
 
 def _select(points, target, search_term=None):
     point_numbers = [
