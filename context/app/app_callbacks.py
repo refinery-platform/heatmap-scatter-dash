@@ -64,7 +64,7 @@ class AppCallbacks(AppLayout):
         else:
             selected_conditions_genes_df = \
                 selected_conditions_df[
-                    _match_booleans(gene_search_term, self._genes)
+                    _match_booleans(gene_search_term, {}, self._genes)
                 ]
 
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
@@ -121,10 +121,15 @@ class AppCallbacks(AppLayout):
             x_axis, y_axis,
             heatmap_range, search_term, scale,
             volcano_selected):
-        print(volcano_selected)  # TODO: do something with this
+        volcano_selected_points = set([
+            x['pointNumber'] for x in volcano_selected['points']
+        ]) if volcano_selected else {}
         if not search_term:
             search_term = ''
-        booleans = _match_booleans(search_term, self._genes)
+        booleans = _match_booleans(
+            search_term, volcano_selected_points, self._genes)
+        print(volcano_selected_points)
+        print(booleans)
         is_log = scale == 'log'
         return {
             'data': [
@@ -160,7 +165,7 @@ class AppCallbacks(AppLayout):
             # ie, there are no differential files.
             # "file" itself is (mis)used for messaging.
             return {}
-        booleans = _match_booleans(search_term, self._genes)
+        booleans = _match_booleans(search_term, {}, self._genes)
         return {
             'data': [
                 go.Scattergl(
@@ -185,7 +190,7 @@ class AppCallbacks(AppLayout):
         }
 
     def _update_table(self, search_term):
-        booleans = _match_booleans(search_term, self._genes)
+        booleans = _match_booleans(search_term, {}, self._genes)
         return ''.join(
             [
                 '<link rel="stylesheet" property="stylesheet" href="{}">'
@@ -237,9 +242,14 @@ def _figure_output(id):
     return Output(id, 'figure')
 
 
-def _match_booleans(search_term, targets):
+def _match_booleans(search_term, index_set, targets):
     # search_term may be None on first load.
-    return [(search_term or '') in s for s in targets]
+    # index set should be ignored if empty
+    return [
+        (search_term or '') in s
+        and (i in index_set or not index_set)
+        for (i, s) in enumerate(targets)
+    ]
 
 
 class _ScatterLayout(go.Layout):
