@@ -35,7 +35,10 @@ class AppCallbacks(AppLayout):
         self.app.callback(
             _figure_output('scatter-volcano'),
             _scatter_inputs('volcano', search=True) +
-            [Input('file-select', 'value')]
+            [
+                Input('file-select', 'value'),
+                Input('scatter-genes', 'selectedData')
+            ]
         )(self._update_scatter_volcano)
 
         self.app.callback(
@@ -128,8 +131,6 @@ class AppCallbacks(AppLayout):
             search_term = ''
         booleans = _match_booleans(
             search_term, volcano_selected_points, self._genes)
-        print(volcano_selected_points)
-        print(booleans)
         is_log = scale == 'log'
         return {
             'data': [
@@ -160,12 +161,17 @@ class AppCallbacks(AppLayout):
             self,
             x_axis, y_axis,
             heatmap_range, search_term,
-            file):
+            file, gene_selected):
         if not x_axis:
             # ie, there are no differential files.
             # "file" itself is (mis)used for messaging.
             return {}
-        booleans = _match_booleans(search_term, {}, self._genes)
+        gene_selected_points = set([
+            x['pointNumber'] for x in
+            gene_selected['points']
+            ]) if gene_selected else {}
+        booleans = _match_booleans(
+            search_term, gene_selected_points, self._genes)
         return {
             'data': [
                 go.Scattergl(
