@@ -169,7 +169,7 @@ class AppCallbacks(AppLayout):
         gene_selected_points = set([
             x['pointNumber'] for x in
             gene_selected['points']
-            ]) if gene_selected else {}
+        ]) if gene_selected else {}
         booleans = _match_booleans(
             search_term, gene_selected_points, self._genes)
         return {
@@ -204,10 +204,12 @@ class AppCallbacks(AppLayout):
             ] + [self._dataframe[booleans].to_html()]
         )
 
+
 _dot = {
     'color': 'rgb(0,0,255)',
     'size': 5
 }
+
 
 def _select(points, target, search_term=None):
     point_numbers = [
