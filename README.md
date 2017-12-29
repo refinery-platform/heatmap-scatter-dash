@@ -9,7 +9,7 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
-                     [--diffs DIFFS [DIFFS ...]] --heatmap {svg,canvas}
+                     [--diffs DIFFS [DIFFS ...]] [--heatmap {svg,canvas}]
                      [--top TOP] [--scatterplot_top] [--cluster_rows]
                      [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
@@ -70,10 +70,10 @@ $ cd context
 $ python app_runner.py --demo 1,10,10 --port 8888
 
   # Load data from disk:
-$ python app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888
+$ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-* --port 8888
 
   # Read an input.json like that created by Refinery:
-$ python app_runner_refinery.py --input fixtures/good/input.json --port 8888
+$ python app_runner_refinery.py --input ../fixtures/good/input.json --port 8888
 ```
 
 and visit `http://localhost:8888/`.
