@@ -28,7 +28,8 @@ class AppCallbacks(AppLayout):
 
         self.app.callback(
             _figure_output('scatter-genes'),
-            _scatter_inputs('genes', search=True, scale_select=True)
+            _scatter_inputs('genes', search=True, scale_select=True) +
+            [Input('scatter-volcano', 'selectedData')]
         )(self._update_scatter_genes)
 
         self.app.callback(
@@ -117,19 +118,35 @@ class AppCallbacks(AppLayout):
     def _update_scatter_genes(
             self,
             x_axis, y_axis,
-            heatmap_range, search_term, scale):
+            heatmap_range, search_term, scale,
+            volcano_selected):
+        print(volcano_selected)
         if not search_term:
             search_term = ''
         booleans = _match_booleans(search_term, self._genes)
         is_log = scale == 'log'
+        blue_dot = {
+            'color': 'rgb(0,0,255)',
+            'size': 5
+        }
         return {
             'data': [
                 go.Scattergl(
-                    # TODO: try go.pointcloud if we need something faster?
+                    # All points
+                    x=self._dataframe[x_axis],
+                    y=self._dataframe[y_axis],
+                    mode='markers',
+                    text=self._dataframe.index,
+                    marker=blue_dot,
+                    opacity=0.1
+                ),
+                go.Scattergl(
+                    # Only the selected ones
                     x=self._dataframe[x_axis][booleans],
                     y=self._dataframe[y_axis][booleans],
                     mode='markers',
-                    text=self._dataframe.index
+                    text=self._dataframe.index,
+                    marker=blue_dot
                 )
             ],
             'layout': _ScatterLayout(
@@ -217,6 +234,7 @@ class _ScatterLayout(go.Layout):
         if y_log:
             y_axis_config['type'] = 'log'
         super().__init__(
+            showlegend=False,
             xaxis=x_axis_config,
             yaxis=y_axis_config,
             margin=go.Margin(
