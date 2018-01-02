@@ -3,6 +3,7 @@ from math import log10
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
+import pandas
 
 from app.app_layout import AppLayout
 
@@ -45,6 +46,11 @@ class AppCallbacks(AppLayout):
             Output('table-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
         )(self._update_table)
+
+        self.app.callback(
+            Output('list-iframe', 'srcDoc'),
+            [Input('search-genes', 'value')]
+        )(self._update_list)
 
     def _update_heatmap(
             self,
@@ -202,6 +208,21 @@ class AppCallbacks(AppLayout):
                 '<link rel="stylesheet" property="stylesheet" href="{}">'
                 .format(url) for url in self._css_urls
             ] + [self._dataframe[booleans].to_html()]
+        )
+
+    def _update_list(self, search_term):
+        booleans = _match_booleans(search_term, {}, self._genes)
+        return ''.join(
+            [
+                '<link rel="stylesheet" property="stylesheet" href="{}">'
+                .format(url) for url in self._css_urls
+            ] + [
+                pandas.DataFrame(self._dataframe[booleans].index).to_html(
+                    index=False)
+                # Would prefer something like:
+                #   self._dataframe[booleans].to_html(max_cols=0)
+                # but that shows all columns, not just the row header.
+            ]
         )
 
 

@@ -147,11 +147,12 @@ class AppLayout(AppBase):
                 self._scatter('pca', pc_options, active=True),
             ], className='tab-content'),
 
-            _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table'),
+            _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table', 'List'),
             html.Div([
                 self._scatter('sample-by-sample', conditions_options, active=True),
                 self._scatter('volcano', volcano_options, volcano=True),
-                _iframe('table-iframe')
+                _iframe('table'),
+                _iframe('list')
             ], className='tab-content')
         ]
 
@@ -198,7 +199,7 @@ class AppLayout(AppBase):
 def _iframe(id):
     return html.Div([
         html.Br(),
-        html.Iframe(id=id,
+        html.Iframe(id=id+'-iframe',
                     srcDoc='First select a subset')
         # or
         #   dcc.Graph(id='gene-table',
@@ -206,7 +207,7 @@ def _iframe(id):
         #   (but that's slow)
         # or
         #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-    ], className='tab-pane', id='table')
+    ], className='tab-pane', id=id)
 
 
 def _to_data_uri(s, mime):
