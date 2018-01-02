@@ -142,14 +142,14 @@ class AppLayout(AppBase):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('PCA'),
+            _tabs('Conditions:', 'PCA'),
             html.Div([
                 self._scatter('pca', pc_options, active=True),
             ], className='tab-content'),
 
-            _tabs('Genes', 'Volcano', 'Table'),
+            _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table'),
             html.Div([
-                self._scatter('genes', conditions_options, active=True),
+                self._scatter('sample-by-sample', conditions_options, active=True),
                 self._scatter('volcano', volcano_options, volcano=True),
                 html.Div([
                     html.Br(),
@@ -233,6 +233,12 @@ def _dropdown(id, options, axis, axis_index, full_width=False):
         ]
     )
 
+def _class_from_index(i):
+    if i == 0:
+        return 'disabled'
+    if i == 1:
+        return 'active'
+    return ''
 
 def _tabs(*names):
     tabs = html.Ul([
@@ -240,7 +246,7 @@ def _tabs(*names):
             html.A([
                 name
             ], href='#' + name.lower())
-        ], className=('active' if index == 0 else ''))
+        ], className=_class_from_index(index))
         for (index, name) in enumerate(names)],
         className='nav nav-tabs')
     return tabs

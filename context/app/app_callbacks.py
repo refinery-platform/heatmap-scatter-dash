@@ -17,7 +17,7 @@ class AppCallbacks(AppLayout):
                 Input('search-genes', 'value'),
                 Input('scale-select', 'value'),
                 Input('scatter-pca', 'selectedData'),
-                Input('scatter-genes', 'selectedData')
+                Input('scatter-sample-by-sample', 'selectedData')
             ]
         )(self._update_heatmap)
 
@@ -27,8 +27,8 @@ class AppCallbacks(AppLayout):
         )(self._update_scatter_pca)
 
         self.app.callback(
-            _figure_output('scatter-genes'),
-            _scatter_inputs('genes', search=True, scale_select=True) +
+            _figure_output('scatter-sample-by-sample'),
+            _scatter_inputs('sample-by-sample', search=True, scale_select=True) +
             [Input('scatter-volcano', 'selectedData')]
         )(self._update_scatter_genes)
 
@@ -37,7 +37,7 @@ class AppCallbacks(AppLayout):
             _scatter_inputs('volcano', search=True) +
             [
                 Input('file-select', 'value'),
-                Input('scatter-genes', 'selectedData')
+                Input('scatter-sample-by-sample', 'selectedData')
             ]
         )(self._update_scatter_volcano)
 
