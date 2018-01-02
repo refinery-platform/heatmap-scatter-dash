@@ -151,17 +151,7 @@ class AppLayout(AppBase):
             html.Div([
                 self._scatter('sample-by-sample', conditions_options, active=True),
                 self._scatter('volcano', volcano_options, volcano=True),
-                html.Div([
-                    html.Br(),
-                    html.Iframe(id='table-iframe',
-                                srcDoc='First select a subset')
-                    # or
-                    #   dcc.Graph(id='gene-table',
-                    #   figure=ff.create_table(self._dataframe.to_html()))
-                    #   (but that's slow)
-                    # or
-                    #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-                ], className='tab-pane', id='table')
+                _iframe('table-iframe')
             ], className='tab-content')
         ]
 
@@ -203,6 +193,20 @@ class AppLayout(AppBase):
         if active:
             className += ' active'
         return html.Div(nodes, className=className, id=id)
+
+
+def _iframe(id):
+    return html.Div([
+        html.Br(),
+        html.Iframe(id=id,
+                    srcDoc='First select a subset')
+        # or
+        #   dcc.Graph(id='gene-table',
+        #   figure=ff.create_table(self._dataframe.to_html()))
+        #   (but that's slow)
+        # or
+        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
+    ], className='tab-pane', id='table')
 
 
 def _to_data_uri(s, mime):
