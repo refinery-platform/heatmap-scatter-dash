@@ -149,7 +149,8 @@ class AppLayout(AppBase):
 
             _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table', 'List'),
             html.Div([
-                self._scatter('sample-by-sample', conditions_options, active=True),
+                self._scatter('sample-by-sample',
+                              conditions_options, active=True),
                 self._scatter('volcano', volcano_options, volcano=True),
                 _iframe('table'),
                 _iframe('list')
@@ -199,7 +200,7 @@ class AppLayout(AppBase):
 def _iframe(id):
     return html.Div([
         html.Br(),
-        html.Iframe(id=id+'-iframe',
+        html.Iframe(id=id + '-iframe',
                     srcDoc='First select a subset')
         # or
         #   dcc.Graph(id='gene-table',
@@ -238,12 +239,14 @@ def _dropdown(id, options, axis, axis_index, full_width=False):
         ]
     )
 
+
 def _class_from_index(i):
     if i == 0:
         return 'disabled'
     if i == 1:
         return 'active'
     return ''
+
 
 def _tabs(*names):
     tabs = html.Ul([

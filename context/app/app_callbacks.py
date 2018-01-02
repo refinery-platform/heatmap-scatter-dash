@@ -30,7 +30,8 @@ class AppCallbacks(AppLayout):
 
         self.app.callback(
             _figure_output('scatter-sample-by-sample'),
-            _scatter_inputs('sample-by-sample', search=True, scale_select=True) +
+            _scatter_inputs('sample-by-sample',
+                            search=True, scale_select=True) +
             [Input('scatter-volcano', 'selectedData')]
         )(self._update_scatter_genes)
 

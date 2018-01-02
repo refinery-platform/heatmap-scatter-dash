@@ -23,8 +23,9 @@ class TestDash():
         self.assertEqual(
             list(self.app.callback_map.keys()),
             ['heatmap.figure']
-            + ['scatter-%s.figure' % s for s in ['pca', 'genes', 'volcano']]
-            + ['table-iframe.srcDoc']
+            + ['scatter-%s.figure' %
+                s for s in ['pca', 'sample-by-sample', 'volcano']]
+            + ['table-iframe.srcDoc', 'list-iframe.srcDoc']
         )
 
     # Outside resource tests:
