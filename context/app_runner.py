@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 import argparse
+import html
 import re
-from os.path import basename
 import traceback
+from os.path import basename
+from sys import stderr
 
 import numpy as np
 import pandas
-from plotly.figure_factory.utils import PLOTLY_SCALES
 from flask import Flask
-from sys import stderr
-import html
+from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 from app.utils.cluster import cluster
