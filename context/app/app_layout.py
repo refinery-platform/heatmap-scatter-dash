@@ -3,7 +3,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.app_base import AppBase
+from app.app_base import AppBase, to_data_uri
 
 
 class AppLayout(AppBase):
@@ -32,7 +32,7 @@ class AppLayout(AppBase):
                 'bootstrap/3.3.7/js/bootstrap.min.js'
         })
         self.app.scripts.append_script({
-            'external_url': self.to_data_uri("""
+            'external_url': to_data_uri("""
                 $('body').on('click', '.nav-tabs a', function(e) {
                     e.preventDefault();
                     $(this).tab('show');

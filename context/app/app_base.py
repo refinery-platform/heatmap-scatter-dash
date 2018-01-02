@@ -1,12 +1,11 @@
+from base64 import urlsafe_b64encode
+
 import dash
 import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.utils.pca import pca
 
-
-
-from base64 import urlsafe_b64encode
 
 class AppBase:
 
@@ -29,7 +28,7 @@ class AppBase:
         self._css_urls = [
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css',
-            self.to_data_uri(
+            to_data_uri(
                 """
                 .plotlyjsicon {
                     display: none;
@@ -58,9 +57,10 @@ class AppBase:
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
 
-    def to_data_uri(self, s, mime):
-        uri = (
-            ('data:' + mime + ';base64,').encode('utf8') +
-            urlsafe_b64encode(s.encode('utf8'))
-        ).decode("utf-8", "strict")
-        return uri
+
+def to_data_uri(s, mime):
+    uri = (
+        ('data:' + mime + ';base64,').encode('utf8') +
+        urlsafe_b64encode(s.encode('utf8'))
+    ).decode("utf-8", "strict")
+    return uri

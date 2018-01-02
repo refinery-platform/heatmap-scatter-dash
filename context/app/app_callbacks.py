@@ -1,10 +1,10 @@
+import re
 from math import log10
 
+import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
-import pandas
-import re
 
 from app.app_layout import AppLayout
 
