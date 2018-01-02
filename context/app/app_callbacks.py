@@ -113,7 +113,7 @@ class AppCallbacks(AppLayout):
                     y=self._dataframe_pca[y_axis],
                     mode='markers',
                     text=self._dataframe_pca.index,
-                    marker=_dot
+                    marker=_dark_dot
                 )
             ],
             'layout': _ScatterLayout(x_axis, y_axis)
@@ -140,8 +140,7 @@ class AppCallbacks(AppLayout):
                     y=self._dataframe[y_axis],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=_dot,
-                    opacity=0.1
+                    marker=_light_dot,
                 ),
                 go.Scattergl(
                     # Only the selected ones
@@ -149,7 +148,7 @@ class AppCallbacks(AppLayout):
                     y=self._dataframe[y_axis][booleans],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=_dot
+                    marker=_dark_dot
                 )
             ],
             'layout': _ScatterLayout(
@@ -180,8 +179,7 @@ class AppCallbacks(AppLayout):
                     y=self._diff_dataframes[file][y_axis],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=_dot,
-                    opacity=0.1
+                    marker=_light_dot
                 ),
                 go.Scattergl(
                     # Only the selected ones
@@ -189,7 +187,7 @@ class AppCallbacks(AppLayout):
                     y=self._diff_dataframes[file][y_axis][booleans],
                     mode='markers',
                     text=self._dataframe.index,
-                    marker=_dot
+                    marker=_dark_dot
                 )
             ],
             'layout': _ScatterLayout(x_axis, y_axis)
@@ -205,8 +203,12 @@ class AppCallbacks(AppLayout):
         )
 
 
-_dot = {
+_dark_dot = {
     'color': 'rgb(0,0,255)',
+    'size': 5
+}
+_light_dot = {
+    'color': 'rgb(127,127,255)',
     'size': 5
 }
 
