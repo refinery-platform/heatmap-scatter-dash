@@ -1,5 +1,4 @@
 
-from base64 import urlsafe_b64encode
 
 import dash_core_components as dcc
 import dash_html_components as html
@@ -20,20 +19,6 @@ class AppLayout(AppBase):
             self.app.css.append_css({
                 'external_url': url
             })
-        self.app.css.append_css({
-            'external_url': _to_data_uri(
-                """
-                .plotlyjsicon {
-                    display: none;
-                }
-                iframe {
-                    border: none;
-                    width: 100%;
-                    height: 33vh;
-                }
-                """,
-                "text/css")
-        })
 
     def _add_scripts(self):
         self.app.scripts.append_script({
@@ -47,7 +32,7 @@ class AppLayout(AppBase):
                 'bootstrap/3.3.7/js/bootstrap.min.js'
         })
         self.app.scripts.append_script({
-            'external_url': _to_data_uri("""
+            'external_url': self.to_data_uri("""
                 $('body').on('click', '.nav-tabs a', function(e) {
                     e.preventDefault();
                     $(this).tab('show');
@@ -209,14 +194,6 @@ def _iframe(id):
         # or
         #   https://community.plot.ly/t/display-tables-in-dash/4707/13
     ], className='tab-pane', id=id)
-
-
-def _to_data_uri(s, mime):
-    uri = (
-        ('data:' + mime + ';base64,').encode('utf8') +
-        urlsafe_b64encode(s.encode('utf8'))
-    ).decode("utf-8", "strict")
-    return uri
 
 
 def _dropdown(id, options, axis, axis_index, full_width=False):
