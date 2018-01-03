@@ -209,12 +209,11 @@ class AppCallbacks(AppLayout):
         }
 
     def _update_condition_list(self, selected_data):
-        print(selected_data)  # TODO: Filter dataframe
-        return self._list_html(self._dataframe.T)
+        points = [point['pointNumber'] for point in selected_data['points']]
+        return self._list_html(self._dataframe.T.iloc[points])
 
     def _update_gene_table(self, search_term):
         booleans = _match_booleans(search_term, {}, self._genes)
-        print(self._dataframe[booleans])
         return self._table_html(self._dataframe[booleans])
 
     def _update_gene_list(self, search_term):
