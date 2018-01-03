@@ -1,5 +1,7 @@
+import re
 from math import log10
 
+import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
@@ -17,7 +19,7 @@ class AppCallbacks(AppLayout):
                 Input('search-genes', 'value'),
                 Input('scale-select', 'value'),
                 Input('scatter-pca', 'selectedData'),
-                Input('scatter-genes', 'selectedData')
+                Input('scatter-sample-by-sample', 'selectedData')
             ]
         )(self._update_heatmap)
 
@@ -27,8 +29,9 @@ class AppCallbacks(AppLayout):
         )(self._update_scatter_pca)
 
         self.app.callback(
-            _figure_output('scatter-genes'),
-            _scatter_inputs('genes', search=True, scale_select=True) +
+            _figure_output('scatter-sample-by-sample'),
+            _scatter_inputs('sample-by-sample',
+                            search=True, scale_select=True) +
             [Input('scatter-volcano', 'selectedData')]
         )(self._update_scatter_genes)
 
@@ -37,14 +40,24 @@ class AppCallbacks(AppLayout):
             _scatter_inputs('volcano', search=True) +
             [
                 Input('file-select', 'value'),
-                Input('scatter-genes', 'selectedData')
+                Input('scatter-sample-by-sample', 'selectedData')
             ]
         )(self._update_scatter_volcano)
 
         self.app.callback(
+            Output('ids-iframe', 'srcDoc'),
+            [Input('scatter-pca', 'selectedData')]
+        )(self._update_condition_list)
+
+        self.app.callback(
             Output('table-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
-        )(self._update_table)
+        )(self._update_gene_table)
+
+        self.app.callback(
+            Output('list-iframe', 'srcDoc'),
+            [Input('search-genes', 'value')]
+        )(self._update_gene_list)
 
     def _update_heatmap(
             self,
@@ -195,20 +208,60 @@ class AppCallbacks(AppLayout):
             'layout': _ScatterLayout(x_axis, y_axis)
         }
 
-    def _update_table(self, search_term):
+    def _update_condition_list(self, selected_data):
+        points = [point['pointNumber'] for point in selected_data['points']]
+        return self._list_html(self._dataframe.T.iloc[points])
+        # Alternatively:
+        #   pandas.DataFrame(self._dataframe.columns.tolist())
+        # but transpose may be more efficient than creating a new DataFrame.
+
+    def _update_gene_table(self, search_term):
         booleans = _match_booleans(search_term, {}, self._genes)
-        return ''.join(
-            [
-                '<link rel="stylesheet" property="stylesheet" href="{}">'
-                .format(url) for url in self._css_urls
-            ] + [self._dataframe[booleans].to_html()]
+        return self._table_html(self._dataframe[booleans])
+
+    def _update_gene_list(self, search_term):
+        booleans = _match_booleans(search_term, {}, self._genes)
+        return self._list_html(self._dataframe[booleans])
+
+    def _table_html(self, dataframe):
+        """
+        Given a dataframe,
+        returns the dataframe as an html table.
+        """
+        return self._css_url_html() + _remove_rowname_header(
+            dataframe.to_html()
         )
+
+    def _list_html(self, dataframe):
+        """
+        Given a dataframe,
+        returns the indexes of the dataframe as a single column html table.
+        """
+        return self._css_url_html() + _remove_rowname_header(
+            pandas.DataFrame(dataframe.index).to_html(
+                index=False
+            )
+        )
+        # Would prefer something like:
+        #   dataframe.to_html(max_cols=0)
+        # but that shows all columns, not just the row header.
+
+    def _css_url_html(self):
+        return ''.join([
+            '<link rel="stylesheet" property="stylesheet" href="{}">'
+            .format(url) for url in self._css_urls
+        ])
 
 
 _dot = {
     'color': 'rgb(0,0,255)',
     'size': 5
 }
+
+
+def _remove_rowname_header(s):
+    return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
+                  count=1, flags=re.DOTALL)
 
 
 def _select(points, target, search_term=None):
