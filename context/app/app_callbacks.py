@@ -1,6 +1,7 @@
 import re
 from math import log10
 
+import time
 import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
@@ -58,6 +59,26 @@ class AppCallbacks(AppLayout):
             Output('list-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
         )(self._update_gene_list)
+
+        # Hidden elements that record the last time a control was touched:
+
+        self.app.callback(
+            Output('search-genes-timestamp', 'children'),
+            [Input('search-genes', 'value')]
+        )(self._update_timestamp)
+
+        self.app.callback(
+            Output('scatter-sample-by-sample-timestamp', 'children'),
+            [Input('scatter-sample-by-sample', 'selectedData')]
+        )(self._update_timestamp)
+
+        self.app.callback(
+            Output('scatter-volcano-timestamp', 'children'),
+            [Input('scatter-volcano', 'selectedData')]
+        )(self._update_timestamp)
+
+    def _update_timestamp(self, input):
+        return time.time()
 
     def _update_heatmap(
             self,

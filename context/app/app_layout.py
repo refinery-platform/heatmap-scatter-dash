@@ -89,7 +89,19 @@ class AppLayout(AppBase):
                         conditions_options=conditions_options,
                         volcano_options=volcano_options),
                     className='col-md-6')
-            ], className='row')
+            ], className='row'),
+            html.Div(
+                id = 'search-genes-timestamp',
+                # style={'display': 'none'}
+            ),
+            html.Div(
+                id='scatter-sample-by-sample-timestamp',
+                # style={'display': 'none'}
+            ),
+            html.Div(
+                id='scatter-volcano-timestamp',
+                # style={'display': 'none'}
+            )
         ], className='container')
 
     def _left_column(self):
