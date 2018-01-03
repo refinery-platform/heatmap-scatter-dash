@@ -127,9 +127,10 @@ class AppLayout(AppBase):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('Conditions:', 'PCA'),
+            _tabs('Conditions:', 'PCA', 'IDs'),
             html.Div([
                 self._scatter('pca', pc_options, active=True),
+                _iframe('ids')
             ], className='tab-content'),
 
             _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table', 'List'),

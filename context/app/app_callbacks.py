@@ -45,14 +45,19 @@ class AppCallbacks(AppLayout):
         )(self._update_scatter_volcano)
 
         self.app.callback(
+            Output('ids-iframe', 'srcDoc'),
+            [Input('scatter-pca', 'selectedData')]
+        )(self._update_condition_list)
+
+        self.app.callback(
             Output('table-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
-        )(self._update_table)
+        )(self._update_gene_table)
 
         self.app.callback(
             Output('list-iframe', 'srcDoc'),
             [Input('search-genes', 'value')]
-        )(self._update_list)
+        )(self._update_gene_list)
 
     def _update_heatmap(
             self,
@@ -203,33 +208,47 @@ class AppCallbacks(AppLayout):
             'layout': _ScatterLayout(x_axis, y_axis)
         }
 
-    def _update_table(self, search_term):
+    def _update_condition_list(self, selected_data):
+        print(selected_data)  # TODO: Filter dataframe
+        return self._list_html(self._dataframe.T)
+
+    def _update_gene_table(self, search_term):
         booleans = _match_booleans(search_term, {}, self._genes)
-        return ''.join(
-            [
-                '<link rel="stylesheet" property="stylesheet" href="{}">'
-                .format(url) for url in self._css_urls
-            ] + [
-                _remove_rowname_header(
-                    self._dataframe[booleans].to_html())
-            ]
+        print(self._dataframe[booleans])
+        return self._table_html(self._dataframe[booleans])
+
+    def _update_gene_list(self, search_term):
+        booleans = _match_booleans(search_term, {}, self._genes)
+        return self._list_html(self._dataframe[booleans])
+
+    def _table_html(self, dataframe):
+        """
+        Given a dataframe,
+        returns the dataframe as an html table.
+        """
+        return self._css_url_html() + _remove_rowname_header(
+            dataframe.to_html()
         )
 
-    def _update_list(self, search_term):
-        booleans = _match_booleans(search_term, {}, self._genes)
-        return ''.join(
-            [
-                '<link rel="stylesheet" property="stylesheet" href="{}">'
-                .format(url) for url in self._css_urls
-            ] + [
-                _remove_rowname_header(
-                    pandas.DataFrame(self._dataframe[booleans].index).to_html(
-                        index=False).replace('<th>rowname</th>', ''))
+    def _list_html(self, dataframe):
+        """
+        Given a dataframe,
+        returns the indexes of the dataframe as a single column html table.
+        """
+        return self._css_url_html() + _remove_rowname_header(
+                    pandas.DataFrame(dataframe.index).to_html(
+                        index=False
+                    )
+                )
                 # Would prefer something like:
-                #   self._dataframe[booleans].to_html(max_cols=0)
+                #   dataframe.to_html(max_cols=0)
                 # but that shows all columns, not just the row header.
-            ]
-        )
+
+    def _css_url_html(self):
+        return ''.join([
+            '<link rel="stylesheet" property="stylesheet" href="{}">'
+                .format(url) for url in self._css_urls
+        ])
 
 
 _dot = {
