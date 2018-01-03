@@ -1,10 +1,11 @@
 import re
 from math import log10
 
+import json
 import time
 import pandas
 import plotly.graph_objs as go
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.app_layout import AppLayout
@@ -77,8 +78,28 @@ class AppCallbacks(AppLayout):
             [Input('scatter-volcano', 'selectedData')]
         )(self._update_timestamp)
 
+        # Hidden elements which pick the value from the last modified control:
+
+        self.app.callback(
+            Output('selected-genes', 'children'),
+            [Input('search-genes-timestamp', 'children'),
+             Input('scatter-sample-by-sample-timestamp', 'children'),
+             Input('scatter-volcano-timestamp', 'children')],
+            [State('search-genes', 'value'),
+             State('scatter-sample-by-sample', 'selectedData'),
+             State('scatter-volcano', 'selectedData')]
+        )(self._choose_latest)
+
     def _update_timestamp(self, input):
         return time.time()
+
+    def _choose_latest(self, *inputs_and_states):
+        assert len(inputs_and_states) % 2 == 0
+        midpoint = len(inputs_and_states) // 2
+        inputs = inputs_and_states[:midpoint]
+        states = inputs_and_states[midpoint:]
+        max_state = states[inputs.index(max(inputs))]
+        return json.dumps(max_state)
 
     def _update_heatmap(
             self,

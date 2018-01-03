@@ -101,6 +101,10 @@ class AppLayout(AppBase):
             html.Div(
                 id='scatter-volcano-timestamp',
                 # style={'display': 'none'}
+            ),
+            html.Div(
+                id='selected-genes',
+                # style={'display': 'none'}
             )
         ], className='container')
 
