@@ -22,7 +22,7 @@ class DefaultArgs():
 
 class RunnerArgs(DefaultArgs):
     """
-    Given a args object appropriate for app_runner_refinery.py,
+    Given an args object appropriate for app_runner_refinery.py,
     produces an object appropriate for app_runner.py
     """
 
