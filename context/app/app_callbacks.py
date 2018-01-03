@@ -211,6 +211,9 @@ class AppCallbacks(AppLayout):
     def _update_condition_list(self, selected_data):
         points = [point['pointNumber'] for point in selected_data['points']]
         return self._list_html(self._dataframe.T.iloc[points])
+        # Alternatively:
+        #   pandas.DataFrame(self._dataframe.columns.tolist())
+        # but transpose may be more efficient than creating a new DataFrame.
 
     def _update_gene_table(self, search_term):
         booleans = _match_booleans(search_term, {}, self._genes)
@@ -257,7 +260,7 @@ _dot = {
 
 
 def _remove_rowname_header(s):
-    return re.sub(r'<tr[^>]*>[^<]*<th>rowname</th>.*?</tr>', '', s,
+    return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
 
 
