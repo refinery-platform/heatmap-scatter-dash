@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 import argparse
+import html
 import re
+import traceback
 from os.path import basename
+from sys import stderr
 
 import numpy as np
 import pandas
+from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
@@ -50,50 +54,74 @@ def demo_dataframes(frames, rows, cols):
 
 
 def main(args, parser=None):
-    if args.files:
-        dataframes = file_dataframes(args.files)
-    elif args.demo:
-        dataframes = demo_dataframes(**args.demo)
-    else:
-        # Argparser validation should keep us from reaching this point.
-        raise Exception('Either "demo" or "files" is required')
+    try:
+        if args.files:
+            dataframes = file_dataframes(args.files)
+        elif args.demo:
+            dataframes = demo_dataframes(**args.demo)
+        else:
+            # Argparser validation should keep us from reaching this point.
+            raise Exception('Either "demo" or "files" is required')
 
-    merged = merge(dataframes)
-    if args.top:
-        merged = sort_by_variance(merged).head(args.top)
+        merged = merge(dataframes)
+        if args.top:
+            merged = sort_by_variance(merged).head(args.top)
 
-    dataframe = cluster(
-        merged,
-        cluster_rows=args.cluster_rows,
-        cluster_cols=args.cluster_cols)
+        dataframe = cluster(
+            merged,
+            cluster_rows=args.cluster_rows,
+            cluster_cols=args.cluster_cols)
 
-    keys = set(dataframe.index.tolist())
-    if args.diffs:
-        diff_dataframes = {
-            # app_runner and refinery pass different things in here...
-            # TODO:  Get rid of "if / else"
-            basename(file.name if hasattr(file, 'name') else file):
-                vulcanize(find_index(pandas.read_csv(file), keys,
-                                     drop_unmatched=args.scatterplot_top))
-            for file in args.diffs
-        }
-    else:
-        diff_dataframes = {
-            'No differential files given': pandas.DataFrame()
-        }
+        keys = set(dataframe.index.tolist())
+        if args.diffs:
+            diff_dataframes = {
+                # app_runner and refinery pass different things in here...
+                # TODO:  Get rid of "if / else"
+                basename(file.name if hasattr(file, 'name') else file):
+                    vulcanize(find_index(pandas.read_csv(file), keys,
+                                         drop_unmatched=args.scatterplot_top))
+                for file in args.diffs
+            }
+        else:
+            diff_dataframes = {
+                'No differential files given': pandas.DataFrame()
+            }
+        app = AppCallbacks(
+            dataframe=dataframe,
+            diff_dataframes=diff_dataframes,
+            colors=args.colors,
+            reverse_colors=args.reverse_colors,
+            heatmap_type=args.heatmap,
+            api_prefix=args.api_prefix
+        ).app
+        app.run_server(
+            debug=args.debug,
+            port=args.port,
+            host='0.0.0.0'
+        )
+    except Exception as e:
+        # Big try-blocks are usually to be avoided...
+        # but here, we want to be sure that some server comes up
+        # and returns a 200, so that django-proxy knows to stop waiting,
+        # and the end-user can see the error.
+        if not args.html_error:
+            raise
+        app = Flask('error-page')
+        error_str = ''.join(
+            traceback.TracebackException.from_exception(e).format()
+        )
+        print(error_str, file=stderr)
 
-    AppCallbacks(
-        dataframe=dataframe,
-        diff_dataframes=diff_dataframes,
-        colors=args.colors,
-        reverse_colors=args.reverse_colors,
-        heatmap_type=args.heatmap,
-        api_prefix=args.api_prefix
-    ).app.run_server(
-        debug=args.debug,
-        port=args.port,
-        host='0.0.0.0'
-    )
+        @app.route("/")
+        def error_page():
+            return (
+                '<html><head><title>error</title></head><body><pre>' +
+                html.escape(error_str) +
+                '</pre></body></html>')
+        app.run(
+            port=args.port,
+            host='0.0.0.0'
+        )
 
 
 if __name__ == '__main__':
@@ -145,6 +173,10 @@ if __name__ == '__main__':
         '--reverse_colors', action='store_true',
         help='Reverse the color scale of the heatmap.')
 
+    parser.add_argument(
+        '--html_error', action='store_true',
+        help='If there is a configuration error, instead of exiting, '
+        'start the server and display an error page.')
     parser.add_argument(
         '--api_prefix', default='',
         help='Prefix for API URLs. '

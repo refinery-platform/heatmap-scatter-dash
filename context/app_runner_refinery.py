@@ -7,15 +7,9 @@ import requests
 import app_runner
 
 
-class RunnerArgs():
-    """
-    Given a args object appropriate for app_runner_refinery.py,
-    produces an object appropriate for app_runner.py
-    """
-
-    def __init__(self, refinery_args):
+class DefaultArgs():
+    def __init__(self):
         self.demo = False
-        self.port = refinery_args.port
         self.debug = False
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
         self.skip_zero = True
@@ -23,9 +17,20 @@ class RunnerArgs():
         self.top = 500
         self.scatterplot_top = False
         self.reverse_colors = True
+        self.html_error = True
+
+
+class RunnerArgs(DefaultArgs):
+    """
+    Given an args object appropriate for app_runner_refinery.py,
+    produces an object appropriate for app_runner.py
+    """
+
+    def __init__(self, refinery_args):
+        super().__init__()
+        self.port = refinery_args.port
 
         input = json.loads(refinery_args.input.read(None))
-
         parameters = {
             p['name']: p['value'] for p in input['parameters']
         }
@@ -81,12 +86,13 @@ class RunnerArgs():
         return files
 
 
-parser = argparse.ArgumentParser(
-    description='Light-weight webapp for visualizing differential expression')
-parser.add_argument('--input',
-                    type=argparse.FileType('r'), required=True)
-parser.add_argument('--port',
-                    type=int, default=80)
-args = RunnerArgs(parser.parse_args())
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Webapp for visualizing differential expression')
+    parser.add_argument('--input',
+                        type=argparse.FileType('r'), required=True)
+    parser.add_argument('--port',
+                        type=int, default=80)
+    args = RunnerArgs(parser.parse_args())
 
-app_runner.main(args)
+    app_runner.main(args)
