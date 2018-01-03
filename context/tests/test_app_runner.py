@@ -1,10 +1,11 @@
 import unittest
 from unittest.mock import patch
 
+from dash import Dash
+from flask import Flask
+
 from app_runner import main
 from app_runner_refinery import DefaultArgs
-from flask import Flask
-from dash import Dash
 
 
 class TestAppRunner(unittest.TestCase):
