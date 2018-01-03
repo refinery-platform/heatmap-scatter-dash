@@ -236,18 +236,18 @@ class AppCallbacks(AppLayout):
         returns the indexes of the dataframe as a single column html table.
         """
         return self._css_url_html() + _remove_rowname_header(
-                    pandas.DataFrame(dataframe.index).to_html(
-                        index=False
-                    )
-                )
-                # Would prefer something like:
-                #   dataframe.to_html(max_cols=0)
-                # but that shows all columns, not just the row header.
+            pandas.DataFrame(dataframe.index).to_html(
+                index=False
+            )
+        )
+        # Would prefer something like:
+        #   dataframe.to_html(max_cols=0)
+        # but that shows all columns, not just the row header.
 
     def _css_url_html(self):
         return ''.join([
             '<link rel="stylesheet" property="stylesheet" href="{}">'
-                .format(url) for url in self._css_urls
+            .format(url) for url in self._css_urls
         ])
 
 
