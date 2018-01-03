@@ -104,7 +104,8 @@ def main(args, parser=None):
         # but here, we want to be sure that some server comes up
         # and returns a 200, so that django-proxy knows to stop waiting,
         # and the end-user can see the error
-
+        if not args.html_error:
+            raise
         app = Flask('error-page')
         error_str = ''.join(
             traceback.TracebackException.from_exception(e).format()
@@ -172,6 +173,10 @@ if __name__ == '__main__':
         '--reverse_colors', action='store_true',
         help='Reverse the color scale of the heatmap.')
 
+    parser.add_argument(
+        '--html_error', action='store_true',
+        help='If there is a configuration error, instead of exiting, '
+        'start the server and display an error page.')
     parser.add_argument(
         '--api_prefix', default='',
         help='Prefix for API URLs. '
