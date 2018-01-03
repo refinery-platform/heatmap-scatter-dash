@@ -103,7 +103,7 @@ def main(args, parser=None):
         # Big try-blocks are usually to be avoided...
         # but here, we want to be sure that some server comes up
         # and returns a 200, so that django-proxy knows to stop waiting,
-        # and the end-user can see the error
+        # and the end-user can see the error.
         if not args.html_error:
             raise
         app = Flask('error-page')

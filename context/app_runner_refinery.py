@@ -23,6 +23,7 @@ class RunnerArgs():
         self.top = 500
         self.scatterplot_top = False
         self.reverse_colors = True
+        self.html_error = True
 
         input = json.loads(refinery_args.input.read(None))
 
