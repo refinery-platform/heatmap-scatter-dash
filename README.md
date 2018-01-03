@@ -13,8 +13,8 @@ usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--top TOP] [--scatterplot_top] [--cluster_rows]
                      [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
-                     [--reverse_colors] [--api_prefix API_PREFIX]
-                     [--port PORT] [--debug]
+                     [--reverse_colors] [--html_error]
+                     [--api_prefix API_PREFIX] [--port PORT] [--debug]
 
 Light-weight visualization for differential expression
 
@@ -43,6 +43,8 @@ optional arguments:
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap.
   --reverse_colors      Reverse the color scale of the heatmap.
+  --html_error          If there is a configuration error, instead of exiting,
+                        start the server and display an error page.
   --api_prefix API_PREFIX
                         Prefix for API URLs. (This is only useful inside
                         Refinery.)
