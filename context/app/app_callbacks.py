@@ -141,15 +141,10 @@ class AppCallbacks(AppLayout):
         selected_conditions = self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
 
-        selected_genes_ids = json.loads(selected_genes_ids_json)
-        selected_genes = [
-            item for (i, item)
-            in enumerate(self._genes)
-            if i in selected_genes_ids
-        ]
-
-        selected_conditions_genes_df = \
-            selected_conditions_df.loc[selected_genes]
+        selected_conditions_genes_df = self._filter_by_genes_ids_json(
+            selected_conditions_df,
+            selected_genes_ids_json
+        )
 
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
         return {
@@ -282,28 +277,27 @@ class AppCallbacks(AppLayout):
     #     # but transpose may be more efficient than creating a new DataFrame.
 
     def _update_gene_table(self, selected_genes_ids_json):
-        selected_genes_ids = json.loads(selected_genes_ids_json)
-        selected_genes = [
-            item for (i, item)
-            in enumerate(self._genes)
-            if i in selected_genes_ids
-        ]
-        selected_genes_df = \
-            self._dataframe.loc[selected_genes]
-
+        selected_genes_df = self._filter_by_genes_ids_json(
+            self._dataframe,
+            selected_genes_ids_json
+        )
         return self._table_html(selected_genes_df)
 
     def _update_gene_list(self, selected_genes_ids_json):
-        selected_genes_ids = json.loads(selected_genes_ids_json)
+        selected_genes_df = self._filter_by_genes_ids_json(
+            self._dataframe,
+            selected_genes_ids_json
+        )
+        return self._list_html(selected_genes_df)
+
+    def _filter_by_genes_ids_json(self, dataframe, json_list):
+        selected_genes_ids = json.loads(json_list)
         selected_genes = [
             item for (i, item)
             in enumerate(self._genes)
             if i in selected_genes_ids
         ]
-        selected_genes_df = \
-            self._dataframe.loc[selected_genes]
-        
-        return self._list_html(selected_genes_df)
+        return dataframe.loc[selected_genes]
 
     def _table_html(self, dataframe):
         """
