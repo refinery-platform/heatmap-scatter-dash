@@ -48,16 +48,16 @@ class AppCallbacks(AppLayout):
         #     Output('ids-iframe', 'srcDoc'),
         #     [Input('scatter-pca', 'selectedData')]
         # )(self._update_condition_list)
-        #
-        # self.app.callback(
-        #     Output('table-iframe', 'srcDoc'),
-        #     [Input('search-genes', 'value')]
-        # )(self._update_gene_table)
-        #
-        # self.app.callback(
-        #     Output('list-iframe', 'srcDoc'),
-        #     [Input('search-genes', 'value')]
-        # )(self._update_gene_list)
+
+        self.app.callback(
+            Output('table-iframe', 'srcDoc'),
+            [Input('selected-genes-ids-json', 'children')]
+        )(self._update_gene_table)
+
+        self.app.callback(
+            Output('list-iframe', 'srcDoc'),
+            [Input('selected-genes-ids-json', 'children')]
+        )(self._update_gene_list)
 
         # Hidden elements that record the last time a control was touched:
 
@@ -280,14 +280,30 @@ class AppCallbacks(AppLayout):
     #     # Alternatively:
     #     #   pandas.DataFrame(self._dataframe.columns.tolist())
     #     # but transpose may be more efficient than creating a new DataFrame.
-    #
-    # def _update_gene_table(self, search_term):
-    #     booleans = _match_booleans(search_term, {}, self._genes)
-    #     return self._table_html(self._dataframe[booleans])
-    #
-    # def _update_gene_list(self, search_term):
-    #     booleans = _match_booleans(search_term, {}, self._genes)
-    #     return self._list_html(self._dataframe[booleans])
+
+    def _update_gene_table(self, selected_genes_ids_json):
+        selected_genes_ids = json.loads(selected_genes_ids_json)
+        selected_genes = [
+            item for (i, item)
+            in enumerate(self._genes)
+            if i in selected_genes_ids
+        ]
+        selected_genes_df = \
+            self._dataframe.loc[selected_genes]
+
+        return self._table_html(selected_genes_df)
+
+    def _update_gene_list(self, selected_genes_ids_json):
+        selected_genes_ids = json.loads(selected_genes_ids_json)
+        selected_genes = [
+            item for (i, item)
+            in enumerate(self._genes)
+            if i in selected_genes_ids
+        ]
+        selected_genes_df = \
+            self._dataframe.loc[selected_genes]
+        
+        return self._list_html(selected_genes_df)
 
     def _table_html(self, dataframe):
         """
