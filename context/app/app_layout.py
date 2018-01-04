@@ -90,22 +90,7 @@ class AppLayout(AppBase):
                         volcano_options=volcano_options),
                     className='col-md-6')
             ], className='row'),
-            html.Div(
-                id = 'search-genes-timestamp',
-                # style={'display': 'none'}
-            ),
-            html.Div(
-                id='scatter-sample-by-sample-timestamp',
-                # style={'display': 'none'}
-            ),
-            html.Div(
-                id='scatter-volcano-timestamp',
-                # style={'display': 'none'}
-            ),
-            html.Div(
-                id='selected-genes',
-                # style={'display': 'none'}
-            )
+            self._hidden_div()
         ], className='container')
 
     def _left_column(self):
@@ -158,6 +143,24 @@ class AppLayout(AppBase):
                 _iframe('list')
             ], className='tab-content')
         ]
+
+    def _hidden_div(self):
+        return html.Div(
+            [
+                'search-genes:',
+                html.Div(id='search-genes-timestamp'),
+                html.Div(id='search-genes-ids-json'),
+                'scatter-sample-by-sample:',
+                html.Div(id='scatter-sample-by-sample-timestamp'),
+                html.Div(id='scatter-sample-by-sample-ids-json'),
+                'scatter-volcano:',
+                html.Div(id='scatter-volcano-timestamp'),
+                html.Div(id='scatter-volcano-ids-json'),
+                'selected-genes:',
+                html.Div(id='selected-genes-ids-json')
+            ],
+            # style={'display': 'none'}
+        )
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [

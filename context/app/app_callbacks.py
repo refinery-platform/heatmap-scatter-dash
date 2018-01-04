@@ -78,22 +78,45 @@ class AppCallbacks(AppLayout):
             [Input('scatter-volcano', 'selectedData')]
         )(self._update_timestamp)
 
+        # Hidden elements which transform inputs into lists of IDs:
+
+        self.app.callback(
+            Output('search-genes-ids-json', 'children'),
+            [Input('search-genes', 'value')]
+        )(self._search_to_ids_json)
+
+        self.app.callback(
+            Output('scatter-sample-by-sample-ids-json', 'children'),
+            [Input('scatter-sample-by-sample', 'selectedData')]
+        )(self._scatter_to_ids_json)
+
+        self.app.callback(
+            Output('scatter-volcano-ids-json', 'children'),
+            [Input('scatter-volcano', 'selectedData')]
+        )(self._scatter_to_ids_json)
+
         # Hidden elements which pick the value from the last modified control:
 
         self.app.callback(
-            Output('selected-genes', 'children'),
+            Output('selected-genes-ids-json', 'children'),
             [Input('search-genes-timestamp', 'children'),
              Input('scatter-sample-by-sample-timestamp', 'children'),
              Input('scatter-volcano-timestamp', 'children')],
-            [State('search-genes', 'value'),
-             State('scatter-sample-by-sample', 'selectedData'),
-             State('scatter-volcano', 'selectedData')]
-        )(self._choose_latest)
+            [State('search-genes-ids-json', 'children'),
+             State('scatter-sample-by-sample-ids-json', 'children'),
+             State('scatter-volcano-ids-json', 'children')]
+        )(self._pick_latest)
+
+    def _search_to_ids_json(self, input):
+        return json.dumps([])
+
+    def _scatter_to_ids_json(self, input):
+        return json.dumps([])
 
     def _update_timestamp(self, input):
         return time.time()
 
-    def _choose_latest(self, *inputs_and_states):
+    def _pick_latest(self, *inputs_and_states):
         assert len(inputs_and_states) % 2 == 0
         midpoint = len(inputs_and_states) // 2
         inputs = inputs_and_states[:midpoint]
