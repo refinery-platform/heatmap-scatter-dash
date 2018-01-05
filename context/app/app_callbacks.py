@@ -1,8 +1,8 @@
+import json
 import re
+import time
 from math import log10
 
-import json
-import time
 import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
@@ -104,7 +104,7 @@ class AppCallbacks(AppLayout):
 
     def _search_to_ids_json(self, input):
         ids = [
-            i for (i,gene)
+            i for (i, gene)
             in enumerate(self._genes)
             if ((input or '') in gene)
         ]
@@ -131,10 +131,10 @@ class AppCallbacks(AppLayout):
             self,
             selected_genes_ids_json,
             scale):
-    #     if pca_selected:
-    #         selected_conditions = _select(
-    #             pca_selected['points'], self._conditions)
-    #     else:
+        #     if pca_selected:
+        #         selected_conditions = _select(
+        #             pca_selected['points'], self._conditions)
+        #     else:
         selected_conditions = self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
 
