@@ -8,15 +8,19 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
-from app.app_layout import AppLayout
+from app.app_gene_callbacks import AppGeneCallbacks
+from app.app_condition_callbacks import AppConditionCallbacks
 
 
-class AppCallbacks(AppLayout):
+from app.utils.callbacks import figure_output, scatter_inputs
+
+
+class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.app.callback(
-            _figure_output('heatmap'),
+            figure_output('heatmap'),
             [
                 Input('selected-genes-ids-json', 'children'),
                 Input('scale-select', 'value')
@@ -24,22 +28,11 @@ class AppCallbacks(AppLayout):
         )(self._update_heatmap)
 
         # self.app.callback(
-        #     _figure_output('scatter-pca'),
+        #     figure_output('scatter-pca'),
         #     _scatter_inputs('pca')
         # )(self._update_scatter_pca)
 
-        self.app.callback(
-            _figure_output('scatter-sample-by-sample'),
-            [Input('selected-genes-ids-json', 'children')] +
-            _scatter_inputs('sample-by-sample', scale_select=True)
-        )(self._update_scatter_genes)
 
-        self.app.callback(
-            _figure_output('scatter-volcano'),
-            [Input('selected-genes-ids-json', 'children'),
-             Input('file-select', 'value')] +
-            _scatter_inputs('volcano', scale_select=False)
-        )(self._update_scatter_volcano)
 
         # self.app.callback(
         #     Output('ids-iframe', 'srcDoc'),
@@ -319,11 +312,11 @@ class AppCallbacks(AppLayout):
 
 
 _dark_dot = {
-    'color': 'rgb(0,0,255)',
+    'color': 'rgb(0,0,127)',
     'size': 5
 }
 _light_dot = {
-    'color': 'rgb(127,127,255)',
+    'color': 'rgb(127,216,127)',
     'size': 5
 }
 
@@ -368,8 +361,7 @@ def _linear(color_scale):
     return [[0, color_scale[0]], [1, color_scale[1]]]
 
 
-def _figure_output(id):
-    return Output(id, 'figure')
+
 
 
 def _match_booleans(search_term, index_set, targets):
@@ -402,15 +394,3 @@ class _ScatterLayout(go.Layout):
                 pad=5
             )
         )
-
-
-def _scatter_inputs(id, scale_select=False):
-    inputs = [
-        Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
-        for axis in ['x', 'y']
-    ]
-    if scale_select:
-        inputs.append(
-            Input('scale-select', 'value')
-        )
-    return inputs
