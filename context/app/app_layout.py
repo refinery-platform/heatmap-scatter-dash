@@ -148,6 +148,8 @@ class AppLayout(AppBase):
     def _hidden_div(self):
         return html.Div(
             [
+                html.Hr(),
+
                 html.B(['search-genes:']),
                 html.Div(id='search-genes-timestamp'),
                 html.Div(id='search-genes-ids-json'),
@@ -160,7 +162,7 @@ class AppLayout(AppBase):
                 html.B(['selected-genes:']),
                 html.Div(id='selected-genes-ids-json')
             ],
-            # style={'display': 'none'}
+            style={'display': 'block' if self._debug else 'none'}
         )
 
     def _scatter(self, id, options, active=False, volcano=False):

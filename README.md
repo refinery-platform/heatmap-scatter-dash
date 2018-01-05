@@ -14,7 +14,7 @@ usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--reverse_colors] [--html_error]
-                     [--api_prefix API_PREFIX] [--port PORT] [--debug]
+                     [--api_prefix API_PREFIX] [--debug] [--port PORT]
 
 Light-weight visualization for differential expression
 
@@ -48,8 +48,9 @@ optional arguments:
   --api_prefix API_PREFIX
                         Prefix for API URLs. (This is only useful inside
                         Refinery.)
+  --debug               Runs the underlying Flask server in debug mode, and
+                        makes some of the internals visible on the page.
   --port PORT
-  --debug
 ```
 
 ## Getting Started

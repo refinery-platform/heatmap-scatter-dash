@@ -92,7 +92,8 @@ def main(args, parser=None):
             colors=args.colors,
             reverse_colors=args.reverse_colors,
             heatmap_type=args.heatmap,
-            api_prefix=args.api_prefix
+            api_prefix=args.api_prefix,
+            debug=args.debug
         ).app
         app.run_server(
             debug=args.debug,
@@ -182,8 +183,11 @@ if __name__ == '__main__':
         help='Prefix for API URLs. '
         '(This is only useful inside Refinery.)')
 
+    parser.add_argument(
+        '--debug', action='store_true',
+        help='Runs the underlying Flask server in debug mode, '
+        'and makes some of the internals visible on the page.')
     parser.add_argument('--port', type=int, default=8050)
-    parser.add_argument('--debug', action='store_true')
 
     args = parser.parse_args()
     main(args, parser)
