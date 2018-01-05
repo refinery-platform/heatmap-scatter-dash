@@ -65,7 +65,7 @@ class AppLayout(AppBase):
         volcano_options = [
             {'label': diff_head, 'value': diff_head}
             for diff_head in sorted(diff_heads, reverse=True)
-            # reveresed, because the y axis label begins with "-"
+            # reversed, because the y axis label begins with "-"
         ]
 
         self.scale_options = [
@@ -138,7 +138,8 @@ class AppLayout(AppBase):
             html.Div([
                 self._scatter('sample-by-sample',
                               conditions_options, active=True),
-                self._scatter('volcano', volcano_options, volcano=True),
+                self._scatter('volcano',
+                              volcano_options, volcano=True),
                 _iframe('table'),
                 _iframe('list')
             ], className='tab-content')
@@ -147,16 +148,16 @@ class AppLayout(AppBase):
     def _hidden_div(self):
         return html.Div(
             [
-                'search-genes:',
+                html.B(['search-genes:']),
                 html.Div(id='search-genes-timestamp'),
                 html.Div(id='search-genes-ids-json'),
-                'scatter-sample-by-sample:',
+                html.B(['scatter-sample-by-sample:']),
                 html.Div(id='scatter-sample-by-sample-timestamp'),
                 html.Div(id='scatter-sample-by-sample-ids-json'),
-                'scatter-volcano:',
+                html.B(['scatter-volcano:']),
                 html.Div(id='scatter-volcano-timestamp'),
                 html.Div(id='scatter-volcano-ids-json'),
-                'selected-genes:',
+                html.B(['selected-genes:']),
                 html.Div(id='selected-genes-ids-json')
             ],
             # style={'display': 'none'}

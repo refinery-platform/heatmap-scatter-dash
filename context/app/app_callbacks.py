@@ -27,23 +27,20 @@ class AppCallbacks(AppLayout):
         #     _figure_output('scatter-pca'),
         #     _scatter_inputs('pca')
         # )(self._update_scatter_pca)
-        #
-        # self.app.callback(
-        #     _figure_output('scatter-sample-by-sample'),
-        #     _scatter_inputs('sample-by-sample',
-        #                     search=True, scale_select=True) +
-        #     [Input('scatter-volcano', 'selectedData')]
-        # )(self._update_scatter_genes)
-        #
-        # self.app.callback(
-        #     _figure_output('scatter-volcano'),
-        #     _scatter_inputs('volcano', search=True) +
-        #     [
-        #         Input('file-select', 'value'),
-        #         Input('scatter-sample-by-sample', 'selectedData')
-        #     ]
-        # )(self._update_scatter_volcano)
-        #
+
+        self.app.callback(
+            _figure_output('scatter-sample-by-sample'),
+            [Input('selected-genes-ids-json', 'children')] +
+            _scatter_inputs('sample-by-sample', scale_select=True)
+        )(self._update_scatter_genes)
+
+        self.app.callback(
+            _figure_output('scatter-volcano'),
+            [Input('selected-genes-ids-json', 'children'),
+             Input('file-select', 'value')] +
+            _scatter_inputs('volcano', scale_select=False)
+        )(self._update_scatter_volcano)
+
         # self.app.callback(
         #     Output('ids-iframe', 'srcDoc'),
         #     [Input('scatter-pca', 'selectedData')]
@@ -194,80 +191,72 @@ class AppCallbacks(AppLayout):
     #         ],
     #         'layout': _ScatterLayout(x_axis, y_axis)
     #     }
-    #
-    # def _update_scatter_genes(
-    #         self,
-    #         x_axis, y_axis,
-    #         heatmap_range, search_term, scale,
-    #         volcano_selected):
-    #     volcano_selected_points = set([
-    #         x['pointNumber'] for x in volcano_selected['points']
-    #     ]) if volcano_selected else {}
-    #     if not search_term:
-    #         search_term = ''
-    #     booleans = _match_booleans(
-    #         search_term, volcano_selected_points, self._genes)
-    #     is_log = scale == 'log'
-    #     return {
-    #         'data': [
-    #             go.Scattergl(
-    #                 # All points
-    #                 x=self._dataframe[x_axis],
-    #                 y=self._dataframe[y_axis],
-    #                 mode='markers',
-    #                 text=self._dataframe.index,
-    #                 marker=_light_dot,
-    #             ),
-    #             go.Scattergl(
-    #                 # Only the selected ones
-    #                 x=self._dataframe[x_axis][booleans],
-    #                 y=self._dataframe[y_axis][booleans],
-    #                 mode='markers',
-    #                 text=self._dataframe.index,
-    #                 marker=_dark_dot
-    #             )
-    #         ],
-    #         'layout': _ScatterLayout(
-    #             x_axis, y_axis,
-    #             x_log=is_log, y_log=is_log)
-    #     }
-    #
-    # def _update_scatter_volcano(
-    #         self,
-    #         x_axis, y_axis,
-    #         heatmap_range, search_term,
-    #         file, gene_selected):
-    #     if not x_axis:
-    #         # ie, there are no differential files.
-    #         # "file" itself is (mis)used for messaging.
-    #         return {}
-    #     gene_selected_points = set([
-    #         x['pointNumber'] for x in
-    #         gene_selected['points']
-    #     ]) if gene_selected else {}
-    #     booleans = _match_booleans(
-    #         search_term, gene_selected_points, self._genes)
-    #     return {
-    #         'data': [
-    #             go.Scattergl(
-    #                 # All points
-    #                 x=self._diff_dataframes[file][x_axis],
-    #                 y=self._diff_dataframes[file][y_axis],
-    #                 mode='markers',
-    #                 text=self._dataframe.index,
-    #                 marker=_light_dot
-    #             ),
-    #             go.Scattergl(
-    #                 # Only the selected ones
-    #                 x=self._diff_dataframes[file][x_axis][booleans],
-    #                 y=self._diff_dataframes[file][y_axis][booleans],
-    #                 mode='markers',
-    #                 text=self._dataframe.index,
-    #                 marker=_dark_dot
-    #             )
-    #         ],
-    #         'layout': _ScatterLayout(x_axis, y_axis)
-    #     }
+
+    def _update_scatter_genes(
+            self,
+            selected_genes_ids_json,
+            x_axis, y_axis, scale):
+        is_log = scale == 'log'
+        all = self._dataframe
+        selected = self._filter_by_genes_ids_json(
+            all,
+            selected_genes_ids_json
+        )
+        return {
+            'data': [
+                go.Scattergl(
+                    x=all[x_axis],
+                    y=all[y_axis],
+                    mode='markers',
+                    text=all.index,
+                    marker=_light_dot,
+                ),
+                go.Scattergl(
+                    x=selected[x_axis],
+                    y=selected[y_axis],
+                    mode='markers',
+                    text=selected.index,
+                    marker=_dark_dot
+                )
+            ],
+            'layout': _ScatterLayout(
+                x_axis, y_axis,
+                x_log=is_log, y_log=is_log)
+        }
+
+    def _update_scatter_volcano(
+            self,
+            selected_genes_ids_json,
+            file_selected,
+            x_axis, y_axis):
+        if not x_axis:
+            # ie, there are no differential files.
+            # "file" itself is (mis)used for messaging.
+            return {}
+        all = self._diff_dataframes[file_selected]
+        selected = self._filter_by_genes_ids_json(
+            all,
+            selected_genes_ids_json
+        )
+        return {
+            'data': [
+                go.Scattergl(
+                    x=all[x_axis],
+                    y=all[y_axis],
+                    mode='markers',
+                    text=self._dataframe.index,
+                    marker=_light_dot
+                ),
+                go.Scattergl(
+                    x=selected[x_axis],
+                    y=selected[y_axis],
+                    mode='markers',
+                    text=self._dataframe.index,
+                    marker=_dark_dot
+                )
+            ],
+            'layout': _ScatterLayout(x_axis, y_axis)
+        }
     #
     # def _update_condition_list(self, selected_data):
     #     points = [point['pointNumber'] for point in selected_data['points']]
@@ -415,20 +404,11 @@ class _ScatterLayout(go.Layout):
         )
 
 
-def _scatter_inputs(id, search=False, scale_select=False):
+def _scatter_inputs(id, scale_select=False):
     inputs = [
         Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
         for axis in ['x', 'y']
     ]
-    inputs.append(
-        Input(
-            'heatmap', 'relayoutData'
-        )
-    )
-    if search:
-        inputs.append(
-            Input('search-genes'.format(id), 'value')
-        )
     if scale_select:
         inputs.append(
             Input('scale-select', 'value')
