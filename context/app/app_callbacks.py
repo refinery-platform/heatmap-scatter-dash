@@ -11,7 +11,7 @@ from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 from app.app_condition_callbacks import AppConditionCallbacks
 from app.app_gene_callbacks import AppGeneCallbacks
 from app.utils.callbacks import figure_output
-
+import logging
 
 class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def __init__(self, **kwargs):
@@ -36,6 +36,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         # )(self._update_condition_list)
 
     def _search_to_ids_json(self, input):
+        self.info('_search_to_ids_json', input)
         ids = [
             i for (i, gene)
             in enumerate(self._genes)
@@ -44,15 +45,18 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         return json.dumps(ids)
 
     def _scatter_to_ids_json(self, input):
+        self.info('_scatter_to_ids_json', input)
         ids = list(set([
             x['pointNumber'] for x in input['points']
         ])) if input else []
         return json.dumps(ids)
 
     def _update_timestamp(self, input):
+        self.info('_update_timestamp', input)
         return time.time()
 
     def _pick_latest(self, *timestamps_and_states):
+        self.info('_pick_latest', timestamps_and_states)
         assert len(timestamps_and_states) % 2 == 0
         midpoint = len(timestamps_and_states) // 2
         timestamps = timestamps_and_states[:midpoint]
@@ -154,6 +158,11 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             .format(url) for url in self._css_urls
         ])
 
+    def info(self, *fields):
+        if self._debug:
+            # TODO: logging.info() didn't work. Check logging levels?
+            print(' | '.join([str(field) for field in fields]))
+
 
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
@@ -203,3 +212,4 @@ def _match_booleans(search_term, index_set, targets):
         and (i in index_set or not index_set)
         for (i, s) in enumerate(targets)
     ]
+
