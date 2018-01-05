@@ -1,7 +1,6 @@
-from dash.dependencies import Output, Input
-
-
 import plotly.graph_objs as go
+from dash.dependencies import Input, Output
+
 
 def figure_output(id):
     return Output(id, 'figure')
@@ -18,6 +17,7 @@ def scatter_inputs(id, scale_select=False):
         )
     return inputs
 
+
 dark_dot = {
     'color': 'rgb(0,0,127)',
     'size': 5
@@ -26,6 +26,7 @@ light_dot = {
     'color': 'rgb(127,216,127)',
     'size': 5
 }
+
 
 class ScatterLayout(go.Layout):
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):

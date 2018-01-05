@@ -1,9 +1,12 @@
-from dash.dependencies import Input, Output, State
-from app.app_layout import AppLayout
-from app.utils.callbacks import figure_output, scatter_inputs, dark_dot,\
-    light_dot, ScatterLayout
 import json
+
 import plotly.graph_objs as go
+from dash.dependencies import Input, Output, State
+
+from app.app_layout import AppLayout
+from app.utils.callbacks import (ScatterLayout, dark_dot, figure_output,
+                                 light_dot, scatter_inputs)
+
 
 class AppGeneCallbacks(AppLayout):
     def __init__(self, **kwargs):

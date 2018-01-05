@@ -6,14 +6,11 @@ from math import log10
 import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input
-
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
-from app.app_gene_callbacks import AppGeneCallbacks
 from app.app_condition_callbacks import AppConditionCallbacks
-
-
-from app.utils.callbacks import figure_output, scatter_inputs
+from app.app_gene_callbacks import AppGeneCallbacks
+from app.utils.callbacks import figure_output
 
 
 class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
@@ -32,8 +29,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         #     figure_output('scatter-pca'),
         #     _scatter_inputs('pca')
         # )(self._update_scatter_pca)
-
-
 
         # self.app.callback(
         #     Output('ids-iframe', 'srcDoc'),
@@ -130,7 +125,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     #         'layout': _ScatterLayout(x_axis, y_axis)
     #     }
 
-
     def _table_html(self, dataframe):
         """
         Given a dataframe,
@@ -159,9 +153,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             '<link rel="stylesheet" property="stylesheet" href="{}">'
             .format(url) for url in self._css_urls
         ])
-
-
-
 
 
 def _remove_rowname_header(s):
@@ -204,9 +195,6 @@ def _linear(color_scale):
     return [[0, color_scale[0]], [1, color_scale[1]]]
 
 
-
-
-
 def _match_booleans(search_term, index_set, targets):
     # search_term may be None on first load.
     # index set should be ignored if empty
@@ -215,6 +203,3 @@ def _match_booleans(search_term, index_set, targets):
         and (i in index_set or not index_set)
         for (i, s) in enumerate(targets)
     ]
-
-
-
