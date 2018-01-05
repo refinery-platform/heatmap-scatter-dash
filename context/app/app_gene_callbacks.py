@@ -146,13 +146,6 @@ class AppGeneCallbacks(AppLayout):
             ],
             'layout': ScatterLayout(x_axis, y_axis)
         }
-    #
-    # def _update_condition_list(self, selected_data):
-    #     points = [point['pointNumber'] for point in selected_data['points']]
-    #     return self._list_html(self._dataframe.T.iloc[points])
-    #     # Alternatively:
-    #     #   pandas.DataFrame(self._dataframe.columns.tolist())
-    #     # but transpose may be more efficient than creating a new DataFrame.
 
     def _update_gene_table(self, selected_genes_ids_json):
         selected_genes_df = self._filter_by_genes_ids_json(

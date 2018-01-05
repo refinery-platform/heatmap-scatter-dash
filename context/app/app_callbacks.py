@@ -25,16 +25,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             ]
         )(self._update_heatmap)
 
-        # self.app.callback(
-        #     figure_output('scatter-pca'),
-        #     _scatter_inputs('pca')
-        # )(self._update_scatter_pca)
-
-        # self.app.callback(
-        #     Output('ids-iframe', 'srcDoc'),
-        #     [Input('scatter-pca', 'selectedData')]
-        # )(self._update_condition_list)
-
     def _search_to_ids_json(self, input):
         self.info('_search_to_ids_json', input)
         ids = [
@@ -68,6 +58,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             self,
             selected_genes_ids_json,
             scale):
+        # TODO: Re-enable PCA
         #     if pca_selected:
         #         selected_conditions = _select(
         #             pca_selected['points'], self._conditions)
@@ -114,20 +105,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             y=dataframe.index.tolist(),
             z=dataframe.as_matrix(),
             colorscale=adjusted_color_scale)
-
-    # def _update_scatter_pca(self, x_axis, y_axis, heatmap_range):
-    #     return {
-    #         'data': [
-    #             go.Scattergl(
-    #                 x=self._dataframe_pca[x_axis],
-    #                 y=self._dataframe_pca[y_axis],
-    #                 mode='markers',
-    #                 text=self._dataframe_pca.index,
-    #                 marker=_dark_dot
-    #             )
-    #         ],
-    #         'layout': _ScatterLayout(x_axis, y_axis)
-    #     }
 
     def _table_html(self, dataframe):
         """
