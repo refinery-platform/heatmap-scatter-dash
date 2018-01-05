@@ -8,6 +8,7 @@ import app_runner
 
 
 class DefaultArgs():
+
     def __init__(self):
         self.demo = False
         self.debug = False
@@ -41,8 +42,8 @@ class RunnerArgs(DefaultArgs):
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
 
-        assert type(parameters['api_prefix']) == str
-        self.api_prefix = parameters['api_prefix']
+        assert type(input['api_prefix']) == str
+        self.api_prefix = input['api_prefix']
 
         data_directory = input['extra_directories'][0]
         try:
