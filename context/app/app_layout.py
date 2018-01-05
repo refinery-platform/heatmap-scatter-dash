@@ -150,6 +150,11 @@ class AppLayout(AppBase):
             [
                 html.Hr(),
 
+                html.B(['selected-conditions:']),
+                html.Div(id='selected-conditions-ids-json'),
+
+                html.Hr(),
+
                 html.B(['search-genes:']),
                 html.Div(id='search-genes-timestamp'),
                 html.Div(id='search-genes-ids-json'),

@@ -135,11 +135,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             .format(url) for url in self._css_urls
         ])
 
-    def info(self, *fields):
-        if self._debug:
-            # TODO: logging.info() didn't work. Check logging levels?
-            print(' | '.join([str(field) for field in fields]))
-
 
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
