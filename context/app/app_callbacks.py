@@ -11,7 +11,7 @@ from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 from app.app_condition_callbacks import AppConditionCallbacks
 from app.app_gene_callbacks import AppGeneCallbacks
 from app.utils.callbacks import figure_output
-import logging
+
 
 class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def __init__(self, **kwargs):
@@ -212,4 +212,3 @@ def _match_booleans(search_term, index_set, targets):
         and (i in index_set or not index_set)
         for (i, s) in enumerate(targets)
     ]
-
