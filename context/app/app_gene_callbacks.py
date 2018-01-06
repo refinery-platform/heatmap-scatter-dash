@@ -83,13 +83,13 @@ class AppGeneCallbacks(AppLayout):
 
     def _update_scatter_genes(
             self,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             x_axis, y_axis, scale):
         is_log = scale == 'log'
         all = self._dataframe
-        selected = self._filter_by_genes_ids_json(
+        selected = self._filter_by_gene_ids_json(
             all,
-            selected_genes_ids_json
+            selected_gene_ids_json
         )
         data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
         return {
@@ -101,7 +101,7 @@ class AppGeneCallbacks(AppLayout):
 
     def _update_scatter_volcano(
             self,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             file_selected,
             x_axis, y_axis):
         if not x_axis:
@@ -109,9 +109,9 @@ class AppGeneCallbacks(AppLayout):
             # "file" itself is (mis)used for messaging.
             return {}
         all = self._diff_dataframes[file_selected]
-        selected = self._filter_by_genes_ids_json(
+        selected = self._filter_by_gene_ids_json(
             all,
-            selected_genes_ids_json
+            selected_gene_ids_json
         )
         return {
             'data': [
@@ -133,21 +133,21 @@ class AppGeneCallbacks(AppLayout):
             'layout': ScatterLayout(x_axis, y_axis)
         }
 
-    def _update_gene_table(self, selected_genes_ids_json):
-        selected_genes_df = self._filter_by_genes_ids_json(
+    def _update_gene_table(self, selected_gene_ids_json):
+        selected_genes_df = self._filter_by_gene_ids_json(
             self._dataframe,
-            selected_genes_ids_json
+            selected_gene_ids_json
         )
         return self._table_html(selected_genes_df)
 
     def _update_gene_list(self, selected_genes_ids_json):
-        selected_genes_df = self._filter_by_genes_ids_json(
+        selected_genes_df = self._filter_by_gene_ids_json(
             self._dataframe,
             selected_genes_ids_json
         )
         return self._list_html(selected_genes_df)
 
-    def _filter_by_genes_ids_json(self, dataframe, json_list):
+    def _filter_by_gene_ids_json(self, dataframe, json_list):
         selected_genes_ids = json.loads(json_list)
         selected_genes = [
             item for (i, item)

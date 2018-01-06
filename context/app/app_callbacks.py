@@ -44,7 +44,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         return json.dumps(ids)
 
     def _scatter_to_condition_ids_json(self, input):
-        self.info('_scatter_to_gene_ids_json', input)
+        self.info('_scatter_to_condition_ids_json', input)
         ids = [
             x['text']
             for x in input['points']
@@ -77,7 +77,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         ] if conditions_ids else self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
 
-        selected_conditions_genes_df = self._filter_by_genes_ids_json(
+        selected_conditions_genes_df = self._filter_by_gene_ids_json(
             selected_conditions_df,
             selected_genes_ids_json
         )
@@ -150,19 +150,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
-
-
-def _select(points, target, search_term=None):
-    point_numbers = [
-        point['pointNumber'] for point in points
-        if not search_term or search_term in point['text']
-    ]
-    # TODO: Why not just return point['text'] here?
-    return [
-        item for (i, item)
-        in enumerate(target)
-        if i in point_numbers
-    ]
 
 
 def _log_interpolate(color_scale, min, max):
