@@ -27,6 +27,20 @@ light_dot = {
     'size': 5
 }
 
+def traces(x_axis, y_axis, dataframe_marker_pairs):
+    # Was hitting something like
+    # https://community.plot.ly/t/7329
+    # when I included the empty df,
+    # but I couldn't create a minimal reproducer.
+    return [
+        go.Scattergl(
+            x=df[x_axis],
+            y=df[y_axis],
+            mode='markers',
+            text=df.index,
+            marker=marker
+        ) for (df, marker) in dataframe_marker_pairs if not df.empty
+    ]
 
 class ScatterLayout(go.Layout):
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):

@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output, State
 
 from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, dark_dot, figure_output,
-                                 light_dot, scatter_inputs)
+                                 light_dot, scatter_inputs, traces)
 
 
 class AppGeneCallbacks(AppLayout):
@@ -91,23 +91,9 @@ class AppGeneCallbacks(AppLayout):
             all,
             selected_genes_ids_json
         )
+        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
         return {
-            'data': [
-                go.Scattergl(
-                    x=all[x_axis],
-                    y=all[y_axis],
-                    mode='markers',
-                    text=all.index,
-                    marker=light_dot,
-                ),
-                go.Scattergl(
-                    x=selected[x_axis],
-                    y=selected[y_axis],
-                    mode='markers',
-                    text=selected.index,
-                    marker=dark_dot
-                )
-            ],
+            'data': data,
             'layout': ScatterLayout(
                 x_axis, y_axis,
                 x_log=is_log, y_log=is_log)

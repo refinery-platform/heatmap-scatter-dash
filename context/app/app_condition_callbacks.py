@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output, State
 
 from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, dark_dot, figure_output,
-                                 light_dot, scatter_inputs)
+                                 light_dot, scatter_inputs, traces)
 
 
 class AppConditionCallbacks(AppLayout):
@@ -62,18 +62,3 @@ class AppConditionCallbacks(AppLayout):
             if i in selected_conditions_ids
         ]
         return dataframe.loc[selected_conditions]
-
-def traces(x_axis, y_axis, dataframe_marker_pairs):
-    # Was hitting something like
-    # https://community.plot.ly/t/7329
-    # when I included the empty df,
-    # but I couldn't create a minimal reproducer.
-    return [
-        go.Scattergl(
-            x=df[x_axis],
-            y=df[y_axis],
-            mode='markers',
-            text=df.index,
-            marker=marker
-        ) for (df, marker) in dataframe_marker_pairs if not df.empty
-    ]
