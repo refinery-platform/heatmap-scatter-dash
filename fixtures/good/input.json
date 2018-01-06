@@ -1,4 +1,5 @@
 {
+  "api_prefix": "/visualizations/container-name/",
   "file_relationships": [
     ["https://raw.githubusercontent.com/mccalluc/heatmap-scatter-dash/v0.0.4/fixtures/good/data/counts.csv"],
     [
@@ -40,13 +41,6 @@
       "value_type": "BOOLEAN",
       "default_value": false,
       "value": true
-    },
-    {
-      "name": "api_prefix",
-      "description": "API prefix",
-      "value_type": "STRING",
-      "default_value": "/container-name-goes-here",
-      "value": "/fake"
     }
   ]
 }
