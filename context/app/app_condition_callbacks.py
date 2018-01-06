@@ -37,16 +37,9 @@ class AppConditionCallbacks(AppLayout):
             all,
             selected_conditions_ids_json
         )
+        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
         return {
-            'data': [
-                go.Scattergl(
-                    x=all[x_axis],
-                    y=all[y_axis],
-                    mode='markers',
-                    text=self._dataframe_pca.index,
-                    marker=dark_dot
-                )
-            ],
+            'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
         }
 
@@ -69,3 +62,18 @@ class AppConditionCallbacks(AppLayout):
             if i in selected_conditions_ids
         ]
         return dataframe.loc[selected_conditions]
+
+def traces(x_axis, y_axis, dataframe_marker_pairs):
+    # Was hitting something like
+    # https://community.plot.ly/t/7329
+    # when I included the empty df,
+    # but I couldn't create a minimal reproducer.
+    return [
+        go.Scattergl(
+            x=df[x_axis],
+            y=df[y_axis],
+            mode='markers',
+            text=df.index,
+            marker=marker
+        ) for (df, marker) in dataframe_marker_pairs if not df.empty
+    ]
