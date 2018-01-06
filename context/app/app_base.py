@@ -64,6 +64,7 @@ class AppBase:
             # TODO: logging.info() didn't work. Check logging levels?
             print(' | '.join([str(field) for field in fields]))
 
+
 def to_data_uri(s, mime):
     uri = (
         ('data:' + mime + ';base64,').encode('utf8') +

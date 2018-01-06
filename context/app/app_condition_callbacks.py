@@ -1,7 +1,6 @@
 import json
 
-import plotly.graph_objs as go
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output
 
 from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, dark_dot, figure_output,
@@ -31,7 +30,8 @@ class AppConditionCallbacks(AppLayout):
             [Input('scatter-pca', 'selectedData')]
         )(self._scatter_to_ids_json)
 
-    def _update_scatter_pca(self, selected_conditions_ids_json, x_axis, y_axis):
+    def _update_scatter_pca(
+            self, selected_conditions_ids_json, x_axis, y_axis):
         all = self._dataframe_pca
         selected = self._filter_by_conditions_ids_json(
             all,

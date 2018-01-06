@@ -27,6 +27,7 @@ light_dot = {
     'size': 5
 }
 
+
 def traces(x_axis, y_axis, dataframe_marker_pairs):
     # Was hitting something like
     # https://community.plot.ly/t/7329
@@ -41,6 +42,7 @@ def traces(x_axis, y_axis, dataframe_marker_pairs):
             marker=marker
         ) for (df, marker) in dataframe_marker_pairs if not df.empty
     ]
+
 
 class ScatterLayout(go.Layout):
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):

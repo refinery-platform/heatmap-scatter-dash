@@ -1,9 +1,9 @@
-import plotly.graph_objs as go
-from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
-from dash import Dash
 import pandas
+import plotly.graph_objs as go
+from dash import Dash
+from dash.dependencies import Input, Output
 
 app = Dash()
 app.layout = html.Div([
@@ -11,6 +11,7 @@ app.layout = html.Div([
     dcc.Input(id='my_input'),
     dcc.Graph(id='my_graph')
 ])
+
 
 @app.callback(
     Output('my_graph', 'figure'),
@@ -26,7 +27,7 @@ def not_a_reproducer_sadly(input):
         columns=['x', 'y']
     )
 
-    data = [ go.Scattergl(x=good['x'], y=good['y'], text=good.index) ]
+    data = [go.Scattergl(x=good['x'], y=good['y'], text=good.index)]
     if input:
         data.append(go.Scattergl(x=empty['x'], y=empty['y'], text=None))
 
@@ -34,5 +35,6 @@ def not_a_reproducer_sadly(input):
         'data': data,
         'layout': go.Layout()
     }
+
 
 app.run_server()
