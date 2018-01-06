@@ -28,7 +28,7 @@ class AppConditionCallbacks(AppLayout):
         self.app.callback(
             Output('selected-conditions-ids-json', 'children'),
             [Input('scatter-pca', 'selectedData')]
-        )(self._scatter_to_ids_json)
+        )(self._scatter_to_condition_ids_json)
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json, x_axis, y_axis):

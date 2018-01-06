@@ -62,12 +62,12 @@ class AppGeneCallbacks(AppLayout):
         self.app.callback(
             Output('scatter-sample-by-sample-ids-json', 'children'),
             [Input('scatter-sample-by-sample', 'selectedData')]
-        )(self._scatter_to_ids_json)
+        )(self._scatter_to_gene_ids_json)
 
         self.app.callback(
             Output('scatter-volcano-ids-json', 'children'),
             [Input('scatter-volcano', 'selectedData')]
-        )(self._scatter_to_ids_json)
+        )(self._scatter_to_gene_ids_json)
 
         # Hidden elements which pick the value from the last modified control:
 

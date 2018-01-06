@@ -17,29 +17,38 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.app.callback(
-            figure_output('heatmap'),
-            [
-                Input('selected-conditions-ids-json', 'children'),
-                Input('selected-genes-ids-json', 'children'),
-                Input('scale-select', 'value')
-            ]
-        )(self._update_heatmap)
+        # self.app.callback(
+        #     figure_output('heatmap'),
+        #     [
+        #         Input('selected-conditions-ids-json', 'children'),
+        #         Input('selected-genes-ids-json', 'children'),
+        #         Input('scale-select', 'value')
+        #     ]
+        # )(self._update_heatmap)
 
     def _search_to_ids_json(self, input):
         self.info('_search_to_ids_json', input)
         ids = [
-            i for (i, gene)
-            in enumerate(self._genes)
-            if ((input or '') in gene)
-        ]
+            gene
+            for gene in self._genes
+            if input in gene
+        ] if input else self._genes
         return json.dumps(ids)
 
-    def _scatter_to_ids_json(self, input):
-        self.info('_scatter_to_ids_json', input)
-        ids = list(set([
-            x['pointNumber'] for x in input['points']
-        ])) if input else []
+    def _scatter_to_gene_ids_json(self, input):
+        self.info('_scatter_to_gene_ids_json', input)
+        ids = [
+            x['text']
+            for x in input['points']
+        ] if input else self._genes
+        return json.dumps(ids)
+
+    def _scatter_to_condition_ids_json(self, input):
+        self.info('_scatter_to_gene_ids_json', input)
+        ids = [
+            x['text']
+            for x in input['points']
+        ] if input else self._conditions
         return json.dumps(ids)
 
     def _update_timestamp(self, input):
