@@ -20,6 +20,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         self.app.callback(
             figure_output('heatmap'),
             [
+                Input('selected-conditions-ids-json', 'children'),
                 Input('selected-genes-ids-json', 'children'),
                 Input('scale-select', 'value')
             ]
@@ -56,14 +57,15 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
 
     def _update_heatmap(
             self,
+            selected_conditions_ids_json,
             selected_genes_ids_json,
             scale):
-        # TODO: Re-enable PCA
-        #     if pca_selected:
-        #         selected_conditions = _select(
-        #             pca_selected['points'], self._conditions)
-        #     else:
-        selected_conditions = self._conditions
+        conditions_ids = json.loads(selected_conditions_ids_json)
+        selected_conditions = [
+            condition
+            for (i, condition) in enumerate(self._conditions)
+            if i in conditions_ids
+        ] if conditions_ids else self._conditions
         selected_conditions_df = self._dataframe[selected_conditions]
 
         selected_conditions_genes_df = self._filter_by_genes_ids_json(
