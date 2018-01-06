@@ -65,7 +65,7 @@ class AppLayout(AppBase):
         volcano_options = [
             {'label': diff_head, 'value': diff_head}
             for diff_head in sorted(diff_heads, reverse=True)
-            # reveresed, because the y axis label begins with "-"
+            # reversed, because the y axis label begins with "-"
         ]
 
         self.scale_options = [
@@ -89,7 +89,8 @@ class AppLayout(AppBase):
                         conditions_options=conditions_options,
                         volcano_options=volcano_options),
                     className='col-md-6')
-            ], className='row')
+            ], className='row'),
+            self._hidden_div()
         ], className='container')
 
     def _left_column(self):
@@ -137,11 +138,37 @@ class AppLayout(AppBase):
             html.Div([
                 self._scatter('sample-by-sample',
                               conditions_options, active=True),
-                self._scatter('volcano', volcano_options, volcano=True),
+                self._scatter('volcano',
+                              volcano_options, volcano=True),
                 _iframe('table'),
                 _iframe('list')
             ], className='tab-content')
         ]
+
+    def _hidden_div(self):
+        return html.Div(
+            [
+                html.Hr(),
+
+                html.B(['selected-conditions:']),
+                html.Div(id='selected-conditions-ids-json'),
+
+                html.Hr(),
+
+                html.B(['search-genes:']),
+                html.Div(id='search-genes-timestamp'),
+                html.Div(id='search-genes-ids-json'),
+                html.B(['scatter-sample-by-sample:']),
+                html.Div(id='scatter-sample-by-sample-timestamp'),
+                html.Div(id='scatter-sample-by-sample-ids-json'),
+                html.B(['scatter-volcano:']),
+                html.Div(id='scatter-volcano-timestamp'),
+                html.Div(id='scatter-volcano-ids-json'),
+                html.B(['selected-genes:']),
+                html.Div(id='selected-genes-ids-json')
+            ],
+            style={'display': 'block' if self._debug else 'none'}
+        )
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [

@@ -14,7 +14,8 @@ class AppBase:
                  colors='Greys',
                  reverse_colors=False,
                  heatmap_type='svg',
-                 api_prefix=None):
+                 api_prefix=None,
+                 debug=False):
         self._dataframe = dataframe
         self._dataframe_pca = pca(self._dataframe)
         self._diff_dataframes = diff_dataframes
@@ -48,6 +49,7 @@ class AppBase:
                 """,
                 "text/css")
         ]
+        self._debug = debug
         self.app = dash.Dash()
         if api_prefix:
             self.app.config.update({
@@ -56,6 +58,11 @@ class AppBase:
         self.app.title = 'Heatmap + Scatterplots'
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
+
+    def info(self, *fields):
+        if self._debug:
+            # TODO: logging.info() didn't work. Check logging levels?
+            print(' | '.join([str(field) for field in fields]))
 
 
 def to_data_uri(s, mime):
