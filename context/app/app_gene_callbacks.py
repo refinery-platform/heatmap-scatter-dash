@@ -148,10 +148,5 @@ class AppGeneCallbacks(AppLayout):
         return self._list_html(selected_genes_df)
 
     def _filter_by_gene_ids_json(self, dataframe, json_list):
-        selected_genes_ids = json.loads(json_list)
-        selected_genes = [
-            item for (i, item)
-            in enumerate(self._genes)
-            if i in selected_genes_ids
-        ]
-        return dataframe.loc[selected_genes]
+        selected_gene_ids = json.loads(json_list)
+        return dataframe.loc[selected_gene_ids]
