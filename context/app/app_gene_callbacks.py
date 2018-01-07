@@ -119,14 +119,14 @@ class AppGeneCallbacks(AppLayout):
                     x=all[x_axis],
                     y=all[y_axis],
                     mode='markers',
-                    text=self._dataframe.index,
+                    text=all.index,
                     marker=light_dot
                 ),
                 go.Scattergl(
                     x=selected[x_axis],
                     y=selected[y_axis],
                     mode='markers',
-                    text=self._dataframe.index,
+                    text=selected.index,
                     marker=dark_dot
                 )
             ],
