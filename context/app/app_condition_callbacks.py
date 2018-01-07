@@ -32,7 +32,7 @@ class AppConditionCallbacks(AppLayout):
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json, x_axis, y_axis):
-        all = self._dataframe_pca
+        all = self._pca_dataframe
         selected = self._filter_by_condition_ids_json(
             all,
             selected_conditions_ids_json
@@ -50,7 +50,7 @@ class AppConditionCallbacks(AppLayout):
             list({point['text'] for point in selected_data['points']})
             if selected_data else []
         )
-        return self._list_html(self._dataframe.T.loc[conditions])
+        return self._list_html(self._union_dataframe.T.loc[conditions])
         # Alternatively:
         #   pandas.DataFrame(self._dataframe.columns.tolist())
         # but transpose may be more efficient than creating a new DataFrame.

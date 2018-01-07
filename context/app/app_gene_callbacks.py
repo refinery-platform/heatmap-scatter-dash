@@ -86,7 +86,7 @@ class AppGeneCallbacks(AppLayout):
             selected_gene_ids_json,
             x_axis, y_axis, scale):
         is_log = scale == 'log'
-        all = self._dataframe
+        all = self._union_dataframe
         selected = self._filter_by_gene_ids_json(
             all,
             selected_gene_ids_json
@@ -121,18 +121,21 @@ class AppGeneCallbacks(AppLayout):
 
     def _update_gene_table(self, selected_gene_ids_json):
         selected_genes_df = self._filter_by_gene_ids_json(
-            self._dataframe,
+            self._union_dataframe,
             selected_gene_ids_json
         )
         return self._table_html(selected_genes_df)
 
     def _update_gene_list(self, selected_genes_ids_json):
         selected_genes_df = self._filter_by_gene_ids_json(
-            self._dataframe,
+            self._union_dataframe,
             selected_genes_ids_json
         )
         return self._list_html(selected_genes_df)
 
     def _filter_by_gene_ids_json(self, dataframe, json_list):
-        selected_gene_ids = json.loads(json_list)
-        return dataframe.loc[selected_gene_ids]
+        if json_list:
+            selected_gene_ids = json.loads(json_list)
+            return dataframe.reindex(selected_gene_ids)
+        else:
+            return dataframe

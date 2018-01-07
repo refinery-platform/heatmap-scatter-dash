@@ -63,16 +63,18 @@ def main(args, parser=None):
             # Argparser validation should keep us from reaching this point.
             raise Exception('Either "demo" or "files" is required')
 
-        merged = merge(dataframes)
+        union_dataframe = merge(dataframes)
         if args.top:
-            merged = sort_by_variance(merged).head(args.top)
+            truncated_dataframe = sort_by_variance(union_dataframe).head(args.top)
+        else:
+            truncated_dataframe = union_dataframe
 
-        dataframe = cluster(
-            merged,
+        cluster_dataframe = cluster(
+            truncated_dataframe,
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols)
 
-        keys = set(dataframe.index.tolist())
+        keys = set(union_dataframe.index.tolist())
         if args.diffs:
             diff_dataframes = {
                 # app_runner and refinery pass different things in here...
@@ -87,7 +89,8 @@ def main(args, parser=None):
                 'No differential files given': pandas.DataFrame()
             }
         app = AppCallbacks(
-            dataframe=dataframe,
+            cluster_dataframe=cluster_dataframe,
+            union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
             colors=args.colors,
             reverse_colors=args.reverse_colors,

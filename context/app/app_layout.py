@@ -217,7 +217,7 @@ def _iframe(id):
                     srcDoc='First select a subset')
         # or
         #   dcc.Graph(id='gene-table',
-        #   figure=ff.create_table(self._dataframe.to_html()))
+        #   figure=ff.create_table(self._union_dataframe.to_html()))
         #   (but that's slow)
         # or
         #   https://community.plot.ly/t/display-tables-in-dash/4707/13

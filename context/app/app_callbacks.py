@@ -75,7 +75,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             for (i, condition) in enumerate(self._conditions)
             if i in conditions_ids
         ] if conditions_ids else self._conditions
-        selected_conditions_df = self._dataframe[selected_conditions]
+        selected_conditions_df = self._cluster_dataframe[selected_conditions]
 
         selected_conditions_genes_df = self._filter_by_gene_ids_json(
             selected_conditions_df,
