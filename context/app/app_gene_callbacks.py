@@ -1,6 +1,5 @@
 import json
 
-import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 
 from app.app_layout import AppLayout

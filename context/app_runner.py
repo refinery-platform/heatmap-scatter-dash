@@ -64,10 +64,10 @@ def main(args, parser=None):
             raise Exception('Either "demo" or "files" is required')
 
         union_dataframe = merge(dataframes)
-        if args.top:
-            truncated_dataframe = sort_by_variance(union_dataframe).head(args.top)
-        else:
-            truncated_dataframe = union_dataframe
+        truncated_dataframe = (
+            sort_by_variance(union_dataframe).head(args.top)
+            if args.top else union_dataframe
+        )
 
         cluster_dataframe = cluster(
             truncated_dataframe,
