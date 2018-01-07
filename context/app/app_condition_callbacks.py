@@ -50,7 +50,7 @@ class AppConditionCallbacks(AppLayout):
             list({point['text'] for point in selected_data['points']})
             if selected_data else []
         )
-        return self._list_html(self._union_dataframe.T.loc[conditions])
+        return self._list_html(conditions)
         # Alternatively:
         #   pandas.DataFrame(self._dataframe.columns.tolist())
         # but transpose may be more efficient than creating a new DataFrame.

@@ -131,7 +131,7 @@ class AppGeneCallbacks(AppLayout):
             self._union_dataframe,
             selected_genes_ids_json
         )
-        return self._list_html(selected_genes_df)
+        return self._list_html(selected_genes_df.index)
 
     def _filter_by_gene_ids_json(self, dataframe, json_list):
         if json_list:

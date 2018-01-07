@@ -126,13 +126,13 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             dataframe.to_html()
         )
 
-    def _list_html(self, dataframe):
+    def _list_html(self, list):
         """
         Given a dataframe,
         returns the indexes of the dataframe as a single column html table.
         """
         return self._css_url_html() + _remove_rowname_header(
-            pandas.DataFrame(dataframe.index).to_html(
+            pandas.DataFrame(list).to_html(
                 index=False
             )
         )
