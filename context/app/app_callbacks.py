@@ -5,27 +5,26 @@ from math import log10
 
 import pandas
 import plotly.graph_objs as go
-# from dash.dependencies import Input
+from dash.dependencies import Input
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.app_condition_callbacks import AppConditionCallbacks
 from app.app_gene_callbacks import AppGeneCallbacks
-
-# from app.utils.callbacks import figure_output
+from app.utils.callbacks import figure_output
 
 
 class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        # self.app.callback(
-        #     figure_output('heatmap'),
-        #     [
-        #         Input('selected-conditions-ids-json', 'children'),
-        #         Input('selected-genes-ids-json', 'children'),
-        #         Input('scale-select', 'value')
-        #     ]
-        # )(self._update_heatmap)
+        self.app.callback(
+            figure_output('heatmap'),
+            [
+                Input('selected-conditions-ids-json', 'children'),
+                Input('selected-genes-ids-json', 'children'),
+                Input('scale-select', 'value')
+            ]
+        )(self._update_heatmap)
 
     def _search_to_ids_json(self, input):
         ids = list({
@@ -63,19 +62,15 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def _update_heatmap(
             self,
             selected_conditions_ids_json,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             scale):
-        conditions_ids = json.loads(selected_conditions_ids_json)
-        selected_conditions = [
-            condition
-            for (i, condition) in enumerate(self._conditions)
-            if i in conditions_ids
-        ] if conditions_ids else self._conditions
+        selected_conditions = (
+            json.loads(selected_conditions_ids_json)
+            or self._conditions)
         selected_conditions_df = self._cluster_dataframe[selected_conditions]
-
         selected_conditions_genes_df = self._filter_by_gene_ids_json(
             selected_conditions_df,
-            selected_genes_ids_json
+            selected_gene_ids_json
         )
 
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
@@ -92,14 +87,15 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         }
 
     def _heatmap(self, dataframe, is_log_scale):
-        adjusted_color_scale = (
-            _linear(self._color_scale) if not is_log_scale
-            else _log_interpolate(
+        if is_log_scale:
+            values = [x for x in dataframe.values.flatten() if x > 0]
+            # We will take the log, so exclude zeros.
+            adjusted_color_scale = _log_interpolate(
                 self._color_scale,
-                min([x for x in
-                     dataframe.values.flatten()
-                     if x > 0]),  # We will take the log, so exclude zeros.
-                dataframe.max().max()))
+                min(values),
+                max(values))
+        else:
+            adjusted_color_scale = _linear(self._color_scale)
 
         if self._heatmap_type == 'svg':
             constructor = go.Heatmap
