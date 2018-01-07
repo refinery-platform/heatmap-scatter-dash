@@ -44,7 +44,6 @@ class AppConditionCallbacks(AppLayout):
         }
 
     def _update_condition_list(self, selected_data):
-        self.info('_update_condition_list', selected_data)
         conditions = (
             # There are repeats in selected_data, so use set comprehension.
             list({point['text'] for point in selected_data['points']})

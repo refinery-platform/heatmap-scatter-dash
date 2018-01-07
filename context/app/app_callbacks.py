@@ -27,36 +27,31 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         # )(self._update_heatmap)
 
     def _search_to_ids_json(self, input):
-        self.info('_search_to_ids_json', input)
-        ids = [
+        ids = list({
             gene
             for gene in self._genes
             if input in gene
-        ] if input else self._genes
+        }) if input else self._genes
         return json.dumps(ids)
 
     def _scatter_to_gene_ids_json(self, input):
-        self.info('_scatter_to_gene_ids_json', input)
-        ids = [
+        ids = list({
             x['text']
             for x in input['points']
-        ] if input else self._genes
+        }) if input else self._genes
         return json.dumps(ids)
 
     def _scatter_to_condition_ids_json(self, input):
-        self.info('_scatter_to_condition_ids_json', input)
-        ids = [
+        ids = list({
             x['text']
             for x in input['points']
-        ] if input else self._conditions
+        }) if input else self._conditions
         return json.dumps(ids)
 
     def _update_timestamp(self, input):
-        self.info('_update_timestamp', input)
         return time.time()
 
     def _pick_latest(self, *timestamps_and_states):
-        self.info('_pick_latest', timestamps_and_states)
         assert len(timestamps_and_states) % 2 == 0
         midpoint = len(timestamps_and_states) // 2
         timestamps = timestamps_and_states[:midpoint]
