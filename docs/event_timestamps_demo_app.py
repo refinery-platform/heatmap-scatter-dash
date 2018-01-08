@@ -6,6 +6,13 @@ import dash_html_components as html
 from dash import Dash
 from dash.dependencies import Input, Output, State
 
+#
+# This demonstrates a way of making Dash stateful, so that it can respond
+# to the last event, instead of just depending on the current value of
+# each control. I've described this approach on the forum, so if this is
+# particularly bad, or good, there might be feedback there:
+# https://community.plot.ly/t/which-component-triggered-the-callback/7366/3
+#
 
 def update_timestamp(input):
     return time.time()
