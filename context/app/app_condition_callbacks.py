@@ -32,12 +32,13 @@ class AppConditionCallbacks(AppLayout):
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json, x_axis, y_axis):
-        all = self._pca_dataframe
+        everyone = self._pca_dataframe
         selected = self._filter_by_condition_ids_json(
-            all,
+            everyone,
             selected_conditions_ids_json
         )
-        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
+        data = traces(x_axis, y_axis,
+                      [(everyone, light_dot), (selected, dark_dot)])
         return {
             'data': data,
             'layout': ScatterLayout(x_axis, y_axis)

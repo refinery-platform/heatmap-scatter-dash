@@ -85,12 +85,13 @@ class AppGeneCallbacks(AppLayout):
             selected_gene_ids_json,
             x_axis, y_axis, scale):
         is_log = scale == 'log'
-        all = self._union_dataframe
+        everyone = self._union_dataframe
         selected = self._filter_by_gene_ids_json(
-            all,
+            everyone,
             selected_gene_ids_json
         )
-        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
+        data = traces(x_axis, y_axis,
+                      [(everyone, light_dot), (selected, dark_dot)])
         return {
             'data': data,
             'layout': ScatterLayout(
@@ -107,12 +108,13 @@ class AppGeneCallbacks(AppLayout):
             # ie, there are no differential files.
             # "file" itself is (mis)used for messaging.
             return {}
-        all = self._diff_dataframes[file_selected]
+        everyone = self._diff_dataframes[file_selected]
         selected = self._filter_by_gene_ids_json(
-            all,
+            everyone,
             selected_gene_ids_json
         )
-        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
+        data = traces(x_axis, y_axis,
+                      [(everyone, light_dot), (selected, dark_dot)])
         return {
             'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
