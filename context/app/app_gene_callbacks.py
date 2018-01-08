@@ -1,6 +1,5 @@
 import json
 
-import plotly.graph_objs as go
 from dash.dependencies import Input, Output, State
 
 from app.app_layout import AppLayout
@@ -62,12 +61,12 @@ class AppGeneCallbacks(AppLayout):
         self.app.callback(
             Output('scatter-sample-by-sample-ids-json', 'children'),
             [Input('scatter-sample-by-sample', 'selectedData')]
-        )(self._scatter_to_ids_json)
+        )(self._scatter_to_gene_ids_json)
 
         self.app.callback(
             Output('scatter-volcano-ids-json', 'children'),
             [Input('scatter-volcano', 'selectedData')]
-        )(self._scatter_to_ids_json)
+        )(self._scatter_to_gene_ids_json)
 
         # Hidden elements which pick the value from the last modified control:
 
@@ -83,15 +82,16 @@ class AppGeneCallbacks(AppLayout):
 
     def _update_scatter_genes(
             self,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             x_axis, y_axis, scale):
         is_log = scale == 'log'
-        all = self._dataframe
-        selected = self._filter_by_genes_ids_json(
-            all,
-            selected_genes_ids_json
+        everyone = self._union_dataframe
+        selected = self._filter_by_gene_ids_json(
+            everyone,
+            selected_gene_ids_json
         )
-        data = traces(x_axis, y_axis, [(all, light_dot), (selected, dark_dot)])
+        data = traces(x_axis, y_axis,
+                      [(everyone, light_dot), (selected, dark_dot)])
         return {
             'data': data,
             'layout': ScatterLayout(
@@ -101,57 +101,42 @@ class AppGeneCallbacks(AppLayout):
 
     def _update_scatter_volcano(
             self,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             file_selected,
             x_axis, y_axis):
         if not x_axis:
             # ie, there are no differential files.
             # "file" itself is (mis)used for messaging.
             return {}
-        all = self._diff_dataframes[file_selected]
-        selected = self._filter_by_genes_ids_json(
-            all,
-            selected_genes_ids_json
+        everyone = self._diff_dataframes[file_selected]
+        selected = self._filter_by_gene_ids_json(
+            everyone,
+            selected_gene_ids_json
         )
+        data = traces(x_axis, y_axis,
+                      [(everyone, light_dot), (selected, dark_dot)])
         return {
-            'data': [
-                go.Scattergl(
-                    x=all[x_axis],
-                    y=all[y_axis],
-                    mode='markers',
-                    text=self._dataframe.index,
-                    marker=light_dot
-                ),
-                go.Scattergl(
-                    x=selected[x_axis],
-                    y=selected[y_axis],
-                    mode='markers',
-                    text=self._dataframe.index,
-                    marker=dark_dot
-                )
-            ],
+            'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
         }
 
-    def _update_gene_table(self, selected_genes_ids_json):
-        selected_genes_df = self._filter_by_genes_ids_json(
-            self._dataframe,
-            selected_genes_ids_json
+    def _update_gene_table(self, selected_gene_ids_json):
+        selected_genes_df = self._filter_by_gene_ids_json(
+            self._union_dataframe,
+            selected_gene_ids_json
         )
         return self._table_html(selected_genes_df)
 
     def _update_gene_list(self, selected_genes_ids_json):
-        selected_genes_df = self._filter_by_genes_ids_json(
-            self._dataframe,
+        selected_genes_df = self._filter_by_gene_ids_json(
+            self._union_dataframe,
             selected_genes_ids_json
         )
-        return self._list_html(selected_genes_df)
+        return self._list_html(selected_genes_df.index)
 
-    def _filter_by_genes_ids_json(self, dataframe, json_list):
-        selected_genes_ids = json.loads(json_list)
-        selected_genes = [
-            item for (i, item)
-            in enumerate(self._genes)
-            if i in selected_genes_ids
-        ]
-        return dataframe.loc[selected_genes]
+    def _filter_by_gene_ids_json(self, dataframe, json_list):
+        if json_list:
+            selected_gene_ids = json.loads(json_list)
+            return dataframe.reindex(selected_gene_ids)
+        else:
+            return dataframe

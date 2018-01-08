@@ -27,27 +27,31 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         )(self._update_heatmap)
 
     def _search_to_ids_json(self, input):
-        self.info('_search_to_ids_json', input)
-        ids = [
-            i for (i, gene)
-            in enumerate(self._genes)
-            if ((input or '') in gene)
-        ]
+        ids = list({
+            gene
+            for gene in self._genes
+            if input in gene
+        }) if input else self._genes
         return json.dumps(ids)
 
-    def _scatter_to_ids_json(self, input):
-        self.info('_scatter_to_ids_json', input)
-        ids = list(set([
-            x['pointNumber'] for x in input['points']
-        ])) if input else []
+    def _scatter_to_gene_ids_json(self, input):
+        ids = list({
+            x['text']
+            for x in input['points']
+        }) if input else self._genes
+        return json.dumps(ids)
+
+    def _scatter_to_condition_ids_json(self, input):
+        ids = list({
+            x['text']
+            for x in input['points']
+        }) if input else self._conditions
         return json.dumps(ids)
 
     def _update_timestamp(self, input):
-        self.info('_update_timestamp', input)
         return time.time()
 
     def _pick_latest(self, *timestamps_and_states):
-        self.info('_pick_latest', timestamps_and_states)
         assert len(timestamps_and_states) % 2 == 0
         midpoint = len(timestamps_and_states) // 2
         timestamps = timestamps_and_states[:midpoint]
@@ -58,19 +62,15 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
     def _update_heatmap(
             self,
             selected_conditions_ids_json,
-            selected_genes_ids_json,
+            selected_gene_ids_json,
             scale):
-        conditions_ids = json.loads(selected_conditions_ids_json)
-        selected_conditions = [
-            condition
-            for (i, condition) in enumerate(self._conditions)
-            if i in conditions_ids
-        ] if conditions_ids else self._conditions
-        selected_conditions_df = self._dataframe[selected_conditions]
-
-        selected_conditions_genes_df = self._filter_by_genes_ids_json(
+        selected_conditions = (
+            json.loads(selected_conditions_ids_json)
+            or self._conditions)
+        selected_conditions_df = self._cluster_dataframe[selected_conditions]
+        selected_conditions_genes_df = self._filter_by_gene_ids_json(
             selected_conditions_df,
-            selected_genes_ids_json
+            selected_gene_ids_json
         )
 
         show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
@@ -87,14 +87,15 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         }
 
     def _heatmap(self, dataframe, is_log_scale):
-        adjusted_color_scale = (
-            _linear(self._color_scale) if not is_log_scale
-            else _log_interpolate(
+        if is_log_scale:
+            values = [x for x in dataframe.values.flatten() if x > 0]
+            # We will take the log, so exclude zeros.
+            adjusted_color_scale = _log_interpolate(
                 self._color_scale,
-                min([x for x in
-                     dataframe.values.flatten()
-                     if x > 0]),  # We will take the log, so exclude zeros.
-                dataframe.max().max()))
+                min(values),
+                max(values))
+        else:
+            adjusted_color_scale = _linear(self._color_scale)
 
         if self._heatmap_type == 'svg':
             constructor = go.Heatmap
@@ -117,13 +118,13 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             dataframe.to_html()
         )
 
-    def _list_html(self, dataframe):
+    def _list_html(self, list):
         """
         Given a dataframe,
         returns the indexes of the dataframe as a single column html table.
         """
         return self._css_url_html() + _remove_rowname_header(
-            pandas.DataFrame(dataframe.index).to_html(
+            pandas.DataFrame(list).to_html(
                 index=False
             )
         )
@@ -141,19 +142,6 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
-
-
-def _select(points, target, search_term=None):
-    point_numbers = [
-        point['pointNumber'] for point in points
-        if not search_term or search_term in point['text']
-    ]
-    # TODO: Why not just return point['text'] here?
-    return [
-        item for (i, item)
-        in enumerate(target)
-        if i in point_numbers
-    ]
 
 
 def _log_interpolate(color_scale, min, max):
