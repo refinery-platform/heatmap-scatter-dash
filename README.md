@@ -103,3 +103,7 @@ Successful Github tags and PRs will prompt Travis to push the built image to Doc
 ```bash
 $ git tag v0.0.x && git push origin --tags
 ```
+
+## Notes
+
+There are a few [notes](docs) on implementation decisions and lessons learned.
