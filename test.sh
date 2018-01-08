@@ -17,7 +17,7 @@ end format
 
 
 start isort
-isort -r context --check-only || die "Run 'isort -rc context'"
+isort --recursive context --check-only || die "Run 'isort --recursive context'"
 end isort
 
 

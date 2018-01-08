@@ -1,9 +1,11 @@
-import time
 import json
-from dash.dependencies import Input, Output, State
+import time
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash import Dash
+from dash.dependencies import Input, Output, State
+
 
 def update_timestamp(input):
     return time.time()
