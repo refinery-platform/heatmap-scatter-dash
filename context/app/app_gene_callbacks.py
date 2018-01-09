@@ -3,8 +3,8 @@ import json
 from dash.dependencies import Input, Output, State
 
 from app.app_layout import AppLayout
-from app.utils.callbacks import (ScatterLayout, dark_dot, figure_output,
-                                 light_dot, scatter_inputs, traces)
+from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
+                                 traces_all_selected)
 
 
 class AppGeneCallbacks(AppLayout):
@@ -90,8 +90,7 @@ class AppGeneCallbacks(AppLayout):
             everyone,
             selected_gene_ids_json
         )
-        data = traces(x_axis, y_axis,
-                      [(everyone, light_dot), (selected, dark_dot)])
+        data = traces_all_selected(x_axis, y_axis, everyone, selected)
         return {
             'data': data,
             'layout': ScatterLayout(
@@ -113,8 +112,7 @@ class AppGeneCallbacks(AppLayout):
             everyone,
             selected_gene_ids_json
         )
-        data = traces(x_axis, y_axis,
-                      [(everyone, light_dot), (selected, dark_dot)])
+        data = traces_all_selected(x_axis, y_axis, everyone, selected)
         return {
             'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
