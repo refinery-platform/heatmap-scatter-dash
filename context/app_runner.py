@@ -69,8 +69,7 @@ def main(args, parser=None):
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
                 basename(file.name if hasattr(file, 'name') else file):
-                    vulcanize(find_index(pandas.read_csv(file), keys,
-                                         drop_unmatched=args.scatterplot_top))
+                    vulcanize(find_index(pandas.read_csv(file), keys))
                 for file in args.diffs
             }
         else:
@@ -84,7 +83,8 @@ def main(args, parser=None):
             reverse_colors=args.reverse_colors,
             heatmap_type=args.heatmap,
             api_prefix=args.api_prefix,
-            debug=args.debug
+            debug=args.debug,
+            top_rows=args.top_rows
         ).app
         app.run_server(
             debug=args.debug,
@@ -143,20 +143,15 @@ if __name__ == '__main__':
         'for large data sets, but the image is blurry, '
         'rather than having sharp edges; TODO.')
     parser.add_argument(
-        '--top', type=int,
-        help='Sort by row variance, descending, and take the top n.')
-    parser.add_argument(
-        '--scatterplot_top', action='store_true', default=False,
-        help='For scatterplots, include only the genes in the heatmap. '
-        '(Used together with --top.)'
-    )
+        '--top_rows', type=int, default=500,
+        help='For heatmap, sort by row variance, and take the top n.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',
-        help='Hierarchically cluster rows.')
+        help='For heatmap, hierarchically cluster rows.')
     parser.add_argument(
         '--cluster_cols', action='store_true',
-        help='Hierarchically cluster columns.')
+        help='For heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',

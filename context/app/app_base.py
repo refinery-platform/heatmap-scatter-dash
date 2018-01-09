@@ -15,8 +15,10 @@ class AppBase:
                  colors='Greys',
                  reverse_colors=False,
                  heatmap_type='svg',
+                 top_rows=500,
                  api_prefix=None,
                  debug=False):
+        self._top_rows = top_rows
         self._union_dataframe = union_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
         self._diff_dataframes = diff_dataframes
