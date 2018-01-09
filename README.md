@@ -10,8 +10,7 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
                      [--diffs DIFFS [DIFFS ...]] [--heatmap {svg,canvas}]
-                     [--top TOP] [--scatterplot_top] [--cluster_rows]
-                     [--cluster_cols]
+                     [--top_rows TOP_ROWS] [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--reverse_colors] [--html_error]
                      [--api_prefix API_PREFIX] [--debug] [--port PORT]
@@ -35,11 +34,9 @@ optional arguments:
                         The canvas-based heatmap will render much more quickly
                         for large data sets, but the image is blurry, rather
                         than having sharp edges; TODO.
-  --top TOP             Sort by row variance, descending, and take the top n.
-  --scatterplot_top     For scatterplots, include only the genes in the
-                        heatmap. (Used together with --top.)
-  --cluster_rows        Hierarchically cluster rows.
-  --cluster_cols        Hierarchically cluster columns.
+  --top_rows TOP_ROWS   For heatmap, sort by row variance, and take the top n.
+  --cluster_rows        For heatmap, hierarchically cluster rows.
+  --cluster_cols        For heatmap, hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap.
   --reverse_colors      Reverse the color scale of the heatmap.
