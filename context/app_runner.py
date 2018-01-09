@@ -4,7 +4,7 @@ import html
 import re
 import traceback
 from os.path import basename
-from sys import stderr
+from warnings import warn
 
 import numpy as np
 import pandas
@@ -114,7 +114,7 @@ def main(args, parser=None):
         error_str = ''.join(
             traceback.TracebackException.from_exception(e).format()
         )
-        print(error_str, file=stderr)
+        warn(error_str)
 
         @app.route("/")
         def error_page():
