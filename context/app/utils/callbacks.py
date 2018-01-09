@@ -18,29 +18,46 @@ def scatter_inputs(id, scale_select=False):
     return inputs
 
 
-dark_dot = {
+_dark_dot = {
     'color': 'rgb(0,0,127)',
     'size': 5
 }
-light_dot = {
+_light_dot = {
     'color': 'rgb(127,216,127)',
     'size': 5
 }
 
 
-def traces(x_axis, y_axis, dataframe_marker_pairs):
+def traces_all_selected(x_axis, y_axis, everyone, selected):
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
     # but I couldn't create a minimal reproducer.
+    trace_defs = [
+        {
+            # Not strictly true that these are "unselected", but the duplicates
+            # are obscured by the selected points, and taking the set
+            # compliment is not worth the trouble.
+            'name': 'unselected',
+            'dataframe': everyone,
+            'marker': _light_dot
+        },
+        {
+            'name': 'selected',
+            'dataframe': selected,
+            'marker': _dark_dot
+        }
+
+    ]
     return [
         go.Scattergl(
-            x=df[x_axis],
-            y=df[y_axis],
+            x=trace['dataframe'][x_axis],
+            y=trace['dataframe'][y_axis],
             mode='markers',
-            text=df.index,
-            marker=marker
-        ) for (df, marker) in dataframe_marker_pairs if not df.empty
+            text=trace['dataframe'].index,
+            marker=trace['marker'],
+            name=trace['name']
+        ) for trace in trace_defs if not trace['dataframe'].empty
     ]
 
 
