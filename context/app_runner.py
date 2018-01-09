@@ -77,12 +77,14 @@ def main(args, parser=None):
         genes = set(union_dataframe.index.tolist())
         if args.diffs:
             diff_dataframes = {}
-            for file in args.diffs:
+            for diff_file in args.diffs:
                 diff_dataframe = \
-                    pandas.read_csv(file, sep=None, engine='python')
+                    pandas.read_csv(diff_file, sep=None, engine='python')
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
-                key = basename(file.name if hasattr(file, 'name') else file)
+                key = basename(diff_file.name
+                               if hasattr(diff_file, 'name')
+                               else diff_file)
                 value = vulcanize(find_index(
                     diff_dataframe, genes,
                     drop_unmatched=args.scatterplot_top))
