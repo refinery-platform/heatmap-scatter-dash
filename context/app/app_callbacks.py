@@ -11,6 +11,8 @@ from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 from app.app_condition_callbacks import AppConditionCallbacks
 from app.app_gene_callbacks import AppGeneCallbacks
 from app.utils.callbacks import figure_output
+from app.utils.cluster import cluster
+from app.utils.frames import sort_by_variance
 
 
 class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
@@ -67,16 +69,24 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         selected_conditions = (
             json.loads(selected_conditions_ids_json)
             or self._conditions)
-        selected_conditions_df = self._cluster_dataframe[selected_conditions]
+        selected_conditions_df = self._union_dataframe[selected_conditions]
         selected_conditions_genes_df = self._filter_by_gene_ids_json(
             selected_conditions_df,
             selected_gene_ids_json
         )
+        truncated_dataframe = (
+            sort_by_variance(selected_conditions_genes_df).head(self._top_rows)
+            if self._top_rows else selected_conditions_genes_df
+        )
+        cluster_dataframe = cluster(
+            truncated_dataframe,
+            cluster_rows=self._cluster_rows,
+            cluster_cols=self._cluster_cols)
 
-        show_genes = len(selected_conditions_genes_df.index.tolist()) < 40
+        show_genes = len(cluster_dataframe.index.tolist()) < 40
         return {
             'data': [
-                self._heatmap(selected_conditions_genes_df, scale == 'log')
+                self._heatmap(cluster_dataframe, scale == 'log')
             ],
             'layout': go.Layout(
                 xaxis={'ticks': '', 'tickangle': 90},

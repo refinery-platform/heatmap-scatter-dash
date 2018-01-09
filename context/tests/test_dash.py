@@ -113,7 +113,6 @@ class TestDashNoDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
         self.app = AppCallbacks(
-            cluster_dataframe=self.counts_dataframe(),
             union_dataframe=self.counts_dataframe()
         ).app
 
@@ -122,7 +121,6 @@ class TestDashWithDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
         self.app = AppCallbacks(
-            cluster_dataframe=self.counts_dataframe(),
             union_dataframe=self.counts_dataframe(),
             diff_dataframes={
                 'A': self.diff_dataframe(),

@@ -15,12 +15,11 @@ def merge(frames):
     return accumulator
 
 
-def find_index(frame, keys, drop_unmatched=False):
+def find_index(frame, keys):
     """
     Given a dataframe that came in with no explicit index,
     and a set of keys,
-    identify a column whose values come from keys, and use that as the index,
-    and optionally remove rows that do not correspond to keys.
+    identify a column whose values come from keys, and use that as the index.
     """
     for index, row in frame.iterrows():
         matches = []
@@ -36,9 +35,10 @@ def find_index(frame, keys, drop_unmatched=False):
             'No row where exactly one column matched keys: {}'.format(keys)
         )
     reindexed = frame.set_index(matches)
-    if drop_unmatched:
-        unmatched_indexes = set(reindexed.index) - set(keys)
-        reindexed.drop(unmatched_indexes, inplace=True)
+    # TODO: Remove this if not being used:
+    # if drop_unmatched:
+    #     unmatched_indexes = set(reindexed.index) - set(keys)
+    #     reindexed.drop(unmatched_indexes, inplace=True)
     return reindexed
 
 

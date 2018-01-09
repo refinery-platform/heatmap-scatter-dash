@@ -12,8 +12,7 @@ from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
-from app.utils.cluster import cluster
-from app.utils.frames import find_index, merge, sort_by_variance
+from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 
 
@@ -64,16 +63,6 @@ def main(args, parser=None):
             raise Exception('Either "demo" or "files" is required')
 
         union_dataframe = merge(dataframes)
-        truncated_dataframe = (
-            sort_by_variance(union_dataframe).head(args.top)
-            if args.top else union_dataframe
-        )
-
-        cluster_dataframe = cluster(
-            truncated_dataframe,
-            cluster_rows=args.cluster_rows,
-            cluster_cols=args.cluster_cols)
-
         genes = set(union_dataframe.index.tolist())
         if args.diffs:
             diff_dataframes = {}
@@ -85,23 +74,23 @@ def main(args, parser=None):
                 key = basename(diff_file.name
                                if hasattr(diff_file, 'name')
                                else diff_file)
-                value = vulcanize(find_index(
-                    diff_dataframe, genes,
-                    drop_unmatched=args.scatterplot_top))
+                value = vulcanize(find_index(diff_dataframe, genes))
                 diff_dataframes[key] = value
         else:
             diff_dataframes = {
                 'No differential files given': pandas.DataFrame()
             }
         app = AppCallbacks(
-            cluster_dataframe=cluster_dataframe,
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
             colors=args.colors,
             reverse_colors=args.reverse_colors,
             heatmap_type=args.heatmap,
             api_prefix=args.api_prefix,
-            debug=args.debug
+            debug=args.debug,
+            top_rows=args.top_rows,
+            cluster_rows=args.cluster_rows,
+            cluster_cols=args.cluster_cols
         ).app
         app.run_server(
             debug=args.debug,
@@ -160,20 +149,15 @@ if __name__ == '__main__':
         'for large data sets, but the image is blurry, '
         'rather than having sharp edges; TODO.')
     parser.add_argument(
-        '--top', type=int,
-        help='Sort by row variance, descending, and take the top n.')
-    parser.add_argument(
-        '--scatterplot_top', action='store_true', default=False,
-        help='For scatterplots, include only the genes in the heatmap. '
-        '(Used together with --top.)'
-    )
+        '--top_rows', type=int, default=500,
+        help='For heatmap, sort by row variance, and take the top n.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',
-        help='Hierarchically cluster rows.')
+        help='For heatmap, hierarchically cluster rows.')
     parser.add_argument(
         '--cluster_cols', action='store_true',
-        help='Hierarchically cluster columns.')
+        help='For heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
