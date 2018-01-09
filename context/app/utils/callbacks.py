@@ -36,8 +36,8 @@ def traces_all_selected(x_axis, y_axis, everyone, selected):
     trace_defs = [
         {
             # Not strictly true that these are "unselected", but the duplicates
-            # are obscured by the selected points, and taking the set compliment
-            # is not worth the trouble.
+            # are obscured by the selected points, and taking the set
+            # compliment is not worth the trouble.
             'name': 'unselected',
             'dataframe': everyone,
             'marker': _light_dot
