@@ -26,7 +26,8 @@ class AppGeneCallbacks(AppLayout):
 
         self.app.callback(
             Output('table-iframe', 'srcDoc'),
-            [Input('selected-genes-ids-json', 'children')]
+            [Input('selected-genes-ids-json', 'children'),
+             Input('selected-conditions-ids-json', 'children')]
         )(self._update_gene_table)
 
         self.app.callback(
@@ -118,12 +119,15 @@ class AppGeneCallbacks(AppLayout):
             'layout': ScatterLayout(x_axis, y_axis)
         }
 
-    def _update_gene_table(self, selected_gene_ids_json):
+    def _update_gene_table(self,
+                           selected_gene_ids_json,
+                           selected_condition_ids_json):
         selected_genes_df = self._filter_by_gene_ids_json(
             self._union_dataframe,
             selected_gene_ids_json
         )
-        return self._table_html(selected_genes_df)
+        selected_conditions = json.loads(selected_condition_ids_json)
+        return self._table_html(selected_genes_df[selected_conditions])
 
     def _update_gene_list(self, selected_genes_ids_json):
         selected_genes_df = self._filter_by_gene_ids_json(
