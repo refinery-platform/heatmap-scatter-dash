@@ -78,7 +78,8 @@ def main(args, parser=None):
         if args.diffs:
             diff_dataframes = {}
             for file in args.diffs:
-                diff_dataframe = pandas.read_csv(file)
+                diff_dataframe = \
+                    pandas.read_csv(file, sep=None, engine='python')
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
                 key = basename(file.name if hasattr(file, 'name') else file)
