@@ -74,16 +74,21 @@ def main(args, parser=None):
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols)
 
-        keys = set(union_dataframe.index.tolist())
+        genes = set(union_dataframe.index.tolist())
         if args.diffs:
-            diff_dataframes = {
+            diff_dataframes = {}
+            for diff_file in args.diffs:
+                diff_dataframe = \
+                    pandas.read_csv(diff_file, sep=None, engine='python')
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
-                basename(file.name if hasattr(file, 'name') else file):
-                    vulcanize(find_index(pandas.read_csv(file), keys,
-                                         drop_unmatched=args.scatterplot_top))
-                for file in args.diffs
-            }
+                key = basename(diff_file.name
+                               if hasattr(diff_file, 'name')
+                               else diff_file)
+                value = vulcanize(find_index(
+                    diff_dataframe, genes,
+                    drop_unmatched=args.scatterplot_top))
+                diff_dataframes[key] = value
         else:
             diff_dataframes = {
                 'No differential files given': pandas.DataFrame()
