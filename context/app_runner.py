@@ -74,9 +74,7 @@ def main(args, parser=None):
                 key = basename(diff_file.name
                                if hasattr(diff_file, 'name')
                                else diff_file)
-                value = vulcanize(find_index(
-                    diff_dataframe, genes,
-                    drop_unmatched=args.scatterplot_top))
+                value = vulcanize(find_index(diff_dataframe, genes))
                 diff_dataframes[key] = value
         else:
             diff_dataframes = {
