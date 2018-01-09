@@ -54,6 +54,7 @@ class ScatterLayout(go.Layout):
             y_axis_config['type'] = 'log'
         super().__init__(
             showlegend=False,
+            dragmode='select',
             xaxis=x_axis_config,
             yaxis=y_axis_config,
             margin=go.Margin(
