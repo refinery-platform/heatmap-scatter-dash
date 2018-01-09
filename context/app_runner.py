@@ -12,8 +12,7 @@ from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
-from app.utils.cluster import cluster
-from app.utils.frames import find_index, merge, sort_by_variance
+from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 
 
@@ -64,16 +63,6 @@ def main(args, parser=None):
             raise Exception('Either "demo" or "files" is required')
 
         union_dataframe = merge(dataframes)
-        truncated_dataframe = (
-            sort_by_variance(union_dataframe).head(args.top)
-            if args.top else union_dataframe
-        )
-
-        cluster_dataframe = cluster(
-            truncated_dataframe,
-            cluster_rows=args.cluster_rows,
-            cluster_cols=args.cluster_cols)
-
         keys = set(union_dataframe.index.tolist())
         if args.diffs:
             diff_dataframes = {
@@ -89,7 +78,6 @@ def main(args, parser=None):
                 'No differential files given': pandas.DataFrame()
             }
         app = AppCallbacks(
-            cluster_dataframe=cluster_dataframe,
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
             colors=args.colors,

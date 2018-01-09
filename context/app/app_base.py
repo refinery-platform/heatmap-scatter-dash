@@ -11,7 +11,6 @@ class AppBase:
 
     def __init__(self,
                  union_dataframe,
-                 cluster_dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
                  reverse_colors=False,
@@ -19,7 +18,6 @@ class AppBase:
                  api_prefix=None,
                  debug=False):
         self._union_dataframe = union_dataframe
-        self._cluster_dataframe = cluster_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
         self._diff_dataframes = diff_dataframes
         self._conditions = self._union_dataframe.axes[1].tolist()
