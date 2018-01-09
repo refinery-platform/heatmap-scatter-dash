@@ -84,7 +84,9 @@ def main(args, parser=None):
             heatmap_type=args.heatmap,
             api_prefix=args.api_prefix,
             debug=args.debug,
-            top_rows=args.top_rows
+            top_rows=args.top_rows,
+            cluster_rows=args.cluster_rows,
+            cluster_cols=args.cluster_cols
         ).app
         app.run_server(
             debug=args.debug,

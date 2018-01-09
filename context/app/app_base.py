@@ -16,9 +16,13 @@ class AppBase:
                  reverse_colors=False,
                  heatmap_type='svg',
                  top_rows=500,
+                 cluster_rows=False,
+                 cluster_cols=False,
                  api_prefix=None,
                  debug=False):
         self._top_rows = top_rows
+        self._cluster_rows = cluster_rows
+        self._cluster_cols = cluster_cols
         self._union_dataframe = union_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
         self._diff_dataframes = diff_dataframes

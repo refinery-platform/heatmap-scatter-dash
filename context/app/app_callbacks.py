@@ -76,12 +76,12 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         )
         truncated_dataframe = (
             sort_by_variance(selected_conditions_genes_df).head(self._top_rows)
-            if True else selected_conditions_genes_df  # TODO: args.top
+            if self._top_rows else selected_conditions_genes_df
         )
         cluster_dataframe = cluster(
             truncated_dataframe,
-            cluster_rows=True,  # TODO: args
-            cluster_cols=True)
+            cluster_rows=self._cluster_rows,
+            cluster_cols=self._cluster_cols)
 
         show_genes = len(cluster_dataframe.index.tolist()) < 40
         return {
