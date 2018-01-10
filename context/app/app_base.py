@@ -1,4 +1,5 @@
 from base64 import urlsafe_b64encode
+import os
 
 import dash
 import pandas
@@ -37,53 +38,21 @@ class AppBase:
         else:
             self._color_scale = PLOTLY_SCALES[colors]
         self._heatmap_type = heatmap_type
-        self._css_urls = [
-            'https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/css/bootstrap.min.css',
-            to_data_uri(
-                """
-                .plotlyjsicon {
-                    display: none;
-                }
-                iframe {
-                    border: none;
-                    width: 100%;
-                    height: 33vh;
-                }
-                table {
-                    border: none;
-                }
-                td, th {
-                    border: none;
-                    padding: 0 5px;
-                }
-                .Select-clear-zone {
-                    display: none;
-                }
-                """,
-                "text/css")
-        ]
-        self._js_urls = [
-            'https://code.jquery.com/'
-            'jquery-3.1.1.slim.min.js',
-            'https://maxcdn.bootstrapcdn.com/'
-            'bootstrap/3.3.7/js/bootstrap.min.js',
-            to_data_uri("""
-                $('body').on('click', '.nav-tabs a', function(e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });
-                """,
-                'application/javascript')
-            # TODO: This is not good.
-            # Currently, there is no way to get data attributes in Dash.
-            # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
-            # So, we need to register them by hand...
-            # but when the JS loads, React hasn't yet
-            # generated the DOM, so we use "on" instead.
-            # html.Script() does put an element in the DOM,
-            # but it doesn't execute.
-        ]
+        with open(relative_path('extra.css')) as extra_css_file:
+            self._css_urls = [
+                'https://maxcdn.bootstrapcdn.com/'
+                    'bootstrap/3.3.7/css/bootstrap.min.css',
+                to_data_uri(extra_css_file.read(), 'text/css')
+            ]
+        with open(relative_path('extra.js')) as extra_js_file:
+            self._js_urls = [
+                'https://code.jquery.com/'
+                    'jquery-3.1.1.slim.min.js',
+                'https://maxcdn.bootstrapcdn.com/'
+                    'bootstrap/3.3.7/js/bootstrap.min.js',
+                to_data_uri(extra_js_file.read(),
+                    'application/javascript')
+            ]
         self._debug = debug
         self.app = dash.Dash()
         if api_prefix:
@@ -99,6 +68,10 @@ class AppBase:
             # TODO: logging.info() didn't work. Check logging levels?
             print(' | '.join([str(field) for field in fields]))
 
+
+def relative_path(file):
+    # https://stackoverflow.com/questions/4060221 for more options
+    return os.path.join(os.path.dirname(__file__), file)
 
 def to_data_uri(s, mime):
     uri = (
