@@ -23,7 +23,7 @@ class WhooshIndex():
     def __init__(self):
         storage = RamStorage()
         schema = Schema(gene_id=TEXT(stored=True),
-                        gene_tokens=NGRAMWORDS(stored=False))
+                        gene_tokens=NGRAMWORDS(stored=False, minsize=1))
         self._index = storage.create_index(schema)
 
     def add(self, *gene_ids):
