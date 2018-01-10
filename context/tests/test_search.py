@@ -11,7 +11,7 @@ class TestSearch(unittest.TestCase):
         self.index.add('foobar')
         self.index.add('baz')
 
-    def test_uniqu_search(self):
+    def test_unique_search(self):
         self.assertEqual(set(self.index.search('baz')),
                          {'baz'})
 
@@ -22,6 +22,10 @@ class TestSearch(unittest.TestCase):
     def test_substring_search(self):
         self.assertEqual(set(self.index.search('ba')),
                          {'bar', 'foobar', 'baz'})
+
+    def test_multiple_search(self):
+        self.assertEqual(set(self.index.search('oo az')),
+                         {'foo', 'baz'})
 
     def test_none_search(self):
         self.assertEqual(set(self.index.search(None)),
