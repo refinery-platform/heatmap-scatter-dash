@@ -5,6 +5,7 @@ import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.utils.pca import pca
+from app.utils.search import Index
 
 
 class AppBase:
@@ -28,6 +29,9 @@ class AppBase:
         self._diff_dataframes = diff_dataframes
         self._conditions = self._union_dataframe.axes[1].tolist()
         self._genes = self._union_dataframe.axes[0].tolist()
+        self._genes_index = Index()
+        for gene in self._genes:
+            self._genes_index.add(gene)
         if reverse_colors:
             self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
         else:

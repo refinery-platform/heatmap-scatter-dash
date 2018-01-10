@@ -15,4 +15,7 @@ class Index():
         self._index.append(doc)
 
     def search(self, query):
-        return [doc for doc in self._index if query in doc]
+        if query:
+            return [doc for doc in self._index if query in doc]
+        else:
+            return self._index
