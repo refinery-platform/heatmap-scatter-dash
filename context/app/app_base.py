@@ -63,6 +63,27 @@ class AppBase:
                 """,
                 "text/css")
         ]
+        self._js_urls = [
+            'https://code.jquery.com/'
+            'jquery-3.1.1.slim.min.js',
+            'https://maxcdn.bootstrapcdn.com/'
+            'bootstrap/3.3.7/js/bootstrap.min.js',
+            to_data_uri("""
+                $('body').on('click', '.nav-tabs a', function(e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+                """,
+                'application/javascript')
+            # TODO: This is not good.
+            # Currently, there is no way to get data attributes in Dash.
+            # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
+            # So, we need to register them by hand...
+            # but when the JS loads, React hasn't yet
+            # generated the DOM, so we use "on" instead.
+            # html.Script() does put an element in the DOM,
+            # but it doesn't execute.
+        ]
         self._debug = debug
         self.app = dash.Dash()
         if api_prefix:

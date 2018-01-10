@@ -16,36 +16,11 @@ class AppLayout(AppBase):
 
     def _add_css(self):
         for url in self._css_urls:
-            self.app.css.append_css({
-                'external_url': url
-            })
+            self.app.css.append_css({'external_url': url})
 
     def _add_scripts(self):
-        self.app.scripts.append_script({
-            'external_url':
-                'https://code.jquery.com/'
-                'jquery-3.1.1.slim.min.js'
-        })
-        self.app.scripts.append_script({
-            'external_url':
-                'https://maxcdn.bootstrapcdn.com/'
-                'bootstrap/3.3.7/js/bootstrap.min.js'
-        })
-        self.app.scripts.append_script({
-            'external_url': to_data_uri("""
-                $('body').on('click', '.nav-tabs a', function(e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                });""", 'application/javascript')
-            # TODO: This is not good.
-            # Currently, there is no way to get data attributes in Dash.
-            # https://community.plot.ly/t/can-data-attributes-be-created-in-dash/7222
-            # So, we need to register them by hand...
-            # but when the JS loads, React hasn't yet
-            # generated the DOM, so we use "on" instead.
-            # html.Script() does put an element in the DOM,
-            # but it doesn't execute.
-        })
+        for url in self._js_urls:
+            self.app.scripts.append_script({'external_url': url})
 
     def _add_dom(self):
         conditions_options = [
