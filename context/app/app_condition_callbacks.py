@@ -17,7 +17,8 @@ class AppConditionCallbacks(AppLayout):
         self.app.callback(
             figure_output('scatter-pca'),
             [Input('selected-conditions-ids-json', 'children')] +
-            scatter_inputs('pca')
+            scatter_inputs('pca') +
+            scatter_inputs('sample-by-sample')
         )(self._update_scatter_pca)
 
         self.app.callback(
@@ -31,13 +32,21 @@ class AppConditionCallbacks(AppLayout):
         )(self._scatter_to_condition_ids_json)
 
     def _update_scatter_pca(
-            self, selected_conditions_ids_json, x_axis, y_axis):
+            self, selected_conditions_ids_json,
+            x_axis, y_axis,
+            gene_x_axis, gene_y_axis):
         everyone = self._pca_dataframe
         selected = self._filter_by_condition_ids_json(
             everyone,
             selected_conditions_ids_json
         )
-        data = traces_all_selected(x_axis, y_axis, everyone, selected)
+        highlight = everyone.loc[[gene_x_axis, gene_y_axis]]
+        selected_highlight = everyone.loc[
+            list(set(selected.index) & set(highlight.index))
+        ]  # pandas.merge loses the index, sadly, so pick a hack.
+        data = traces_all_selected(x_axis, y_axis, everyone, selected,
+                                   highlight=highlight,
+                                   selected_highlight=selected_highlight)
         return {
             'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
