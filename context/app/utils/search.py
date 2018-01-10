@@ -29,6 +29,7 @@ class SimpleIndex():
 
 class WhooshIndex():
     # Search might be fast, but indexing is too slow to be useful.
+    # TODO: If we never have a strategy to make this useful, remove.
 
     def __init__(self):
         storage = RamStorage()
