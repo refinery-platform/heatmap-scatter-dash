@@ -38,10 +38,12 @@ class TestIndex():
         self.assertEqual(set(self.index.search('z')),
                          {'baz'})
 
+
 class TestSimpleIndex(TestIndex, unittest.TestCase):
     def __init__(self, x):
         super().__init__(x)
         self.index_class = SimpleIndex
+
 
 class TestWhooshIndex(TestIndex, unittest.TestCase):
     def __init__(self, x):

@@ -1,3 +1,5 @@
+import re
+
 from whoosh.fields import NGRAMWORDS, TEXT, Schema
 from whoosh.filedb.filestore import RamStorage
 from whoosh.qparser import OrGroup, QueryParser
@@ -13,8 +15,16 @@ class SimpleIndex():
     def add(self, *gene_ids):
         self._index.extend(gene_ids)
 
-    def search(self, substring):
-        return [gene_id for gene_id in self._index if substring in gene_id]
+    def search(self, substrings):
+        if substrings:
+            matches = []
+            for substring in re.split('\s+', substrings):
+                matches.extend([gene_id
+                                for gene_id in self._index
+                                if substring in gene_id])
+            return matches
+        else:
+            return self._index.copy()
 
 
 class WhooshIndex():
@@ -33,10 +43,10 @@ class WhooshIndex():
                                 gene_tokens=gene_id)
         writer.commit()
 
-    def search(self, substring):
+    def search(self, substrings):
         with self._index.searcher() as searcher:
             parser = QueryParser('gene_tokens', self._index.schema,
                                  group=OrGroup)
-            query = parser.parse(substring) if substring else Every()
+            query = parser.parse(substrings) if substrings else Every()
             results = searcher.search(query)
             return [result['gene_id'] for result in results]
