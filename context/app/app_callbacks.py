@@ -84,6 +84,17 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             cluster_cols=self._cluster_cols)
 
         show_genes = len(cluster_dataframe.index.tolist()) < 40
+
+        char_width = 10  # With a proportional font, this is only an estimate.
+
+        if show_genes:
+            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            left_margin = row_max * char_width
+        else:
+            left_margin = 75
+
+        col_max = max([len(s) for s in list(cluster_dataframe)])
+        bottom_margin = col_max * char_width
         return {
             'data': [
                 self._heatmap(cluster_dataframe, scale == 'log')
@@ -91,7 +102,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             'layout': go.Layout(
                 xaxis={'ticks': '', 'tickangle': 90},
                 yaxis={'ticks': '', 'showticklabels': show_genes},
-                margin={'l': 75, 'b': 75, 't': 30, 'r': 0}
+                margin={'l': left_margin, 'b': bottom_margin, 't': 30, 'r': 0}
                 # Need top margin so infobox on hover is not truncated
             )
         }
