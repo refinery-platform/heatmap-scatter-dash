@@ -29,11 +29,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         )(self._update_heatmap)
 
     def _search_to_ids_json(self, input):
-        ids = list({
-            gene
-            for gene in self._genes
-            if input in gene
-        }) if input else self._genes
+        ids = self._genes_index.search(input)
         return json.dumps(ids)
 
     def _scatter_to_gene_ids_json(self, input):
