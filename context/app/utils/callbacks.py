@@ -1,3 +1,4 @@
+import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
@@ -18,17 +19,26 @@ def scatter_inputs(id, scale_select=False):
     return inputs
 
 
+_light = 'rgb(127,216,127)'
+_dark = 'rgb(0,0,127)'
+
 _dark_dot = {
-    'color': 'rgb(0,0,127)',
-    'size': 5
+    'color': _dark, 'size': 5
 }
 _light_dot = {
-    'color': 'rgb(127,216,127)',
-    'size': 5
+    'color': _light, 'size': 5
+}
+_big_dark_dot = {
+    'color': _dark, 'size': 10
+}
+_big_light_dot = {
+    'color': _light, 'size': 10
 }
 
 
-def traces_all_selected(x_axis, y_axis, everyone, selected):
+def traces_all_selected(x_axis, y_axis, everyone, selected,
+                        highlight=pandas.DataFrame(),
+                        selected_highlight=pandas.DataFrame()):
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
@@ -46,8 +56,17 @@ def traces_all_selected(x_axis, y_axis, everyone, selected):
             'name': 'selected',
             'dataframe': selected,
             'marker': _dark_dot
+        },
+        {
+            'name': 'gene axis',
+            'dataframe': highlight,
+            'marker': _big_light_dot
+        },
+        {
+            'name': 'gene axis',
+            'dataframe': selected_highlight,
+            'marker': _big_dark_dot
         }
-
     ]
     return [
         go.Scattergl(
