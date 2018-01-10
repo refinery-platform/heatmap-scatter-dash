@@ -26,6 +26,10 @@ class TestIndex():
         self.assertEqual(set(self.index.search('oo az')),
                          {'foo', 'foobar', 'baz'})
 
+    def test_padded_multiple_search(self):
+        self.assertEqual(set(self.index.search('  oo  az  ')),
+                         {'foo', 'foobar', 'baz'})
+
     def test_none_search(self):
         self.assertEqual(set(self.index.search(None)),
                          {'foo', 'bar', 'foobar', 'baz'})

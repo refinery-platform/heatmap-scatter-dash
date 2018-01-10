@@ -18,7 +18,7 @@ class SimpleIndex():
     def search(self, substrings):
         if substrings:
             matches = []
-            for substring in re.split('\s+', substrings):
+            for substring in re.split('\s+', substrings.strip()):
                 matches.extend([gene_id
                                 for gene_id in self._index
                                 if substring in gene_id])
