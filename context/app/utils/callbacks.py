@@ -1,6 +1,6 @@
+import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
-import pandas
 
 
 def figure_output(id):
