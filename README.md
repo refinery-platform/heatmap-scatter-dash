@@ -4,7 +4,7 @@ A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
 Can be run as a Flask app from the commandline,
 or as Docker container for [Refinery](https://github.com/refinery-platform/refinery-platform) visualizations.
 
-<img width="657" alt="heatmap-scatterplot" src="https://user-images.githubusercontent.com/730388/34022648-6bd1bd7c-e10e-11e7-8b8a-ee9dfca981ed.png">
+<img width="645" alt="screen shot" src="https://user-images.githubusercontent.com/730388/34791348-b263ab92-f612-11e7-8330-31a2d4804ada.png">
 
 ```
 $ python app_runner.py -h
