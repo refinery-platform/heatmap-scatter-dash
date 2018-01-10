@@ -1,7 +1,8 @@
-from whoosh.fields import Schema, TEXT, NGRAMWORDS
+from whoosh.fields import NGRAMWORDS, TEXT, Schema
 from whoosh.filedb.filestore import RamStorage
-from whoosh.qparser import QueryParser, OrGroup
-from  whoosh.query import Every
+from whoosh.qparser import OrGroup, QueryParser
+from whoosh.query import Every
+
 
 class Index():
     # For the moment, we just want to be able to index strings,
