@@ -57,6 +57,9 @@ class AppBase:
                     border: none;
                     padding: 0 5px;
                 }
+                .Select-clear-zone {
+                    display: none;
+                }
                 """,
                 "text/css")
         ]
