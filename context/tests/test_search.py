@@ -25,7 +25,7 @@ class TestSearch(unittest.TestCase):
 
     def test_multiple_search(self):
         self.assertEqual(set(self.index.search('oo az')),
-                         {'foo', 'baz'})
+                         {'foo', 'foobar', 'baz'})
 
     def test_none_search(self):
         self.assertEqual(set(self.index.search(None)),

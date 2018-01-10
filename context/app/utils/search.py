@@ -1,6 +1,6 @@
 from whoosh.fields import Schema, TEXT, NGRAMWORDS
 from whoosh.filedb.filestore import RamStorage
-from whoosh.qparser import QueryParser
+from whoosh.qparser import QueryParser, OrGroup
 from  whoosh.query import Every
 
 class Index():
@@ -21,7 +21,8 @@ class Index():
 
     def search(self, substring):
         with self._index.searcher() as searcher:
-            parser = QueryParser('gene_tokens', self._index.schema)
+            parser = QueryParser('gene_tokens', self._index.schema,
+                                 group=OrGroup)
             query = parser.parse(substring) if substring else Every()
             results = searcher.search(query)
             return [result['gene_id'] for result in results]
