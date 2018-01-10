@@ -6,7 +6,7 @@ from scipy.cluster.hierarchy import leaves_list, linkage
 
 def _order_rows(dataframe, clustering):
     row_labels = dataframe.index.tolist()
-    if clustering:
+    if clustering and len(row_labels) > 1:
         rows_linkage = linkage(dataframe, 'ward')
         rows_order = leaves_list(rows_linkage).tolist()
         return [row_labels[i] for i in rows_order]
