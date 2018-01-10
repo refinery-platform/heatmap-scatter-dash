@@ -55,6 +55,8 @@ optional arguments:
 The best way to run the app during development is just as a Flask app.
 Check out the project, set up a virtualenv and install dependencies:
 ```bash
+  # Requires Python3:
+$ python --version
 $ git clone https://github.com/mccalluc/heatmap-scatter-dash.git
 $ cd heatmap-scatter-dash
   # Set up a virtualenv, and then install dependencies:
