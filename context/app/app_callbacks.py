@@ -87,11 +87,14 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
 
         char_width = 10  # With a proportional font, this is only an estimate.
 
-        row_label_max = max([len(s) for s in list(cluster_dataframe.index)])
-        left_margin = max(row_label_max * char_width, 75) if show_genes else 75
+        if show_genes:
+            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            left_margin = row_max * char_width
+        else:
+            left_margin = 75
 
-        col_label_max = max([len(s) for s in list(cluster_dataframe)])
-        bottom_margin = max(col_label_max * char_width, 75)
+        col_max = max([len(s) for s in list(cluster_dataframe)])
+        bottom_margin = col_max * char_width
         return {
             'data': [
                 self._heatmap(cluster_dataframe, scale == 'log')
