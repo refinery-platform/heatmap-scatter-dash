@@ -21,10 +21,29 @@ class TestCluster(unittest.TestCase):
             index=['r1', 'r2', 'r3', 'r4', 'r5', 'r6']
         )
 
+    def assert_no_change(self, array):
+        dataframe = pandas.DataFrame(array)
+        clustered = cluster(
+            dataframe, skip_zero=False,
+            cluster_rows=True, cluster_cols=True)
+        self.assertEqual(clustered.as_matrix().tolist(), array)
+
+    def test_1_1(self):
+        self.assert_no_change([[1]])
+
+    def test_1_2(self):
+        self.assert_no_change([[1, 2]])
+
+    def test_2_1(self):
+        self.assert_no_change([[2, 1]])
+
+    def test_2_2(self):
+        self.assert_no_change([[1, 2], [3, 4]])
+
     def test_pass_through(self):
         clustered = cluster(
             self.dataframe, skip_zero=False,
-            cluster_rows=False, cluster_cols=False, )
+            cluster_rows=False, cluster_cols=False)
         self.assertEqual(clustered.as_matrix().tolist(), [
             [0, 4, 0, 5],
             [0, 0, 0, 0],
