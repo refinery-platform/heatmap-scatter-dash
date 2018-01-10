@@ -4,9 +4,21 @@ from whoosh.qparser import OrGroup, QueryParser
 from whoosh.query import Every
 
 
-class Index():
-    # For the moment, we just want to be able to index strings,
-    # and return those that match on any substring.
+class SimpleIndex():
+    # "Indexing" is fast, but search is a bit slow.
+
+    def __init__(self):
+        self._index = []
+
+    def add(self, *gene_ids):
+        self._index.extend(gene_ids)
+
+    def search(self, substring):
+        return [gene_id for gene_id in self._index if substring in gene_id]
+
+
+class WhooshIndex():
+    # Search might be fast, but indexing is too slow to be useful.
 
     def __init__(self):
         storage = RamStorage()
@@ -14,10 +26,11 @@ class Index():
                         gene_tokens=NGRAMWORDS(stored=False))
         self._index = storage.create_index(schema)
 
-    def add(self, gene_id):
+    def add(self, *gene_ids):
         writer = self._index.writer()
-        writer.add_document(gene_id=gene_id,
-                            gene_tokens=gene_id)
+        for gene_id in gene_ids:
+            writer.add_document(gene_id=gene_id,
+                                gene_tokens=gene_id)
         writer.commit()
 
     def search(self, substring):

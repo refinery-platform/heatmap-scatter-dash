@@ -1,15 +1,14 @@
 import unittest
 
-from app.utils.search import Index
+from app.utils.search import SimpleIndex, WhooshIndex
 
 
-class TestSearch(unittest.TestCase):
+class TestIndex():
     def setUp(self):
-        self.index = Index()
+        self.index = self.index_class()
         self.index.add('foo')
-        self.index.add('bar')
-        self.index.add('foobar')
-        self.index.add('baz')
+        self.index.add('bar', 'foobar', 'baz')
+        # Should accept varargs
 
     def test_unique_search(self):
         self.assertEqual(set(self.index.search('baz')),
@@ -34,3 +33,17 @@ class TestSearch(unittest.TestCase):
     def test_empty_search(self):
         self.assertEqual(set(self.index.search('')),
                          {'foo', 'bar', 'foobar', 'baz'})
+
+    def test_single_char_search(self):
+        self.assertEqual(set(self.index.search('z')),
+                         {'baz'})
+
+class TestSimpleIndex(TestIndex, unittest.TestCase):
+    def __init__(self, x):
+        super().__init__(x)
+        self.index_class = SimpleIndex
+
+class TestWhooshIndex(TestIndex, unittest.TestCase):
+    def __init__(self, x):
+        super().__init__(x)
+        self.index_class = WhooshIndex
