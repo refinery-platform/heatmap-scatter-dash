@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output
 from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
+import plotly.graph_objs as go
 
 
 class AppConditionCallbacks(AppLayout):
@@ -44,7 +45,7 @@ class AppConditionCallbacks(AppLayout):
         selected_highlight = everyone.loc[
             list(set(selected.index) & set(highlight.index))
         ]  # pandas.merge loses the index, sadly, so pick a hack.
-        data = traces_all_selected(x_axis, y_axis, everyone, selected,
+        data = traces_all_selected(go.Scatter, x_axis, y_axis, everyone, selected,
                                    highlight=highlight,
                                    selected_highlight=selected_highlight)
         return {

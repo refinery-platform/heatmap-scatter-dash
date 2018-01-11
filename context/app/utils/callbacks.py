@@ -36,7 +36,7 @@ _big_light_dot = {
 }
 
 
-def traces_all_selected(x_axis, y_axis, everyone, selected,
+def traces_all_selected(constuctor, x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame()):
     # Was hitting something like
@@ -50,29 +50,33 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             # compliment is not worth the trouble.
             'name': 'unselected',
             'dataframe': everyone,
-            'marker': _light_dot
+            'marker': _light_dot,
+            'mode': 'markers'
         },
         {
             'name': 'selected',
             'dataframe': selected,
-            'marker': _dark_dot
+            'marker': _dark_dot,
+            'mode': 'markers'
         },
         {
             'name': 'gene axis',
             'dataframe': highlight,
-            'marker': _big_light_dot
+            'marker': _big_light_dot,
+            'mode': 'markers+text'
         },
         {
             'name': 'gene axis',
             'dataframe': selected_highlight,
-            'marker': _big_dark_dot
+            'marker': _big_dark_dot,
+            'mode': 'markers+text'
         }
     ]
     return [
-        go.Scattergl(
+        constuctor(
             x=trace['dataframe'][x_axis],
             y=trace['dataframe'][y_axis],
-            mode='markers',
+            mode=trace['mode'],
             text=trace['dataframe'].index,
             marker=trace['marker'],
             name=trace['name']

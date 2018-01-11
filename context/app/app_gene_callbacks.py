@@ -5,6 +5,7 @@ from dash.dependencies import Input, Output, State
 from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
+import plotly.graph_objs as go
 
 
 class AppGeneCallbacks(AppLayout):
@@ -91,7 +92,7 @@ class AppGeneCallbacks(AppLayout):
             everyone,
             selected_gene_ids_json
         )
-        data = traces_all_selected(x_axis, y_axis, everyone, selected)
+        data = traces_all_selected(go.Scattergl, x_axis, y_axis, everyone, selected)
         return {
             'data': data,
             'layout': ScatterLayout(
@@ -113,7 +114,7 @@ class AppGeneCallbacks(AppLayout):
             everyone,
             selected_gene_ids_json
         )
-        data = traces_all_selected(x_axis, y_axis, everyone, selected)
+        data = traces_all_selected(go.Scattergl, x_axis, y_axis, everyone, selected)
         return {
             'data': data,
             'layout': ScatterLayout(x_axis, y_axis)
