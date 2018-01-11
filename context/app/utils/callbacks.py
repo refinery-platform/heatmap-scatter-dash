@@ -29,14 +29,14 @@ _light_dot = {
     'color': _light, 'size': 5
 }
 _big_dark_dot = {
-    'color': _dark, 'size': 10
+    'color': _dark, 'size': 5, 'symbol': 'square'
 }
 _big_light_dot = {
-    'color': _light, 'size': 10
+    'color': _light, 'size': 5, 'symbol': 'square'
 }
 
 
-def traces_all_selected(constuctor, x_axis, y_axis, everyone, selected,
+def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame()):
     # Was hitting something like
@@ -71,13 +71,14 @@ def traces_all_selected(constuctor, x_axis, y_axis, everyone, selected,
         }
     ]
     return [
-        constuctor(
+        (go.Scatter if labelled else go.Scattergl)(
             x=trace['dataframe'][x_axis],
             y=trace['dataframe'][y_axis],
             mode=mode,
             text=trace['dataframe'].index,
             marker=trace['marker'],
             name=trace['name'],
+            textposition='bottom center',
             hoverinfo='none' if labelled else 'all',
         ) for trace in trace_defs if not trace['dataframe'].empty
     ]
