@@ -52,7 +52,6 @@ optional arguments:
 
 ## Getting Started
 
-The best way to run the app during development is just as a Flask app.
 Check out the project and install dependencies:
 ```bash
   # Requires Python3:
