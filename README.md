@@ -9,7 +9,8 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
-                     [--diffs DIFFS [DIFFS ...]] [--most_variable_rows TOP_ROWS]
+                     [--diffs DIFFS [DIFFS ...]]
+                     [--most_variable_rows MOST_VARIABLE_ROWS]
                      [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--reverse_colors] [--html_error]
@@ -23,27 +24,31 @@ optional arguments:
                         argument determines the dimensions of the random
                         matrix.
   --files FILES [FILES ...]
-                        Read CSV or TSV files. Multiple files will be joined
-                        based on the values in the first column. Compressed
-                        files are also handled, if correct extension is given.
-                        (ie ".csv.gz")
+                        Read CSV or TSV files. Identifiers should be in the
+                        first column and multiple files will be joined on
+                        identifier. Compressed files are also handled, if
+                        correct extension is given. (ie ".csv.gz")
   --diffs DIFFS [DIFFS ...]
-                        Read CSV or TSV files containing differential analysis
-                        data.
-  --most_variable_rows TOP_ROWS   For heatmap, sort by row variance, and take the top n.
-  --cluster_rows        For heatmap, hierarchically cluster rows.
-  --cluster_cols        For heatmap, hierarchically cluster columns.
+                        Read CSV or TSV files containing differential
+                        expression data.
+  --most_variable_rows MOST_VARIABLE_ROWS
+                        For the heatmap, we first sort by row variance, and
+                        then take the number of rows specified here. Defaults
+                        to 500.
+  --cluster_rows        For the heatmap, hierarchically cluster rows.
+  --cluster_cols        For the heatmap, hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap.
   --reverse_colors      Reverse the color scale of the heatmap.
   --html_error          If there is a configuration error, instead of exiting,
-                        start the server and display an error page.
+                        start the server and display an error page. (This is
+                        used by Refinery.)
   --api_prefix API_PREFIX
-                        Prefix for API URLs. (This is only useful inside
-                        Refinery.)
-  --debug               Runs the underlying Flask server in debug mode, and
-                        makes some of the internals visible on the page.
-  --port PORT
+                        Prefix for API URLs. (This is used by Refinery.)
+  --debug               Run the server in debug mode: The server will restart
+                        in response to any code changes, and some hidden
+                        fields will be shown.
+  --port PORT           Optionally, specify a port to run the server on.
 ```
 
 ## Getting Started
