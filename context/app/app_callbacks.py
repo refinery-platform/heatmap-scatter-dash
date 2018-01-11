@@ -71,8 +71,8 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
             selected_gene_ids_json
         )
         truncated_dataframe = (
-            sort_by_variance(selected_conditions_genes_df).head(self._top_rows)
-            if self._top_rows else selected_conditions_genes_df
+            sort_by_variance(selected_conditions_genes_df).head(self._most_variable_rows)
+            if self._most_variable_rows else selected_conditions_genes_df
         )
         cluster_dataframe = cluster(
             truncated_dataframe,

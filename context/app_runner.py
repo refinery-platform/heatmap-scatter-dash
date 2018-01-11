@@ -87,7 +87,7 @@ def main(args, parser=None):
             reverse_colors=args.reverse_colors,
             api_prefix=args.api_prefix,
             debug=args.debug,
-            top_rows=args.top_rows,
+            most_variable_rows=args.most_variable_rows,
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols
         ).app

@@ -16,12 +16,12 @@ class AppBase:
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
                  reverse_colors=False,
-                 top_rows=500,
+                 most_variable_rows=500,
                  cluster_rows=False,
                  cluster_cols=False,
                  api_prefix=None,
                  debug=False):
-        self._top_rows = top_rows
+        self._most_variable_rows = most_variable_rows
         self._cluster_rows = cluster_rows
         self._cluster_cols = cluster_cols
         self._union_dataframe = union_dataframe

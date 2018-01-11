@@ -9,7 +9,7 @@ or as Docker container for [Refinery](https://github.com/refinery-platform/refin
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo DEMO | --files FILES [FILES ...])
-                     [--diffs DIFFS [DIFFS ...]] [--top_rows TOP_ROWS]
+                     [--diffs DIFFS [DIFFS ...]] [--most_variable_rows TOP_ROWS]
                      [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
                      [--reverse_colors] [--html_error]
@@ -30,7 +30,7 @@ optional arguments:
   --diffs DIFFS [DIFFS ...]
                         Read CSV or TSV files containing differential analysis
                         data.
-  --top_rows TOP_ROWS   For heatmap, sort by row variance, and take the top n.
+  --most_variable_rows TOP_ROWS   For heatmap, sort by row variance, and take the top n.
   --cluster_rows        For heatmap, hierarchically cluster rows.
   --cluster_cols        For heatmap, hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
