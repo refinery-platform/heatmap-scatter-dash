@@ -132,26 +132,26 @@ if __name__ == '__main__':
         'The argument determines the dimensions of the random matrix.')
     input_source.add_argument(
         '--files', nargs='+', type=argparse.FileType('r'),
-        help='Read CSV or TSV files. Multiple files will be joined '
-             'based on the values in the first column. '
+        help='Read CSV or TSV files. Identifiers should be in the first '
+             'column and multiple files will be joined on identifier. '
              'Compressed files are also handled, '
              'if correct extension is given. (ie ".csv.gz")')
 
     parser.add_argument(
         '--diffs', nargs='+', type=argparse.FileType('r'), default=[],
-        help='Read CSV or TSV files containing differential analysis data.')
-    # --diffs itself is optional... but if present, files must be given.
+        help='Read CSV or TSV files containing differential expression data.')
 
     parser.add_argument(
-        '--top_rows', type=int, default=500,
-        help='For heatmap, sort by row variance, and take the top n.')
+        '--most_variable_rows', type=int, default=500,
+        help='For the heatmap, we first sort by row variance, and then take '
+             'the number of rows specified here. Defaults to 500.')
 
     parser.add_argument(
         '--cluster_rows', action='store_true',
-        help='For heatmap, hierarchically cluster rows.')
+        help='For the heatmap, hierarchically cluster rows.')
     parser.add_argument(
         '--cluster_cols', action='store_true',
-        help='For heatmap, hierarchically cluster columns.')
+        help='For the heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
@@ -163,17 +163,20 @@ if __name__ == '__main__':
     parser.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
-        'start the server and display an error page.')
+        'start the server and display an error page. '
+        '(This is used by Refinery.)')
     parser.add_argument(
         '--api_prefix', default='',
         help='Prefix for API URLs. '
-        '(This is only useful inside Refinery.)')
-
+        '(This is used by Refinery.)')
     parser.add_argument(
         '--debug', action='store_true',
-        help='Runs the underlying Flask server in debug mode, '
-        'and makes some of the internals visible on the page.')
-    parser.add_argument('--port', type=int, default=8050)
+        help='Run the server in debug mode: The server will '
+        'restart in response to any code changes, '
+        'and some hidden fields will be shown.')
+    parser.add_argument(
+        '--port', type=int, default=8050,
+        help='Optionally, specify a port to run the server on.')
 
     args = parser.parse_args()
     main(args, parser)
