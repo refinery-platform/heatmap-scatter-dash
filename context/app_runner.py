@@ -85,7 +85,6 @@ def main(args, parser=None):
             diff_dataframes=diff_dataframes,
             colors=args.colors,
             reverse_colors=args.reverse_colors,
-            heatmap_type=args.heatmap,
             api_prefix=args.api_prefix,
             debug=args.debug,
             top_rows=args.top_rows,
@@ -143,11 +142,6 @@ if __name__ == '__main__':
         help='Read CSV or TSV files containing differential analysis data.')
     # --diffs itself is optional... but if present, files must be given.
 
-    parser.add_argument(
-        '--heatmap', choices=['svg', 'canvas'], default='svg',
-        help='The canvas-based heatmap will render much more quickly '
-        'for large data sets, but the image is blurry, '
-        'rather than having sharp edges; TODO.')
     parser.add_argument(
         '--top_rows', type=int, default=500,
         help='For heatmap, sort by row variance, and take the top n.')

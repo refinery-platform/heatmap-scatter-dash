@@ -16,7 +16,6 @@ class AppBase:
                  diff_dataframes={'none given': pandas.DataFrame()},
                  colors='Greys',
                  reverse_colors=False,
-                 heatmap_type='svg',
                  top_rows=500,
                  cluster_rows=False,
                  cluster_cols=False,
@@ -37,7 +36,6 @@ class AppBase:
             self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
         else:
             self._color_scale = PLOTLY_SCALES[colors]
-        self._heatmap_type = heatmap_type
         with open(relative_path('extra.css')) as extra_css_file:
             self._css_urls = [
                 'https://maxcdn.bootstrapcdn.com/'

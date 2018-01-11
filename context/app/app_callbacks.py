@@ -114,13 +114,7 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         else:
             adjusted_color_scale = _linear(self._color_scale)
 
-        if self._heatmap_type == 'svg':
-            constructor = go.Heatmap
-        elif self._heatmap_type == 'canvas':
-            constructor = go.Heatmapgl
-        else:
-            raise Exception('Unknown heatmap type: ' + self._heatmap_type)
-        return constructor(
+        return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
             y=dataframe.index.tolist(),
             z=dataframe.as_matrix(),
