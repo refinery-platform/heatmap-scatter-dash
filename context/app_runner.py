@@ -38,7 +38,7 @@ def file_dataframes(files):
 
 
 def demo_dataframes(rows, cols):
-    array = np.random.rand(rows, cols)
+    array = np.random.randint(100, size=(rows, cols))
     col_labels = ['cond-{}'.format(i) for i in range(cols)]
     row_labels = ['gene-{}'.format(i) for i in range(rows)]
     return [pandas.DataFrame(array,
