@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--colors', choices=list(PLOTLY_SCALES), default='Greys',
-        help='Color scale for the heatmap.')
+        help='Color scale for the heatmap. Defaults to grey scale.')
     parser.add_argument(
         '--reverse_colors', action='store_true',
         help='Reverse the color scale of the heatmap.')
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         'and some hidden fields will be shown.')
     parser.add_argument(
         '--port', type=int, default=8050,
-        help='Optionally, specify a port to run the server on.')
+        help='Specify a port to run the server on. Defaults to 8050.')
 
     args = parser.parse_args()
     main(args, parser)

@@ -36,7 +36,7 @@ optional arguments:
   --cluster_rows        For the heatmap, hierarchically cluster rows.
   --cluster_cols        For the heatmap, hierarchically cluster columns.
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
-                        Color scale for the heatmap.
+                        Color scale for the heatmap. Defaults to grey scale.
   --reverse_colors      Reverse the color scale of the heatmap.
   --html_error          If there is a configuration error, instead of exiting,
                         start the server and display an error page. (This is
@@ -45,7 +45,7 @@ optional arguments:
   --debug               Run the server in debug mode: The server will restart
                         in response to any code changes, and some hidden
                         fields will be shown.
-  --port PORT           Optionally, specify a port to run the server on.
+  --port PORT           Specify a port to run the server on. Defaults to 8050.
 ```
 
 ## Getting Started
@@ -65,16 +65,16 @@ Then try one of these:
 $ cd context
 
   # Generate a random matrix:
-$ python app_runner.py --demo 1,10,10 --port 8888
+$ python app_runner.py --demo 100 10
 
   # Load data from disk:
-$ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-* --port 8888
+$ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 
   # Read an input.json like that created by Refinery:
-$ python app_runner_refinery.py --input ../fixtures/good/input.json --port 8888
+$ python app_runner_refinery.py --input ../fixtures/good/input.json
 ```
 
-and visit `http://localhost:8888/`.
+and visit `http://localhost:8050/`.
 
 ## Testing
 
