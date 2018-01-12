@@ -5,7 +5,7 @@ from math import log10
 
 import pandas
 import plotly.graph_objs as go
-from dash.dependencies import Input
+from dash.dependencies import Input, Output
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.app_condition_callbacks import AppConditionCallbacks
@@ -27,6 +27,24 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
                 Input('scale-select', 'value')
             ]
         )(self._update_heatmap)
+
+        # TODO: Generate the heatmap from the dataframe... and also update the scatterplots
+        self.app.callback(
+            Output('heatmap-dataframe-json', 'children'),
+            [
+                Input('selected-conditions-ids-json', 'children'),
+                Input('selected-genes-ids-json', 'children'),
+                Input('scale-select', 'value')
+            ]
+        )(self._update_heatmap_dataframe_json)
+
+        self.app.callback(
+            Output('heatmap-debug-json', 'children'),
+            [Input('heatmap', 'relayoutData')]
+        )(self._update_heatmap_debug_json)
+
+    def _update_heatmap_debug_json(self, input):
+        return json.dumps(input)
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
@@ -56,6 +74,35 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         states = timestamps_and_states[midpoint:]
         latest = states[timestamps.index(max(timestamps))]
         return latest
+
+    def _update_heatmap_dataframe_json(
+            self,
+            selected_conditions_ids_json,
+            selected_gene_ids_json,
+            scale):
+        selected_conditions = (
+            json.loads(selected_conditions_ids_json)
+            or self._conditions)
+        selected_conditions_df = self._union_dataframe[selected_conditions]
+        selected_conditions_genes_df = self._filter_by_gene_ids_json(
+            selected_conditions_df,
+            selected_gene_ids_json
+        )
+        truncated_dataframe = (
+            sort_by_variance(selected_conditions_genes_df)
+                .head(self._most_variable_rows)
+            if self._most_variable_rows else selected_conditions_genes_df
+        )
+        cluster_dataframe = cluster(
+            truncated_dataframe,
+            cluster_rows=self._cluster_rows,
+            cluster_cols=self._cluster_cols)
+
+        return json.dumps({
+            'cols': cluster_dataframe.columns.tolist(),
+            'rows': cluster_dataframe.index.tolist(),
+            'matrix': cluster_dataframe.as_matrix().tolist(),
+        })
 
     def _update_heatmap(
             self,

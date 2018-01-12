@@ -94,7 +94,9 @@ class AppLayout(AppBase):
                         className='col-sm-5'
                     )
                 ], className='form-group'),
-            ], className='form-horizontal')
+            ], className='form-horizontal'),
+            html.Div(id='heatmap-debug-json'),
+            html.Div(id='heatmap-dataframe-json')
         ]
 
     def _right_column(self, pc_options, conditions_options, volcano_options):
