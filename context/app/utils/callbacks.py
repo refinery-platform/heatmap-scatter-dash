@@ -39,12 +39,6 @@ _big_light_dot = {
 def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame()):
-    # Was hitting something like
-    # https://community.plot.ly/t/7329
-    # when I included the empty df,
-    # but I couldn't create a minimal reproducer.
-    labelled = not highlight.empty
-    mode = 'markers+text' if labelled else 'markers'
     trace_defs = [
         {
             # Not strictly true that these are "unselected", but the duplicates
@@ -70,17 +64,29 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'marker': _big_dark_dot
         }
     ]
+    labelled = not highlight.empty
+    kwargs_list = [
+        {
+            'x': trace['dataframe'][x_axis],
+            'y': trace['dataframe'][y_axis],
+            'mode': 'markers',
+            'text': trace['dataframe'].index,
+            'marker': trace['marker'],
+            'name': trace['name']
+        } for trace in trace_defs if not trace['dataframe'].empty
+        # Was hitting something like
+        # https://community.plot.ly/t/7329
+        # when I included the empty df,
+        # but I couldn't create a minimal reproducer.
+    ]
+    if labelled:
+        for kwargs in kwargs_list:
+            kwargs['textposition'] = 'bottom_center'
+            kwargs['hoverinfo'] = 'none'
+            kwargs['mode'] = 'markers+text'
     return [
-        (go.Scatter if labelled else go.Scattergl)(
-            x=trace['dataframe'][x_axis],
-            y=trace['dataframe'][y_axis],
-            mode=mode,
-            text=trace['dataframe'].index,
-            marker=trace['marker'],
-            name=trace['name'],
-            textposition='bottom center',
-            hoverinfo='none' if labelled else 'all',
-        ) for trace in trace_defs if not trace['dataframe'].empty
+        (go.Scatter if labelled else go.Scattergl)(**kwargs)
+        for kwargs in kwargs_list
     ]
 
 
