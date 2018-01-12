@@ -46,22 +46,26 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             # compliment is not worth the trouble.
             'name': 'unselected',
             'dataframe': everyone,
-            'marker': _light_dot
+            'marker': _light_dot,
+            'text': None
         },
         {
             'name': 'selected',
             'dataframe': selected,
-            'marker': _dark_dot
+            'marker': _dark_dot,
+            'text': None
         },
         {
             'name': 'gene axis',
             'dataframe': highlight,
-            'marker': _big_light_dot
+            'marker': _big_light_dot,
+            'text': highlight.index
         },
         {
             'name': 'gene axis',
             'dataframe': selected_highlight,
-            'marker': _big_dark_dot
+            'marker': _big_dark_dot,
+            'text': selected_highlight.index
         }
     ]
     labelled = not highlight.empty
@@ -70,7 +74,7 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'x': trace['dataframe'][x_axis],
             'y': trace['dataframe'][y_axis],
             'mode': 'markers',
-            'text': trace['dataframe'].index,
+            'text': trace['text'],
             'marker': trace['marker'],
             'name': trace['name']
         } for trace in trace_defs if not trace['dataframe'].empty
