@@ -15,7 +15,7 @@ class DefaultArgs():
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
         self.skip_zero = True
         self.colors = 'Greys'
-        self.top_rows = 500
+        self.most_variable_rows = 500
         self.reverse_colors = True
         self.html_error = True
 

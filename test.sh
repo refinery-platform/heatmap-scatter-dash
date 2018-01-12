@@ -30,7 +30,7 @@ end usage
 
 
 start cypress
-python context/app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888 --heatmap svg &
+python context/app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888 &
 node_modules/.bin/cypress run
 kill `jobs -p`
 end cypress

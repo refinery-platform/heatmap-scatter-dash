@@ -13,11 +13,7 @@ class TestAppRunner(unittest.TestCase):
     def full_args(self):
         args = DefaultArgs()
         args.port = 12345
-        args.demo = {
-            'frames': 1,
-            'rows': 2,
-            'cols': 2
-        }
+        args.demo = [2, 2]
         args.files = []
         args.diffs = []
         args.api_prefix = None
