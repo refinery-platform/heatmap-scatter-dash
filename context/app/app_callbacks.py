@@ -85,12 +85,13 @@ class AppCallbacks(AppGeneCallbacks, AppConditionCallbacks):
         char_width = 10  # With a proportional font, this is only an estimate.
 
         if show_genes:
-            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            row_max = max([len(s) for s in list(cluster_dataframe.index)],
+                          default=0)
             left_margin = row_max * char_width
         else:
             left_margin = 75
 
-        col_max = max([len(s) for s in list(cluster_dataframe)])
+        col_max = max([len(s) for s in list(cluster_dataframe)], default=0)
         bottom_margin = col_max * char_width
         return {
             'data': [

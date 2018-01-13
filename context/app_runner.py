@@ -29,15 +29,19 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
     }
 
 
-def file_dataframes(files):
+def read_mystery_file(file):
+    return pandas.read_csv(file, index_col=0, sep=None, engine='python')
+
+
+def get_file_dataframes(files):
     return [
-        pandas.read_csv(file, index_col=0, sep=None, engine='python')
+        read_mystery_file(file)
         # With sep=None, csv.Sniffer is used to detect filetype.
         for file in files
     ]
 
 
-def demo_dataframes(rows, cols):
+def get_demo_dataframes(rows, cols):
     array = np.random.rand(rows, cols)
     col_labels = ['cond-{}'.format(i) for i in range(cols)]
     row_labels = ['gene-{}'.format(i) for i in range(rows)]
@@ -46,12 +50,27 @@ def demo_dataframes(rows, cols):
                              index=row_labels)]
 
 
+def get_diff_dataframes(files, genes):
+    diff_dataframes = {}
+    for diff_file in args.diffs:
+        diff_dataframe = \
+            read_mystery_file(diff_file)
+        # app_runner and refinery pass different things in here...
+        # TODO:  Get rid of "if / else"
+        key = basename(diff_file.name
+                       if hasattr(diff_file, 'name')
+                       else diff_file)
+        value = vulcanize(find_index(diff_dataframe, genes))
+        diff_dataframes[key] = value
+    return diff_dataframes
+
+
 def main(args, parser=None):
     try:
         if args.files:
-            dataframes = file_dataframes(args.files)
+            dataframes = get_file_dataframes(args.files)
         elif args.demo:
-            dataframes = demo_dataframes(*args.demo)
+            dataframes = get_demo_dataframes(*args.demo)
         else:
             # Argparser validation should keep us from reaching this point.
             raise Exception('Either "demo" or "files" is required')
@@ -59,17 +78,7 @@ def main(args, parser=None):
         union_dataframe = merge(dataframes)
         genes = set(union_dataframe.index.tolist())
         if args.diffs:
-            diff_dataframes = {}
-            for diff_file in args.diffs:
-                diff_dataframe = \
-                    pandas.read_csv(diff_file, sep=None, engine='python')
-                # app_runner and refinery pass different things in here...
-                # TODO:  Get rid of "if / else"
-                key = basename(diff_file.name
-                               if hasattr(diff_file, 'name')
-                               else diff_file)
-                value = vulcanize(find_index(diff_dataframe, genes))
-                diff_dataframes[key] = value
+            diff_dataframes = get_diff_dataframes(files, genes)
         else:
             diff_dataframes = {
                 'No differential files given': pandas.DataFrame()
