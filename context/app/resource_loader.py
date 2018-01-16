@@ -2,6 +2,7 @@
 import os
 from base64 import urlsafe_b64encode
 
+
 class ResourceLoader():
 
     def load_resources(self):
@@ -26,6 +27,7 @@ class ResourceLoader():
 
         for url in self._js_urls:
             self.app.scripts.append_script({'external_url': url})
+
 
 def relative_path(file):
     # https://stackoverflow.com/questions/4060221 for more options

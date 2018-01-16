@@ -1,8 +1,9 @@
 import dash
-import dash_html_components as html
 import dash_core_components as dcc
+import dash_html_components as html
 
 from app.resource_loader import ResourceLoader
+
 
 class HelpApp(ResourceLoader):
 
@@ -23,7 +24,7 @@ class HelpApp(ResourceLoader):
         self.app.layout = html.Div([
             html.Div([
                 dcc.Markdown([
-'''
+                    '''
 # Help
 
 This is a test

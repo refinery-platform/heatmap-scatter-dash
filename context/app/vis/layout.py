@@ -1,8 +1,8 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.vis.base import VisBase
 from app.resource_loader import ResourceLoader
+from app.vis.base import VisBase
 
 
 class VisLayout(VisBase, ResourceLoader):
