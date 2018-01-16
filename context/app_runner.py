@@ -11,9 +11,11 @@ import pandas
 from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.app_callbacks import AppCallbacks
+from app.help.help_app import HelpApp
+from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
+from app.vis.callbacks import VisCallbacks
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
@@ -31,9 +33,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
 
 def file_dataframes(files):
     return [
-        pandas.read_csv(file, index_col=0, sep=None, engine='python')
-        # With sep=None, csv.Sniffer is used to detect filetype.
-        for file in files
+        tabular.parse(file) for file in files
     ]
 
 
@@ -61,8 +61,7 @@ def main(args, parser=None):
         if args.diffs:
             diff_dataframes = {}
             for diff_file in args.diffs:
-                diff_dataframe = \
-                    pandas.read_csv(diff_file, sep=None, engine='python')
+                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
                 key = basename(diff_file.name
@@ -74,7 +73,13 @@ def main(args, parser=None):
             diff_dataframes = {
                 'No differential files given': pandas.DataFrame()
             }
-        app = AppCallbacks(
+
+        server = Flask('heatmap-scatter-dash')
+
+        # TODO: Just calling constructor shouldn't do stuff.
+        VisCallbacks(
+            server=server,
+            url_base_pathname='/',
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
             colors=args.colors,
@@ -84,8 +89,13 @@ def main(args, parser=None):
             most_variable_rows=args.most_variable_rows,
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols
-        ).app
-        app.run_server(
+        )
+        HelpApp(
+            server=server,
+            url_base_pathname='/help',
+        )
+
+        server.run(
             debug=args.debug,
             port=args.port,
             host='0.0.0.0'

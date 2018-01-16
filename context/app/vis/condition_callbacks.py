@@ -2,12 +2,12 @@ import json
 
 from dash.dependencies import Input, Output
 
-from app.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
+from app.vis.layout import VisLayout
 
 
-class AppConditionCallbacks(AppLayout):
+class VisConditionCallbacks(VisLayout):
     # Since there is only one control here, all the timestamp machinery in
     # AppGeneCallbacks would be excessive, but we might need it some day.
 

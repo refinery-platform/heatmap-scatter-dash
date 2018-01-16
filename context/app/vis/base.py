@@ -9,7 +9,7 @@ from app.utils.pca import pca
 from app.utils.search import SimpleIndex
 
 
-class AppBase:
+class VisBase:
 
     def __init__(self,
                  union_dataframe,
@@ -20,7 +20,9 @@ class AppBase:
                  cluster_rows=False,
                  cluster_cols=False,
                  api_prefix=None,
-                 debug=False):
+                 debug=False,
+                 server=None,
+                 url_base_pathname=None):
         self._most_variable_rows = most_variable_rows
         self._cluster_rows = cluster_rows
         self._cluster_cols = cluster_cols
@@ -36,13 +38,13 @@ class AppBase:
             self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
         else:
             self._color_scale = PLOTLY_SCALES[colors]
-        with open(relative_path('extra.css')) as extra_css_file:
+        with open(relative_path('../extra.css')) as extra_css_file:
             self._css_urls = [
                 'https://maxcdn.bootstrapcdn.com/'
                 'bootstrap/3.3.7/css/bootstrap.min.css',
                 to_data_uri(extra_css_file.read(), 'text/css')
             ]
-        with open(relative_path('extra.js')) as extra_js_file:
+        with open(relative_path('../extra.js')) as extra_js_file:
             self._js_urls = [
                 'https://code.jquery.com/'
                 'jquery-3.1.1.slim.min.js',
@@ -52,7 +54,8 @@ class AppBase:
                             'application/javascript')
             ]
         self._debug = debug
-        self.app = dash.Dash()
+        self.app = dash.Dash(server=server,
+                             url_base_pathname=url_base_pathname)
         if api_prefix:
             self.app.config.update({
                 'requests_pathname_prefix': api_prefix
@@ -61,10 +64,11 @@ class AppBase:
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
 
-    def info(self, *fields):
-        if self._debug:
-            # TODO: logging.info() didn't work. Check logging levels?
-            print(' | '.join([str(field) for field in fields]))
+    # TODO: Remove?
+    # def info(self, *fields):
+    #     if self._debug:
+    #         # TODO: logging.info() didn't work. Check logging levels?
+    #         print(' | '.join([str(field) for field in fields]))
 
 
 def relative_path(file):

@@ -1,10 +1,10 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.app_base import AppBase
+from app.vis.base import VisBase
 
 
-class AppLayout(AppBase):
+class VisLayout(VisBase):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -115,7 +115,17 @@ class AppLayout(AppBase):
                               volcano_options, volcano=True),
                 _iframe('table'),
                 _iframe('list')
-            ], className='tab-content')
+            ], className='tab-content'),
+
+            html.Hr(),
+            html.Div([
+                html.A(['Help'], href='help', target='_blank'),
+                ' | ',
+                html.A(['Report Bug'],
+                       target='_blank',
+                       href='https://github.com/refinery-platform/'
+                            'heatmap-scatter-dash/issues/new')
+            ])
         ]
 
     def _hidden_div(self):

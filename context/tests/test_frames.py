@@ -29,24 +29,18 @@ class TestRead(TestDataFrames):
             index=[1]
         )
 
-    def assertFileRead(self, input_text, output_df):
+    def assertFileRead(self, input_text):
         file = tempfile.NamedTemporaryFile(mode='w+')
         file.write(input_text)
         file.seek(0)
         dfs = file_dataframes([file.name])
-        self.assertEqualDataFrames(dfs[0], output_df)
+        self.assertEqualDataFrames(dfs[0], self.target)
 
     def test_read_csv(self):
-        self.assertFileRead(
-            ',b,c\n1,2,3',
-            self.target
-        )
+        self.assertFileRead(',b,c\n1,2,3')
 
     def test_read_tsv(self):
-        self.assertFileRead(
-            '\tb\tc\n1\t2\t3',
-            self.target
-        )
+        self.assertFileRead('\tb\tc\n1\t2\t3')
 
 
 class TestMerge(TestDataFrames):
