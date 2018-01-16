@@ -13,7 +13,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.app_callbacks import AppCallbacks
 from app.utils.frames import find_index, merge
-from app.utils.vulcanize import vulcanize
+from app.utils import tabular
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
@@ -31,9 +31,7 @@ def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
 
 def file_dataframes(files):
     return [
-        pandas.read_csv(file, index_col=0, sep=None, engine='python')
-        # With sep=None, csv.Sniffer is used to detect filetype.
-        for file in files
+        tabular.parse(file) for file in files
     ]
 
 
@@ -61,8 +59,7 @@ def main(args, parser=None):
         if args.diffs:
             diff_dataframes = {}
             for diff_file in args.diffs:
-                diff_dataframe = \
-                    pandas.read_csv(diff_file, sep=None, engine='python')
+                diff_dataframe = tabular.parse(diff_file)
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
                 key = basename(diff_file.name

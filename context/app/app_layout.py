@@ -115,7 +115,14 @@ class AppLayout(AppBase):
                               volcano_options, volcano=True),
                 _iframe('table'),
                 _iframe('list')
-            ], className='tab-content')
+            ], className='tab-content'),
+
+            html.Hr(),
+            html.Div([
+                html.A(['Help'], href='#help'),
+                ' | ',
+                html.A(['Report Bug'], href='#bug')
+            ])
         ]
 
     def _hidden_div(self):
