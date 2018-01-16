@@ -1,7 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.app_base import AppBase
+from app.vis.app_base import AppBase
 
 
 class AppLayout(AppBase):

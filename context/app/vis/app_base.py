@@ -38,13 +38,13 @@ class AppBase:
             self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
         else:
             self._color_scale = PLOTLY_SCALES[colors]
-        with open(relative_path('extra.css')) as extra_css_file:
+        with open(relative_path('../extra.css')) as extra_css_file:
             self._css_urls = [
                 'https://maxcdn.bootstrapcdn.com/'
                 'bootstrap/3.3.7/css/bootstrap.min.css',
                 to_data_uri(extra_css_file.read(), 'text/css')
             ]
-        with open(relative_path('extra.js')) as extra_js_file:
+        with open(relative_path('../extra.js')) as extra_js_file:
             self._js_urls = [
                 'https://code.jquery.com/'
                 'jquery-3.1.1.slim.min.js',

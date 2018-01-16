@@ -2,7 +2,7 @@ import json
 
 from dash.dependencies import Input, Output, State
 
-from app.app_layout import AppLayout
+from app.vis.app_layout import AppLayout
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
 

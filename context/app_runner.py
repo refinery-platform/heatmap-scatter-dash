@@ -11,7 +11,7 @@ import pandas
 from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.app_callbacks import AppCallbacks
+from app.vis.app_callbacks import AppCallbacks
 from app.utils.frames import find_index, merge
 from app.utils import tabular
 from app.help.help_app import HelpApp

@@ -8,8 +8,8 @@ import plotly.graph_objs as go
 from dash.dependencies import Input
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
-from app.app_condition_callbacks import AppConditionCallbacks
-from app.app_gene_callbacks import AppGeneCallbacks
+from app.vis.app_condition_callbacks import AppConditionCallbacks
+from app.vis.app_gene_callbacks import AppGeneCallbacks
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
 from app.utils.frames import sort_by_variance
