@@ -2,7 +2,7 @@ import unittest
 
 import pandas
 
-from app.app_callbacks import AppCallbacks
+from app.vis.callbacks import VisCallbacks
 
 
 class TestDash():
@@ -112,7 +112,8 @@ class TestDash():
 class TestDashNoDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
-        self.app = AppCallbacks(
+        self.app = VisCallbacks(
+            url_base_pathname='/',
             union_dataframe=self.counts_dataframe()
         ).app
 
@@ -120,7 +121,8 @@ class TestDashNoDifferentials(TestDash, unittest.TestCase):
 class TestDashWithDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
-        self.app = AppCallbacks(
+        self.app = VisCallbacks(
+            url_base_pathname='/',
             union_dataframe=self.counts_dataframe(),
             diff_dataframes={
                 'A': self.diff_dataframe(),

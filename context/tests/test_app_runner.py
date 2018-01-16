@@ -62,8 +62,8 @@ class TestAppRunner(unittest.TestCase):
         args = self.full_args()
         args.html_error = False
         main(args)
-        mock_dash.assert_called_once()
-        mock_flask.assert_not_called()
+        mock_flask.assert_called_once()
+        mock_dash.assert_not_called()
 
     @patch.object(Flask, 'run')
     @patch.object(Dash, 'run_server')
@@ -72,5 +72,5 @@ class TestAppRunner(unittest.TestCase):
         args = self.full_args()
         args.html_error = True
         main(args)
-        mock_dash.assert_called_once()
-        mock_flask.assert_not_called()
+        mock_flask.assert_called_once()
+        mock_dash.assert_not_called()
