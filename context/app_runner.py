@@ -11,10 +11,11 @@ import pandas
 from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.vis.callbacks import VisCallbacks
-from app.utils.frames import find_index, merge
-from app.utils import tabular
 from app.help.help_app import HelpApp
+from app.utils import tabular
+from app.utils.frames import find_index, merge
+from app.utils.vulcanize import vulcanize
+from app.vis.callbacks import VisCallbacks
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
@@ -75,7 +76,8 @@ def main(args, parser=None):
 
         server = Flask('heatmap-scatter-dash')
 
-        vis_app = VisCallbacks(
+        # TODO: Just calling constructor shouldn't do stuff.
+        VisCallbacks(
             server=server,
             url_base_pathname='/',
             union_dataframe=union_dataframe,
@@ -87,8 +89,8 @@ def main(args, parser=None):
             most_variable_rows=args.most_variable_rows,
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols
-        ).app
-        help_app = HelpApp(
+        )
+        HelpApp(
             server=server,
             url_base_pathname='/help',
         )

@@ -8,11 +8,11 @@ import plotly.graph_objs as go
 from dash.dependencies import Input
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
-from app.vis.condition_callbacks import VisConditionCallbacks
-from app.vis.gene_callbacks import VisGeneCallbacks
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
 from app.utils.frames import sort_by_variance
+from app.vis.condition_callbacks import VisConditionCallbacks
+from app.vis.gene_callbacks import VisGeneCallbacks
 
 
 class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):

@@ -1,6 +1,7 @@
 import dash
 import dash_html_components as html
 
+
 class HelpApp():
 
     def __init__(self,
