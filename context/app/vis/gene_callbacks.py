@@ -2,12 +2,12 @@ import json
 
 from dash.dependencies import Input, Output, State
 
-from app.vis.app_layout import AppLayout
+from app.vis.layout import VisLayout
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
 
 
-class AppGeneCallbacks(AppLayout):
+class VisGeneCallbacks(VisLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

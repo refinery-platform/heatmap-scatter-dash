@@ -1,10 +1,10 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.vis.app_base import AppBase
+from app.vis.base import VisBase
 
 
-class AppLayout(AppBase):
+class VisLayout(VisBase):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

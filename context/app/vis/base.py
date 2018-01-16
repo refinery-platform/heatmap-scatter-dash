@@ -9,7 +9,7 @@ from app.utils.pca import pca
 from app.utils.search import SimpleIndex
 
 
-class AppBase:
+class VisBase:
 
     def __init__(self,
                  union_dataframe,

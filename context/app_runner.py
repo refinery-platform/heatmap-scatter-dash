@@ -11,7 +11,7 @@ import pandas
 from flask import Flask
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
-from app.vis.app_callbacks import AppCallbacks
+from app.vis.callbacks import VisCallbacks
 from app.utils.frames import find_index, merge
 from app.utils import tabular
 from app.help.help_app import HelpApp
@@ -75,7 +75,7 @@ def main(args, parser=None):
 
         server = Flask('heatmap-scatter-dash')
 
-        vis_app = AppCallbacks(
+        vis_app = VisCallbacks(
             server=server,
             url_base_pathname='/',
             union_dataframe=union_dataframe,
