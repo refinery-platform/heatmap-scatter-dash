@@ -20,7 +20,9 @@ class AppBase:
                  cluster_rows=False,
                  cluster_cols=False,
                  api_prefix=None,
-                 debug=False):
+                 debug=False,
+                 server=None,
+                 url_base_pathname=None):
         self._most_variable_rows = most_variable_rows
         self._cluster_rows = cluster_rows
         self._cluster_cols = cluster_cols
@@ -52,7 +54,8 @@ class AppBase:
                             'application/javascript')
             ]
         self._debug = debug
-        self.app = dash.Dash()
+        self.app = dash.Dash(server=server,
+                             url_base_pathname=url_base_pathname)
         if api_prefix:
             self.app.config.update({
                 'requests_pathname_prefix': api_prefix

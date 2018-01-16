@@ -14,6 +14,7 @@ from plotly.figure_factory.utils import PLOTLY_SCALES
 from app.app_callbacks import AppCallbacks
 from app.utils.frames import find_index, merge
 from app.utils import tabular
+from app.help.help_app import HelpApp
 
 
 def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
@@ -71,7 +72,12 @@ def main(args, parser=None):
             diff_dataframes = {
                 'No differential files given': pandas.DataFrame()
             }
-        app = AppCallbacks(
+
+        server = Flask('heatmap-scatter-dash')
+
+        vis_app = AppCallbacks(
+            server=server,
+            url_base_pathname='/',
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
             colors=args.colors,
@@ -82,7 +88,12 @@ def main(args, parser=None):
             cluster_rows=args.cluster_rows,
             cluster_cols=args.cluster_cols
         ).app
-        app.run_server(
+        help_app = HelpApp(
+            server=server,
+            url_base_pathname='/help',
+        )
+
+        server.run(
             debug=args.debug,
             port=args.port,
             host='0.0.0.0'

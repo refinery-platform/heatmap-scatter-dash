@@ -119,9 +119,12 @@ class AppLayout(AppBase):
 
             html.Hr(),
             html.Div([
-                html.A(['Help'], href='#help'),
+                html.A(['Help'], href='help', target='_blank'),
                 ' | ',
-                html.A(['Report Bug'], href='#bug')
+                html.A(['Report Bug'],
+                       target='_blank',
+                       href='https://github.com/refinery-platform/'
+                            'heatmap-scatter-dash/issues/new')
             ])
         ]
 
