@@ -22,6 +22,9 @@ def find_index(frame, keys):
     identify a column whose values come from keys, and use that as the index.
     """
     for index, row in frame.iterrows():
+        assert isinstance(index, int), \
+            'already indexed: got "{}", expected int'.format(index)
+        # TODO: Something better with pandas?
         matches = []
         for column_name, value in row.to_dict().items():
             if value in keys:

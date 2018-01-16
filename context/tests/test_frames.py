@@ -39,9 +39,8 @@ class TestRead(TestDataFrames):
     def test_read_csv(self):
         self.assertFileRead(',b,c\n1,2,3')
 
-    # TODO
-    # def test_read_tsv(self):
-    #     self.assertFileRead('\tb\tc\n1\t2\t3')
+    def test_read_tsv(self):
+        self.assertFileRead('\tb\tc\n1\t2\t3')
 
 
 class TestMerge(TestDataFrames):

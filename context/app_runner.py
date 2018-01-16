@@ -61,7 +61,7 @@ def main(args, parser=None):
         if args.diffs:
             diff_dataframes = {}
             for diff_file in args.diffs:
-                diff_dataframe = tabular.parse(diff_file)
+                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
                 # app_runner and refinery pass different things in here...
                 # TODO:  Get rid of "if / else"
                 key = basename(diff_file.name

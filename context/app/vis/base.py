@@ -64,10 +64,11 @@ class VisBase:
         # Works, but not officially supported:
         # https://community.plot.ly/t/including-page-titles-favicon-etc-in-dash-app/4648
 
-    def info(self, *fields):
-        if self._debug:
-            # TODO: logging.info() didn't work. Check logging levels?
-            print(' | '.join([str(field) for field in fields]))
+    # TODO: Remove?
+    # def info(self, *fields):
+    #     if self._debug:
+    #         # TODO: logging.info() didn't work. Check logging levels?
+    #         print(' | '.join([str(field) for field in fields]))
 
 
 def relative_path(file):
