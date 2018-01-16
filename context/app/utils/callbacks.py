@@ -29,20 +29,16 @@ _light_dot = {
     'color': _light, 'size': 5
 }
 _big_dark_dot = {
-    'color': _dark, 'size': 10
+    'color': _dark, 'size': 5, 'symbol': 'square'
 }
 _big_light_dot = {
-    'color': _light, 'size': 10
+    'color': _light, 'size': 5, 'symbol': 'square'
 }
 
 
 def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame()):
-    # Was hitting something like
-    # https://community.plot.ly/t/7329
-    # when I included the empty df,
-    # but I couldn't create a minimal reproducer.
     trace_defs = [
         {
             # Not strictly true that these are "unselected", but the duplicates
@@ -50,33 +46,51 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             # compliment is not worth the trouble.
             'name': 'unselected',
             'dataframe': everyone,
-            'marker': _light_dot
+            'marker': _light_dot,
+            'text': None
         },
         {
             'name': 'selected',
             'dataframe': selected,
-            'marker': _dark_dot
+            'marker': _dark_dot,
+            'text': None
         },
         {
             'name': 'gene axis',
             'dataframe': highlight,
-            'marker': _big_light_dot
+            'marker': _big_light_dot,
+            'text': highlight.index
         },
         {
             'name': 'gene axis',
             'dataframe': selected_highlight,
-            'marker': _big_dark_dot
+            'marker': _big_dark_dot,
+            'text': selected_highlight.index
         }
     ]
+    labelled = not highlight.empty
+    kwargs_list = [
+        {
+            'x': trace['dataframe'][x_axis],
+            'y': trace['dataframe'][y_axis],
+            'mode': 'markers',
+            'text': trace['text'],
+            'marker': trace['marker'],
+            'name': trace['name']
+        } for trace in trace_defs if not trace['dataframe'].empty
+        # Was hitting something like
+        # https://community.plot.ly/t/7329
+        # when I included the empty df,
+        # but I couldn't create a minimal reproducer.
+    ]
+    if labelled:
+        for kwargs in kwargs_list:
+            kwargs['textposition'] = 'bottom_center'
+            kwargs['hoverinfo'] = 'none'
+            kwargs['mode'] = 'markers+text'
     return [
-        go.Scattergl(
-            x=trace['dataframe'][x_axis],
-            y=trace['dataframe'][y_axis],
-            mode='markers',
-            text=trace['dataframe'].index,
-            marker=trace['marker'],
-            name=trace['name']
-        ) for trace in trace_defs if not trace['dataframe'].empty
+        (go.Scatter if labelled else go.Scattergl)(**kwargs)
+        for kwargs in kwargs_list
     ]
 
 
