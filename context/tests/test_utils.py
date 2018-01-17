@@ -1,7 +1,5 @@
 import unittest
-from base64 import urlsafe_b64decode
 
-from app.vis.base import to_data_uri
 from app.vis.callbacks import _log_interpolate
 
 
@@ -48,17 +46,4 @@ class TestUtils(unittest.TestCase):
             [[0, 'rgb(0.0, 0.0, 0.0)'],
              [0.1, 'rgb(0.0, 0.0, 0.0)'],
              [1, 'rgb(255.0, 255.0, 255.0)']]
-        )
-
-    def test_to_data_uri(self):
-        orig = 'alert("testing 123?")'
-        uri = to_data_uri(orig, 'text/fake')
-        encoded = 'YWxlcnQoInRlc3RpbmcgMTIzPyIp'
-        self.assertEqual(
-            uri,
-            'data:text/fake;base64,' + encoded
-        )
-        self.assertEqual(
-            b'alert("testing 123?")',
-            urlsafe_b64decode(encoded)
         )

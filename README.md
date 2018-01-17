@@ -4,7 +4,7 @@ A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
 Can be run as a Flask app from the commandline,
 or as Docker container for [Refinery](https://github.com/refinery-platform/refinery-platform) visualizations.
 
-<img width="645" alt="screen shot" src="https://user-images.githubusercontent.com/730388/34791348-b263ab92-f612-11e7-8330-31a2d4804ada.png">
+![screen shot](context/app/static/screen-shot.png)
 
 ```
 $ python app_runner.py -h
@@ -99,6 +99,8 @@ Successful Github tags and PRs will prompt Travis to push the built image to Doc
 $ git tag v0.0.x && git push origin --tags
 ```
 
-## Notes
+## For More Information...
 
 There are a few [notes](docs) on implementation decisions and lessons learned.
+
+The [online help](context/app/help/help.md) can be previewed to get a better sense of the operational details.

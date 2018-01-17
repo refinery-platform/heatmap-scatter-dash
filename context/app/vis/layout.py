@@ -1,24 +1,16 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
+from app.utils.resource_loader import ResourceLoader
 from app.vis.base import VisBase
 
 
-class VisLayout(VisBase):
+class VisLayout(VisBase, ResourceLoader):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._add_css()
-        self._add_scripts()
+        self.load_resources()
         self._add_dom()
-
-    def _add_css(self):
-        for url in self._css_urls:
-            self.app.css.append_css({'external_url': url})
-
-    def _add_scripts(self):
-        for url in self._js_urls:
-            self.app.scripts.append_script({'external_url': url})
 
     def _add_dom(self):
         conditions_options = [
