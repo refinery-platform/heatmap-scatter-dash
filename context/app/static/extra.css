@@ -1,11 +1,15 @@
 .plotlyjsicon {
+	/* We give props in other ways: having it on every hover is excessive. */
 	display: none;
 }
+
 iframe {
 	border: none;
 	width: 100%;
 	height: 33vh;
 }
+
+/* Clean, minimal table style: */
 table {
 	border: none;
 }
@@ -13,18 +17,18 @@ td, th {
 	border: none;
 	padding: 0 5px;
 }
+
+/* Bring baseline of button closer to that of the text, and space btween buttons. */
+.nav-tabs > .btn {
+	margin: 5px 0 0 5px;
+}
+
+/* Hide the "X" on pulldowns */
 .Select-clear-zone {
 	display: none;
 }
-@keyframes fadein {
-	0% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 0.5;
-	}
-}
 
+/* "Please Wait" overlay */
 ._dash-loading-callback {
 	position: absolute;
 	top: 0;
@@ -35,4 +39,14 @@ td, th {
 	opacity: 0;
 	background: no-repeat center url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ctext x='256' y='256'%3EPlease wait...%3C/text%3E%3C/svg%3E");
 	animation: fadein 0.5s ease-in 0.2s forwards;
+}
+
+/* Slight delay on "Please Wait" to reduce flicker */
+@keyframes fadein {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0.5;
+	}
 }
