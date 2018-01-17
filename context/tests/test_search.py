@@ -1,6 +1,6 @@
 import unittest
 
-from app.utils.search import SimpleIndex, WhooshIndex
+from app.utils.search import SimpleIndex  # , WhooshIndex
 
 
 class TestIndex():
@@ -49,7 +49,7 @@ class TestSimpleIndex(TestIndex, unittest.TestCase):
         self.index_class = SimpleIndex
 
 
-class TestWhooshIndex(TestIndex, unittest.TestCase):
-    def __init__(self, x):
-        super().__init__(x)
-        self.index_class = WhooshIndex
+# class TestWhooshIndex(TestIndex, unittest.TestCase):
+#     def __init__(self, x):
+#         super().__init__(x)
+#         self.index_class = WhooshIndex
