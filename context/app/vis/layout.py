@@ -235,7 +235,6 @@ def _tabs(*names, help_button=False):
             target='_blank',
             className=css_classes
         ))
-        li_list.append(' ')
         li_list.append(html.A(
             ['Report Bug'], href='https://github.com/refinery-platform/'
             'heatmap-scatter-dash/issues/new',
