@@ -1,8 +1,10 @@
+import os
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.utils.resource_loader import ResourceLoader, relative_path
+from app.utils.resource_loader import ResourceLoader
 
 
 class HelpApp(ResourceLoader):
@@ -31,3 +33,9 @@ class HelpApp(ResourceLoader):
                 ], className='col-md-12'),
             ], className='row'),
         ], className='container')
+
+
+
+def relative_path(file):
+    # https://stackoverflow.com/questions/4060221 for more options
+    return os.path.join(os.path.dirname(__file__), '..', 'static', file)

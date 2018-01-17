@@ -78,7 +78,7 @@ def main(args, parser=None):
 
         @server.route('/static/<path:path>')
         def serve_static(path):
-            return send_from_directory('static', path)
+            return send_from_directory('app/static', path)
 
         # TODO: Just calling constructor shouldn't do stuff.
         VisCallbacks(
