@@ -242,5 +242,5 @@ def _tabs(*names, help_button=False):
             className=css_classes
         ))
     tabs = html.Ul(li_list,
-        className='nav nav-tabs')
+                   className='nav nav-tabs')
     return tabs
