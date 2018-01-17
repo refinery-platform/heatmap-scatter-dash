@@ -4,7 +4,7 @@ This is a tool for exploring tabular gene expression and differential expression
 
 There are three main components:
 
-*Insert screenshot here*
+![screen shot](static/screen-shot.png)
 
 - On the left is a hierarchically clustered heatmap, with a gene search box and an axis toggle.
 - To the right and above is a scatter-plot of the conditions in the dataset,
@@ -16,7 +16,7 @@ a volcano plot for differential expression data, and a table of the current acti
 
 Each component offers a tool bar when you hover over it. From left to right:
 
-*Insert small screenshot here*
+![tool bar](static/tool-bar.png)
 
 - Click the camera icon to save the current graph as a PNG.
 - Click the disk icon to save the data on the Plotly web service.
