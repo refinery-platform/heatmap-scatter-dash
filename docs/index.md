@@ -1,5 +1,0 @@
----
-Help
----
-
-Help goes here.

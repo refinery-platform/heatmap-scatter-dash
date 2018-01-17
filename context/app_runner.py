@@ -8,7 +8,7 @@ from warnings import warn
 
 import numpy as np
 import pandas
-from flask import Flask
+from flask import Flask, send_from_directory
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.help.help_app import HelpApp
@@ -74,7 +74,11 @@ def main(args, parser=None):
                 'No differential files given': pandas.DataFrame()
             }
 
-        server = Flask('heatmap-scatter-dash')
+        server = Flask(__name__, static_url_path='')
+
+        @server.route('/static/<path:path>')
+        def serve_static(path):
+            return send_from_directory('static', path)
 
         # TODO: Just calling constructor shouldn't do stuff.
         VisCallbacks(

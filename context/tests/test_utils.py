@@ -1,7 +1,7 @@
 import unittest
 from base64 import urlsafe_b64decode
 
-from app.resource_loader import to_data_uri
+from app.utils.resource_loader import to_data_uri
 from app.vis.callbacks import _log_interpolate
 
 

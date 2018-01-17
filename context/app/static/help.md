@@ -44,7 +44,7 @@ sample-by-sample plot.
 although there is no hard-coded limit.
 - It is not currently possible to select a range on the heatmap, and have the scatterplots update accordingly
 
-## Feedback
+### Feedback
 
 Please make any feature requests or bug reports [here](https://github.com/refinery-platform/heatmap-scatter-dash/issues/new).
 

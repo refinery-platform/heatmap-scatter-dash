@@ -31,7 +31,7 @@ class ResourceLoader():
 
 def relative_path(file):
     # https://stackoverflow.com/questions/4060221 for more options
-    return os.path.join(os.path.dirname(__file__), file)
+    return os.path.join(os.path.dirname(__file__), '..', 'static', file)
 
 
 def to_data_uri(s, mime):

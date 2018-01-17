@@ -2,7 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.resource_loader import ResourceLoader, relative_path
+from app.utils.resource_loader import ResourceLoader, relative_path
 
 
 class HelpApp(ResourceLoader):

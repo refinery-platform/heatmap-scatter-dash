@@ -1,7 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.resource_loader import ResourceLoader
+from app.utils.resource_loader import ResourceLoader
 from app.vis.base import VisBase
 
 
