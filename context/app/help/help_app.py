@@ -32,7 +32,7 @@ class HelpApp(ResourceLoader):
                     markdown
                 ], className='col-md-12'),
             ], className='row'),
-        ], className='container')
+        ], className='container-fluid')
 
 
 def relative_path(file):

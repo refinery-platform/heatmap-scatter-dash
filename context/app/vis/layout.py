@@ -56,7 +56,7 @@ class VisLayout(VisBase, ResourceLoader):
                     className='col-md-6')
             ], className='row'),
             self._hidden_div()
-        ], className='container')
+        ], className='container-fluid')
 
     def _left_column(self):
         return [
@@ -171,7 +171,7 @@ class VisLayout(VisBase, ResourceLoader):
                 id='scatter-{}'.format(id),
                 style={
                     'height': '33vh',
-                    'width': '40vw'
+                    'width': '45vw'
                     # Shouldn't need to specify manually, but
                     # volcano was not getting the correct horizontal sizing...
                     # maybe because it's not on the screen at load time?
