@@ -103,4 +103,4 @@ $ git tag v0.0.x && git push origin --tags
 
 There are a few [notes](docs) on implementation decisions and lessons learned.
 
-The [online help](context/app/static/help.md) can be previewed to get a better sense of the operational details.
+The [online help](context/app/help/help.md) can be previewed to get a better sense of the operational details.

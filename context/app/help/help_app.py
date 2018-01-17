@@ -38,4 +38,4 @@ class HelpApp(ResourceLoader):
 
 def relative_path(file):
     # https://stackoverflow.com/questions/4060221 for more options
-    return os.path.join(os.path.dirname(__file__), '..', 'static', file)
+    return os.path.join(os.path.dirname(__file__), file)
