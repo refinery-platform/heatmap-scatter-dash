@@ -46,5 +46,5 @@ although there is no hard-coded limit.
 
 ## Feedback
 
-Please make any feature requests or bug reports [here](https://github.com/refinery-platform/heatmap-scatter-dash/issues/new)
+Please make any feature requests or bug reports [here](https://github.com/refinery-platform/heatmap-scatter-dash/issues/new).
 
