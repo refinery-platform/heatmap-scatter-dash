@@ -1,5 +1,4 @@
 import unittest
-from base64 import urlsafe_b64decode
 
 from app.vis.callbacks import _log_interpolate
 

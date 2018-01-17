@@ -35,7 +35,6 @@ class HelpApp(ResourceLoader):
         ], className='container')
 
 
-
 def relative_path(file):
     # https://stackoverflow.com/questions/4060221 for more options
     return os.path.join(os.path.dirname(__file__), file)
