@@ -12,8 +12,8 @@ usage: app_runner.py [-h] (--demo ROWS COLS | --files CSV [CSV ...])
                      [--diffs CSV [CSV ...]] [--most_variable_rows ROWS]
                      [--cluster_rows] [--cluster_cols]
                      [--colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}]
-                     [--reverse_colors] [--html_error] [--api_prefix PREFIX]
-                     [--debug] [--port PORT]
+                     [--reverse_colors] [--port PORT] [--profile]
+                     [--html_error] [--debug] [--api_prefix PREFIX]
 
 Light-weight visualization for differential expression
 
@@ -38,14 +38,19 @@ optional arguments:
   --colors {Greys,YlGnBu,Greens,YlOrRd,Bluered,RdBu,Reds,Blues,Picnic,Rainbow,Portland,Jet,Hot,Blackbody,Earth,Electric,Viridis}
                         Color scale for the heatmap. Defaults to grey scale.
   --reverse_colors      Reverse the color scale of the heatmap.
+  --port PORT           Specify a port to run the server on. Defaults to 8050.
+
+Refinery/Developer:
+  These parameters will probably only be of interest to developers, and/or
+  they are used when the tool is embedded in Refinery.
+
+  --profile             Load data, dump profiling, and exit.
   --html_error          If there is a configuration error, instead of exiting,
-                        start the server and display an error page. (This is
-                        used by Refinery.)
-  --api_prefix PREFIX   Prefix for API URLs. (This is used by Refinery.)
+                        start the server and display an error page.
   --debug               Run the server in debug mode: The server will restart
                         in response to any code changes, and some hidden
                         fields will be shown.
-  --port PORT           Specify a port to run the server on. Defaults to 8050.
+  --api_prefix PREFIX   Prefix for API URLs.
 ```
 
 ## Getting Started

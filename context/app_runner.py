@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import argparse
+import cProfile
 import html
-import re
+import pstats
 import traceback
 from os.path import basename
+from sys import exit
 from warnings import warn
 
 import numpy as np
@@ -16,19 +18,6 @@ from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
-
-
-def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
-    if not pattern.match(s):
-        raise argparse.ArgumentTypeError(
-            'Should be of the form "ROWS,COLS", '
-            'where each is an integer'
-        )
-    dimensions = [int(i) for i in s.split(',')]
-    return {
-        'rows': dimensions[0],
-        'cols': dimensions[1]
-    }
 
 
 def file_dataframes(files):
@@ -46,59 +35,70 @@ def demo_dataframes(rows, cols):
                              index=row_labels)]
 
 
+def init(args, parser):
+    if args.files:
+        dataframes = file_dataframes(args.files)
+    elif args.demo:
+        dataframes = demo_dataframes(*args.demo)
+    else:
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
+
+    union_dataframe = merge(dataframes)
+    genes = set(union_dataframe.index.tolist())
+    if args.diffs:
+        diff_dataframes = {}
+        for diff_file in args.diffs:
+            diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
+            # app_runner and refinery pass different things in here...
+            # TODO:  Get rid of "if / else"
+            key = basename(diff_file.name
+                           if hasattr(diff_file, 'name')
+                           else diff_file)
+            value = vulcanize(find_index(diff_dataframe, genes))
+            diff_dataframes[key] = value
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
+
+    server = Flask(__name__, static_url_path='')
+
+    @server.route('/static/<path:path>')
+    def serve_static(path):
+        return send_from_directory('app/static', path)
+
+    # TODO: Just calling constructor shouldn't do stuff.
+    VisCallbacks(
+        server=server,
+        url_base_pathname='/',
+        union_dataframe=union_dataframe,
+        diff_dataframes=diff_dataframes,
+        colors=args.colors,
+        reverse_colors=args.reverse_colors,
+        api_prefix=args.api_prefix,
+        debug=args.debug,
+        most_variable_rows=args.most_variable_rows,
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols
+    )
+    HelpApp(
+        server=server,
+        url_base_pathname='/help',
+    )
+
+    return server
+
+
 def main(args, parser=None):
     try:
-        if args.files:
-            dataframes = file_dataframes(args.files)
-        elif args.demo:
-            dataframes = demo_dataframes(*args.demo)
-        else:
-            # Argparser validation should keep us from reaching this point.
-            raise Exception('Either "demo" or "files" is required')
-
-        union_dataframe = merge(dataframes)
-        genes = set(union_dataframe.index.tolist())
-        if args.diffs:
-            diff_dataframes = {}
-            for diff_file in args.diffs:
-                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                # app_runner and refinery pass different things in here...
-                # TODO:  Get rid of "if / else"
-                key = basename(diff_file.name
-                               if hasattr(diff_file, 'name')
-                               else diff_file)
-                value = vulcanize(find_index(diff_dataframe, genes))
-                diff_dataframes[key] = value
-        else:
-            diff_dataframes = {
-                'No differential files given': pandas.DataFrame()
-            }
-
-        server = Flask(__name__, static_url_path='')
-
-        @server.route('/static/<path:path>')
-        def serve_static(path):
-            return send_from_directory('app/static', path)
-
-        # TODO: Just calling constructor shouldn't do stuff.
-        VisCallbacks(
-            server=server,
-            url_base_pathname='/',
-            union_dataframe=union_dataframe,
-            diff_dataframes=diff_dataframes,
-            colors=args.colors,
-            reverse_colors=args.reverse_colors,
-            api_prefix=args.api_prefix,
-            debug=args.debug,
-            most_variable_rows=args.most_variable_rows,
-            cluster_rows=args.cluster_rows,
-            cluster_cols=args.cluster_cols
-        )
-        HelpApp(
-            server=server,
-            url_base_pathname='/help',
-        )
-
+        if args.profile:
+            profile = cProfile.Profile()
+            profile.runcall(init, args, parser)
+            stats = pstats.Stats(profile).sort_stats('cumulative')
+            stats.print_stats(r'context/app')
+            exit(0)
+        server = init(args, parser)
         server.run(
             debug=args.debug,
             port=args.port,
@@ -167,24 +167,30 @@ if __name__ == '__main__':
     parser.add_argument(
         '--reverse_colors', action='store_true',
         help='Reverse the color scale of the heatmap.')
-
     parser.add_argument(
+        '--port', type=int, default=8050,
+        help='Specify a port to run the server on. Defaults to 8050.')
+
+    group = parser.add_argument_group(
+        'Refinery/Developer',
+        'These parameters will probably only be of interest to developers, '
+        'and/or they are used when the tool is embedded in Refinery.')
+
+    group.add_argument(
+        '--profile', action='store_true',
+        help='Load data, dump profiling, and exit.')
+    group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
-        'start the server and display an error page. '
-        '(This is used by Refinery.)')
-    parser.add_argument(
-        '--api_prefix', default='', metavar='PREFIX',
-        help='Prefix for API URLs. '
-        '(This is used by Refinery.)')
-    parser.add_argument(
+        'start the server and display an error page.')
+    group.add_argument(
         '--debug', action='store_true',
         help='Run the server in debug mode: The server will '
         'restart in response to any code changes, '
         'and some hidden fields will be shown.')
-    parser.add_argument(
-        '--port', type=int, default=8050,
-        help='Specify a port to run the server on. Defaults to 8050.')
+    group.add_argument(
+        '--api_prefix', default='', metavar='PREFIX',
+        help='Prefix for API URLs.')
 
     args = parser.parse_args()
     main(args, parser)
