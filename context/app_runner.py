@@ -167,24 +167,31 @@ if __name__ == '__main__':
     parser.add_argument(
         '--reverse_colors', action='store_true',
         help='Reverse the color scale of the heatmap.')
-
     parser.add_argument(
+        '--port', type=int, default=8050,
+        help='Specify a port to run the server on. Defaults to 8050.')
+
+    group = parser.add_argument_group(
+        'Refinery/Developer',
+        'These parameters will probably only be of interest to developers, '
+        'and/or they are used when the tool is embedded in Refinery.')
+
+    group.add_argument(
+        '--profile', action='store_true',
+        help='Instead of launching the application, load all the data as '
+        'normal and then print out a profile report.')
+    group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
-        'start the server and display an error page. '
-        '(This is used by Refinery.)')
-    parser.add_argument(
-        '--api_prefix', default='', metavar='PREFIX',
-        help='Prefix for API URLs. '
-        '(This is used by Refinery.)')
-    parser.add_argument(
+        'start the server and display an error page.')
+    group.add_argument(
         '--debug', action='store_true',
         help='Run the server in debug mode: The server will '
         'restart in response to any code changes, '
         'and some hidden fields will be shown.')
-    parser.add_argument(
-        '--port', type=int, default=8050,
-        help='Specify a port to run the server on. Defaults to 8050.')
+    group.add_argument(
+        '--api_prefix', default='', metavar='PREFIX',
+        help='Prefix for API URLs.')
 
     args = parser.parse_args()
     main(args, parser)

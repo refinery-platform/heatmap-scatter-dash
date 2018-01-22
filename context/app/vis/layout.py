@@ -212,6 +212,7 @@ def _dropdown(id, options, axis, axis_index):
 
 def _class_from_index(i):
     if i == 0:
+        # The first "tab" is really just a label.
         return 'disabled'
     if i == 1:
         return 'active'
