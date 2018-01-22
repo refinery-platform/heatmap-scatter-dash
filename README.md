@@ -51,10 +51,6 @@ Refinery/Developer:
                         in response to any code changes, and some hidden
                         fields will be shown.
   --api_prefix PREFIX   Prefix for API URLs.
-  --debug               Run the server in debug mode: The server will restart
-                        in response to any code changes, and some hidden
-                        fields will be shown.
-  --port PORT           Specify a port to run the server on. Defaults to 8050.
 ```
 
 ## Getting Started

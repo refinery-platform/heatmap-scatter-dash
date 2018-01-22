@@ -22,10 +22,10 @@ end isort
 
 
 start usage
-diff <(perl -ne 'print if /^usage:/../  --api_prefix/' README.md) <(cd context; ./app_runner.py -h) || \
+diff <(perl -ne 'print if /^usage:/../^  --api_prefix/' README.md) <(cd context; ./app_runner.py -h) || \
 die '
 Update README.md:
-  perl -ne '"'"'print unless /^usage:/../  --api_prefix/; print `cd context; ./app_runner.py -h` if /^usage:/'"'"' -i README.md'
+  perl -ne '"'"'print unless /^usage:/../^  --api_prefix/; print `cd context; ./app_runner.py -h` if /^usage:/'"'"' -i README.md'
 end usage
 
 
