@@ -21,19 +21,6 @@ from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
 
 
-def dimensions_regex(s, pattern=re.compile(r"\d+,\d+")):
-    if not pattern.match(s):
-        raise argparse.ArgumentTypeError(
-            'Should be of the form "ROWS,COLS", '
-            'where each is an integer'
-        )
-    dimensions = [int(i) for i in s.split(',')]
-    return {
-        'rows': dimensions[0],
-        'cols': dimensions[1]
-    }
-
-
 def file_dataframes(files):
     return [
         tabular.parse(file) for file in files
