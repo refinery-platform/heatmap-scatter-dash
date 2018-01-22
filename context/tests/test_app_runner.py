@@ -19,6 +19,7 @@ class TestAppRunner(unittest.TestCase):
         args.api_prefix = None
         args.cluster_rows = False
         args.cluster_cols = False
+        args.profile = False
         return args
 
     def test_default_args(self):

@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import argparse
+import cProfile
 import html
+import pstats
 import re
 import traceback
 from os.path import basename
+from sys import exit
 from warnings import warn
 
 import numpy as np
@@ -46,59 +49,70 @@ def demo_dataframes(rows, cols):
                              index=row_labels)]
 
 
+def init(args, parser):
+    if args.files:
+        dataframes = file_dataframes(args.files)
+    elif args.demo:
+        dataframes = demo_dataframes(*args.demo)
+    else:
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
+
+    union_dataframe = merge(dataframes)
+    genes = set(union_dataframe.index.tolist())
+    if args.diffs:
+        diff_dataframes = {}
+        for diff_file in args.diffs:
+            diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
+            # app_runner and refinery pass different things in here...
+            # TODO:  Get rid of "if / else"
+            key = basename(diff_file.name
+                           if hasattr(diff_file, 'name')
+                           else diff_file)
+            value = vulcanize(find_index(diff_dataframe, genes))
+            diff_dataframes[key] = value
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
+
+    server = Flask(__name__, static_url_path='')
+
+    @server.route('/static/<path:path>')
+    def serve_static(path):
+        return send_from_directory('app/static', path)
+
+    # TODO: Just calling constructor shouldn't do stuff.
+    VisCallbacks(
+        server=server,
+        url_base_pathname='/',
+        union_dataframe=union_dataframe,
+        diff_dataframes=diff_dataframes,
+        colors=args.colors,
+        reverse_colors=args.reverse_colors,
+        api_prefix=args.api_prefix,
+        debug=args.debug,
+        most_variable_rows=args.most_variable_rows,
+        cluster_rows=args.cluster_rows,
+        cluster_cols=args.cluster_cols
+    )
+    HelpApp(
+        server=server,
+        url_base_pathname='/help',
+    )
+
+    return server
+
+
 def main(args, parser=None):
     try:
-        if args.files:
-            dataframes = file_dataframes(args.files)
-        elif args.demo:
-            dataframes = demo_dataframes(*args.demo)
-        else:
-            # Argparser validation should keep us from reaching this point.
-            raise Exception('Either "demo" or "files" is required')
-
-        union_dataframe = merge(dataframes)
-        genes = set(union_dataframe.index.tolist())
-        if args.diffs:
-            diff_dataframes = {}
-            for diff_file in args.diffs:
-                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                # app_runner and refinery pass different things in here...
-                # TODO:  Get rid of "if / else"
-                key = basename(diff_file.name
-                               if hasattr(diff_file, 'name')
-                               else diff_file)
-                value = vulcanize(find_index(diff_dataframe, genes))
-                diff_dataframes[key] = value
-        else:
-            diff_dataframes = {
-                'No differential files given': pandas.DataFrame()
-            }
-
-        server = Flask(__name__, static_url_path='')
-
-        @server.route('/static/<path:path>')
-        def serve_static(path):
-            return send_from_directory('app/static', path)
-
-        # TODO: Just calling constructor shouldn't do stuff.
-        VisCallbacks(
-            server=server,
-            url_base_pathname='/',
-            union_dataframe=union_dataframe,
-            diff_dataframes=diff_dataframes,
-            colors=args.colors,
-            reverse_colors=args.reverse_colors,
-            api_prefix=args.api_prefix,
-            debug=args.debug,
-            most_variable_rows=args.most_variable_rows,
-            cluster_rows=args.cluster_rows,
-            cluster_cols=args.cluster_cols
-        )
-        HelpApp(
-            server=server,
-            url_base_pathname='/help',
-        )
-
+        if args.profile:
+            profile = cProfile.Profile()
+            profile.runcall(init, args, parser)
+            stats = pstats.Stats(profile).sort_stats('cumulative')
+            stats.print_stats(r'context/app')
+            exit(0)
+        server = init(args, parser)
         server.run(
             debug=args.debug,
             port=args.port,
@@ -178,8 +192,7 @@ if __name__ == '__main__':
 
     group.add_argument(
         '--profile', action='store_true',
-        help='Instead of launching the application, load all the data as '
-        'normal and then print out a profile report.')
+        help='Load data, dump profiling, and exit.')
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
