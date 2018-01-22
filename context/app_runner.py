@@ -3,7 +3,6 @@ import argparse
 import cProfile
 import html
 import pstats
-import re
 import traceback
 from os.path import basename
 from sys import exit
