@@ -44,7 +44,7 @@ Refinery/Developer:
   These parameters will probably only be of interest to developers, and/or
   they are used when the tool is embedded in Refinery.
 
-  --profile             Load data, dump profiling, and exit.
+  --profile             Log profiling data on startup and with each callback.
   --html_error          If there is a configuration error, instead of exiting,
                         start the server and display an error page.
   --debug               Run the server in debug mode: The server will restart

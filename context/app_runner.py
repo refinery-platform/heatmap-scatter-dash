@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     group.add_argument(
         '--profile', action='store_true',
-        help='Load data, dump profiling, and exit.')
+        help='Log profiling data on startup and with each callback.')
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
