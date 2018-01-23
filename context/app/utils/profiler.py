@@ -1,6 +1,6 @@
+import contextlib
 import cProfile
 import pstats
-import contextlib
 
 
 @contextlib.contextmanager

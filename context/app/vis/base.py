@@ -3,8 +3,8 @@ import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.utils.pca import pca
-from app.utils.search import SimpleIndex
 from app.utils.profiler import null_profiler
+from app.utils.search import SimpleIndex
 
 
 class VisBase():

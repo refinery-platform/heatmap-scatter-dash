@@ -83,7 +83,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 
             show_genes = len(cluster_dataframe.index.tolist()) < 40
 
-            char_width = 10  # With a proportional font, this is only an estimate.
+            # With a proportional font, this is only an estimate.
+            char_width = 10
 
             if show_genes:
                 row_max = max([len(s) for s in list(cluster_dataframe.index)])
@@ -100,7 +101,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 'layout': go.Layout(
                     xaxis={'ticks': '', 'tickangle': 90},
                     yaxis={'ticks': '', 'showticklabels': show_genes},
-                    margin={'l': left_margin, 'b': bottom_margin, 't': 30, 'r': 0}
+                    margin={'l': left_margin,
+                            'b': bottom_margin, 't': 30, 'r': 0}
                     # Need top margin so infobox on hover is not truncated
                 )
             }

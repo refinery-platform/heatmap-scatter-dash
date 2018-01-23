@@ -3,7 +3,6 @@ import argparse
 import html
 import traceback
 from os.path import basename
-from sys import exit
 from warnings import warn
 
 import numpy as np
@@ -12,12 +11,10 @@ from flask import Flask, send_from_directory
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.help.help_app import HelpApp
-from app.utils import tabular
+from app.utils import profiler, tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
-
-from app.utils import profiler
 
 
 def file_dataframes(files):

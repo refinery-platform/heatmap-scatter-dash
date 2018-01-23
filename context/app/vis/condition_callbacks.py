@@ -63,7 +63,7 @@ class VisConditionCallbacks(VisLayout):
             return self._list_html(conditions)
             # Alternatively:
             #   pandas.DataFrame(self._dataframe.columns.tolist())
-            # but transpose may be more efficient than creating a new DataFrame.
+            # but transpose may be more efficient than a new DataFrame?
 
     def _filter_by_condition_ids_json(self, dataframe, json_list):
         with self._profiler():
