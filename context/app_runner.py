@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import argparse
-import cProfile
 import html
-import pstats
 import traceback
 from os.path import basename
 from sys import exit
@@ -18,6 +16,8 @@ from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
+
+from app.utils.profiler import profile
 
 
 def file_dataframes(files):
@@ -93,10 +93,8 @@ def init(args, parser):
 def main(args, parser=None):
     try:
         if args.profile:
-            profile = cProfile.Profile()
-            profile.runcall(init, args, parser)
-            stats = pstats.Stats(profile).sort_stats('cumulative')
-            stats.print_stats(r'context/app')
+            with profile():
+                server = init(args, parser)
             exit(0)
         server = init(args, parser)
         server.run(
