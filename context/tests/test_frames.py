@@ -48,6 +48,10 @@ class TestTabularParser(TestDataFrames):
     def test_read_tsv(self):
         self.assertFileRead('\tb\tc\n1\t2\t3')
 
+    def test_read_other_delimiters(self):
+        for c in '~!@#$%^&*|:;':
+            self.assertFileRead('{0}b{0}c\n1{0}2{0}3'.format(c))
+
 
 class TestMerge(TestDataFrames):
 
