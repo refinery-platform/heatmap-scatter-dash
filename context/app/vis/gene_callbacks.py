@@ -85,60 +85,65 @@ class VisGeneCallbacks(VisLayout):
             self,
             selected_gene_ids_json,
             x_axis, y_axis, scale):
-        is_log = scale == 'log'
-        everyone = self._union_dataframe
-        selected = self._filter_by_gene_ids_json(
-            everyone,
-            selected_gene_ids_json
-        )
-        data = traces_all_selected(x_axis, y_axis, everyone, selected)
-        return {
-            'data': data,
-            'layout': ScatterLayout(
-                x_axis, y_axis,
-                x_log=is_log, y_log=is_log)
-        }
+        with self._profiler():
+            is_log = scale == 'log'
+            everyone = self._union_dataframe
+            selected = self._filter_by_gene_ids_json(
+                everyone,
+                selected_gene_ids_json
+            )
+            data = traces_all_selected(x_axis, y_axis, everyone, selected)
+            return {
+                'data': data,
+                'layout': ScatterLayout(
+                    x_axis, y_axis,
+                    x_log=is_log, y_log=is_log)
+            }
 
     def _update_scatter_volcano(
             self,
             selected_gene_ids_json,
             file_selected,
             x_axis, y_axis):
-        if not x_axis:
-            # ie, there are no differential files.
-            # "file" itself is (mis)used for messaging.
-            return {}
-        everyone = self._diff_dataframes[file_selected]
-        selected = self._filter_by_gene_ids_json(
-            everyone,
-            selected_gene_ids_json
-        )
-        data = traces_all_selected(x_axis, y_axis, everyone, selected)
-        return {
-            'data': data,
-            'layout': ScatterLayout(x_axis, y_axis)
-        }
+        with self._profiler():
+            if not x_axis:
+                # ie, there are no differential files.
+                # "file" itself is (mis)used for messaging.
+                return {}
+            everyone = self._diff_dataframes[file_selected]
+            selected = self._filter_by_gene_ids_json(
+                everyone,
+                selected_gene_ids_json
+            )
+            data = traces_all_selected(x_axis, y_axis, everyone, selected)
+            return {
+                'data': data,
+                'layout': ScatterLayout(x_axis, y_axis)
+            }
 
     def _update_gene_table(self,
                            selected_gene_ids_json,
                            selected_condition_ids_json):
-        selected_genes_df = self._filter_by_gene_ids_json(
-            self._union_dataframe,
-            selected_gene_ids_json
-        )
-        selected_conditions = json.loads(selected_condition_ids_json)
-        return self._table_html(selected_genes_df[selected_conditions])
+        with self._profiler():
+            selected_genes_df = self._filter_by_gene_ids_json(
+                self._union_dataframe,
+                selected_gene_ids_json
+            )
+            selected_conditions = json.loads(selected_condition_ids_json)
+            return self._table_html(selected_genes_df[selected_conditions])
 
     def _update_gene_list(self, selected_genes_ids_json):
-        selected_genes_df = self._filter_by_gene_ids_json(
-            self._union_dataframe,
-            selected_genes_ids_json
-        )
-        return self._list_html(selected_genes_df.index)
+        with self._profiler():
+            selected_genes_df = self._filter_by_gene_ids_json(
+                self._union_dataframe,
+                selected_genes_ids_json
+            )
+            return self._list_html(selected_genes_df.index)
 
     def _filter_by_gene_ids_json(self, dataframe, json_list):
-        if json_list:
-            selected_gene_ids = json.loads(json_list)
-            return dataframe.reindex(selected_gene_ids)
-        else:
-            return dataframe
+        with self._profiler():
+            if json_list:
+                selected_gene_ids = json.loads(json_list)
+                return dataframe.reindex(selected_gene_ids)
+            else:
+                return dataframe

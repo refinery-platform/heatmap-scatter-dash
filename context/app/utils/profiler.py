@@ -4,7 +4,7 @@ import contextlib
 
 
 @contextlib.contextmanager
-def profile():
+def active_profiler():
     # Inspired by https://gist.github.com/davesque/6644474
     p = cProfile.Profile()
 
@@ -14,3 +14,8 @@ def profile():
 
     stats = pstats.Stats(p).sort_stats('cumulative')
     stats.print_stats(r'context/app')
+
+
+@contextlib.contextmanager
+def null_profiler():
+    yield
