@@ -62,47 +62,50 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             selected_conditions_ids_json,
             selected_gene_ids_json,
             scale):
-        selected_conditions = (
-            json.loads(selected_conditions_ids_json)
-            or self._conditions)
-        selected_conditions_df = self._union_dataframe[selected_conditions]
-        selected_conditions_genes_df = self._filter_by_gene_ids_json(
-            selected_conditions_df,
-            selected_gene_ids_json
-        )
-        truncated_dataframe = (
-            sort_by_variance(selected_conditions_genes_df)
-            .head(self._most_variable_rows)
-            if self._most_variable_rows else selected_conditions_genes_df
-        )
-        cluster_dataframe = cluster(
-            truncated_dataframe,
-            cluster_rows=self._cluster_rows,
-            cluster_cols=self._cluster_cols)
-
-        show_genes = len(cluster_dataframe.index.tolist()) < 40
-
-        char_width = 10  # With a proportional font, this is only an estimate.
-
-        if show_genes:
-            row_max = max([len(s) for s in list(cluster_dataframe.index)])
-            left_margin = row_max * char_width
-        else:
-            left_margin = 75
-
-        col_max = max([len(s) for s in list(cluster_dataframe)])
-        bottom_margin = col_max * char_width
-        return {
-            'data': [
-                self._heatmap(cluster_dataframe, scale == 'log')
-            ],
-            'layout': go.Layout(
-                xaxis={'ticks': '', 'tickangle': 90},
-                yaxis={'ticks': '', 'showticklabels': show_genes},
-                margin={'l': left_margin, 'b': bottom_margin, 't': 30, 'r': 0}
-                # Need top margin so infobox on hover is not truncated
+        with self._profiler():
+            selected_conditions = (
+                json.loads(selected_conditions_ids_json)
+                or self._conditions)
+            selected_conditions_df = self._union_dataframe[selected_conditions]
+            selected_conditions_genes_df = self._filter_by_gene_ids_json(
+                selected_conditions_df,
+                selected_gene_ids_json
             )
-        }
+            truncated_dataframe = (
+                sort_by_variance(selected_conditions_genes_df)
+                .head(self._most_variable_rows)
+                if self._most_variable_rows else selected_conditions_genes_df
+            )
+            cluster_dataframe = cluster(
+                truncated_dataframe,
+                cluster_rows=self._cluster_rows,
+                cluster_cols=self._cluster_cols)
+
+            show_genes = len(cluster_dataframe.index.tolist()) < 40
+
+            # With a proportional font, this is only an estimate.
+            char_width = 10
+
+            if show_genes:
+                row_max = max([len(s) for s in list(cluster_dataframe.index)])
+                left_margin = row_max * char_width
+            else:
+                left_margin = 75
+
+            col_max = max([len(s) for s in list(cluster_dataframe)])
+            bottom_margin = col_max * char_width
+            return {
+                'data': [
+                    self._heatmap(cluster_dataframe, scale == 'log')
+                ],
+                'layout': go.Layout(
+                    xaxis={'ticks': '', 'tickangle': 90},
+                    yaxis={'ticks': '', 'showticklabels': show_genes},
+                    margin={'l': left_margin,
+                            'b': bottom_margin, 't': 30, 'r': 0}
+                    # Need top margin so infobox on hover is not truncated
+                )
+            }
 
     def _heatmap(self, dataframe, is_log_scale):
         if is_log_scale:

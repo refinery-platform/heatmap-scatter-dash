@@ -3,6 +3,7 @@ import pandas
 from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.utils.pca import pca
+from app.utils.profiler import null_profiler
 from app.utils.search import SimpleIndex
 
 
@@ -19,7 +20,8 @@ class VisBase():
                  api_prefix=None,
                  debug=False,
                  server=None,
-                 url_base_pathname=None):
+                 url_base_pathname=None,
+                 profiler=null_profiler):
         self._most_variable_rows = most_variable_rows
         self._cluster_rows = cluster_rows
         self._cluster_cols = cluster_cols
@@ -29,6 +31,7 @@ class VisBase():
         self._conditions = self._union_dataframe.axes[1].tolist()
         self._genes = self._union_dataframe.axes[0].tolist()
         self._genes_index = SimpleIndex()
+        self._profiler = profiler
         for gene in self._genes:
             self._genes_index.add(gene)
         if reverse_colors:

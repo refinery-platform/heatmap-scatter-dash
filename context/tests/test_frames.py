@@ -20,7 +20,7 @@ class TestDataFrames(unittest.TestCase):
         self.assertEqual(a.index.tolist(),       b.index.tolist())
 
 
-class TestRead(TestDataFrames):
+class TestTabularParser(TestDataFrames):
 
     def setUp(self):
         self.target = pandas.DataFrame([
@@ -33,14 +33,24 @@ class TestRead(TestDataFrames):
         file = tempfile.NamedTemporaryFile(mode='w+')
         file.write(input_text)
         file.seek(0)
-        dfs = file_dataframes([file.name])
+        dfs = file_dataframes([file])
         self.assertEqualDataFrames(dfs[0], self.target)
 
     def test_read_csv(self):
         self.assertFileRead(',b,c\n1,2,3')
 
+    def test_read_csv_rn(self):
+        self.assertFileRead(',b,c\r\n1,2,3')
+
+    def test_read_csv_quoted(self):
+        self.assertFileRead(',"b","c"\n"1","2","3"')
+
     def test_read_tsv(self):
         self.assertFileRead('\tb\tc\n1\t2\t3')
+
+    def test_read_crazy_delimiters(self):
+        for c in '~!@#$%^&*|:;':
+            self.assertFileRead('{0}b{0}c\n1{0}2{0}3'.format(c))
 
 
 class TestMerge(TestDataFrames):
