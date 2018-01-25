@@ -1,3 +1,11 @@
+import os
+
+
+def relative_path(base, file):
+    # https://stackoverflow.com/questions/4060221 for more options
+    return os.path.join(os.path.dirname(base), file)
+
+
 class ResourceLoader():
 
     def load_resources(self):

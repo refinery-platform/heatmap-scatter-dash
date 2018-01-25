@@ -7,27 +7,21 @@ import requests
 import app_runner
 
 
-class DefaultArgs():
-
-    def __init__(self):
-        self.demo = False
-        self.debug = False
-        self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
-        self.skip_zero = True
-        self.colors = 'Greys'
-        self.most_variable_rows = 500
-        self.reverse_colors = True
-        self.html_error = True
-
-
-class RunnerArgs(DefaultArgs):
+class RunnerArgs():
     """
-    Given an args object appropriate for app_runner_refinery.py,
-    produces an object appropriate for app_runner.py
+    Initialized with an args object for app_runner_refinery.py,
+    produces an args object for app_runner.py
     """
 
     def __init__(self, refinery_args):
-        super().__init__()
+        defaults = app_runner.arg_parser().parse_args(['--demo', '1', '1'])
+        # We clobber the '--demo' setting just below.
+        # This seemed more clear than reading the JSON first,
+        # getting the files from it, and then passing them through parse_args,
+        # but I could be wrong.
+        for k, v in vars(defaults).items():
+            setattr(self, k, v)
+        self.demo = False
         self.port = refinery_args.port
 
         input = json.loads(refinery_args.input.read(None))
@@ -36,13 +30,13 @@ class RunnerArgs(DefaultArgs):
         }
         assert len(parameters) == 2
 
-        assert type(parameters['Cluster Rows']) == bool
-        assert type(parameters['Cluster Cols']) == bool
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
+        assert type(self.cluster_rows) == bool
+        assert type(self.cluster_cols) == bool
 
-        assert type(input['api_prefix']) == str
         self.api_prefix = input['api_prefix']
+        assert type(self.api_prefix) == str
 
         data_directory = input['extra_directories'][0]
         try:
@@ -75,24 +69,33 @@ class RunnerArgs(DefaultArgs):
             else:
                 name = url.split("/")[-1]
                 path = '{}{}'.format(data_dir, name)
-                files.append(path)  # TODO: More unique?
                 with open(path, 'wb') as f:
                     for chunk in response.iter_content(chunk_size=1024):
                         # filter out KEEP-ALIVE new chunks
                         if chunk:
                             f.write(chunk)
+                files.append(open(path))
             finally:
                 response.close()
         return files
 
+    def __repr__(self):
+        return '\n'.join(
+            ['{}: {}'.format(k, v) for k, v in vars(self).items()]
+        )
 
-if __name__ == '__main__':
+
+def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input',
                         type=argparse.FileType('r'), required=True)
     parser.add_argument('--port',
                         type=int, default=80)
-    args = RunnerArgs(parser.parse_args())
+    # During development, it's useful to be able to specify a high port.
+    return parser
 
+
+if __name__ == '__main__':
+    args = RunnerArgs(arg_parser().parse_args())
     app_runner.main(args)

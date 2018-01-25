@@ -18,9 +18,11 @@ from app.vis.callbacks import VisCallbacks
 
 
 def file_dataframes(files):
-    return [
-        tabular.parse(file) for file in files
-    ]
+    frames = []
+    for file in files:
+        frames.append(tabular.parse(file))
+        file.close()
+    return frames
 
 
 def demo_dataframes(rows, cols):
@@ -53,11 +55,7 @@ def init(args, parser):
             diff_dataframes = {}
             for diff_file in args.diffs:
                 diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                # app_runner and refinery pass different things in here...
-                # TODO:  Get rid of "if / else"
-                key = basename(diff_file.name
-                               if hasattr(diff_file, 'name')
-                               else diff_file)
+                key = basename(diff_file.name)
                 value = vulcanize(find_index(diff_dataframe, genes))
                 diff_dataframes[key] = value
         else:
@@ -126,7 +124,7 @@ def main(args, parser=None):
         )
 
 
-if __name__ == '__main__':
+def arg_parser():
     parser = argparse.ArgumentParser(
         description='Light-weight visualization for differential expression')
 
@@ -179,15 +177,20 @@ if __name__ == '__main__':
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
-        'start the server and display an error page.')
+             'start the server and display an error page.')
     group.add_argument(
         '--debug', action='store_true',
         help='Run the server in debug mode: The server will '
-        'restart in response to any code changes, '
-        'and some hidden fields will be shown.')
+             'restart in response to any code changes, '
+             'and some hidden fields will be shown.')
     group.add_argument(
         '--api_prefix', default='', metavar='PREFIX',
         help='Prefix for API URLs.')
 
+    return parser
+
+
+if __name__ == '__main__':
+    parser = arg_parser()
     args = parser.parse_args()
     main(args, parser)
