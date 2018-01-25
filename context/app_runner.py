@@ -125,6 +125,7 @@ def main(args, parser=None):
             host='0.0.0.0'
         )
 
+
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Light-weight visualization for differential expression')
@@ -189,6 +190,7 @@ def arg_parser():
         help='Prefix for API URLs.')
 
     return parser
+
 
 if __name__ == '__main__':
     parser = arg_parser()

@@ -18,7 +18,6 @@ class TestAppRunner(unittest.TestCase):
         app_runner.main(args)
         mock_flask.assert_called_once()
 
-
     @patch.object(Flask, 'run')
     @patch.object(Dash, 'run_server')
     def test_bad_config_html_error_false(self, mock_dash, mock_flask):
