@@ -7,35 +7,17 @@ import requests
 import app_runner
 
 
-class DefaultArgs():
-
-    def __init__(self):
-        # It should never actually use demo, but we want something valid here.
-        self.demo = [2, 2]
-        self.files = None
-        self.diffs = None
-        self.api_prefix = None
-        self.cluster_rows = False
-        self.cluster_cols = False
-        self.profile = False
-        self.port = 80
-        self.debug = False
-        self.heatmap = 'svg'
-        self.skip_zero = True
-        self.colors = 'Greys'
-        self.most_variable_rows = 500
-        self.reverse_colors = True
-        self.html_error = True
-
-
-class RunnerArgs(DefaultArgs):
+class RunnerArgs():
     """
     Given an args object appropriate for app_runner_refinery.py,
     produces an object appropriate for app_runner.py
     """
 
     def __init__(self, refinery_args):
-        super().__init__()
+        defaults = app_runner.parse_args([])
+        for k, v in defaults:
+            setattr(self, k, v)
+        self.port = 80
         self.demo = False
 
         input = json.loads(refinery_args.input.read(None))

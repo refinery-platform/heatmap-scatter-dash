@@ -125,8 +125,7 @@ def main(args, parser=None):
             host='0.0.0.0'
         )
 
-
-if __name__ == '__main__':
+def arg_parser():
     parser = argparse.ArgumentParser(
         description='Light-weight visualization for differential expression')
 
@@ -179,15 +178,19 @@ if __name__ == '__main__':
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
-        'start the server and display an error page.')
+             'start the server and display an error page.')
     group.add_argument(
         '--debug', action='store_true',
         help='Run the server in debug mode: The server will '
-        'restart in response to any code changes, '
-        'and some hidden fields will be shown.')
+             'restart in response to any code changes, '
+             'and some hidden fields will be shown.')
     group.add_argument(
         '--api_prefix', default='', metavar='PREFIX',
         help='Prefix for API URLs.')
 
+    return parser
+
+if __name__ == '__main__':
+    parser = arg_parser()
     args = parser.parse_args()
     main(args, parser)

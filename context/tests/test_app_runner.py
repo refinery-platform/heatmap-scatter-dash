@@ -4,27 +4,18 @@ from unittest.mock import patch
 from dash import Dash
 from flask import Flask
 
-from app_runner import main
-from app_runner_refinery import DefaultArgs
+import app_runner
 
 
 class TestAppRunner(unittest.TestCase):
 
     def full_args(self):
-        args = DefaultArgs()
-        # args.port = 12345
-        # args.demo = [2, 2]
-        # args.files = []
-        # args.diffs = []
-        # args.api_prefix = None
-        # args.cluster_rows = False
-        # args.cluster_cols = False
-        return args
+        return app_runner.arg_parser().parse_args(['--demo', '10', '10'])
 
     @patch.object(Flask, 'run')
     def test_default_args(self, mock_flask):
-        args = DefaultArgs()
-        main(args)
+        args = self.full_args()
+        app_runner.main(args)
         mock_flask.assert_called_once()
 
 
@@ -39,7 +30,7 @@ class TestAppRunner(unittest.TestCase):
                 Exception,
                 r'Either "demo" or "files" is required'
         ):
-            main(args)
+            app_runner.main(args)
         mock_dash.assert_not_called()
         mock_flask.assert_not_called()
 
@@ -50,7 +41,7 @@ class TestAppRunner(unittest.TestCase):
         args = self.full_args()
         args.html_error = True
         args.demo = None  # anything for a bad config
-        main(args)
+        app_runner.main(args)
         mock_dash.assert_not_called()
         mock_flask.assert_called_once()
 
@@ -60,7 +51,7 @@ class TestAppRunner(unittest.TestCase):
         # No error, and dash starts.
         args = self.full_args()
         args.html_error = False
-        main(args)
+        app_runner.main(args)
         mock_flask.assert_called_once()
         mock_dash.assert_not_called()
 
@@ -70,6 +61,6 @@ class TestAppRunner(unittest.TestCase):
         # No error, and dash starts. (html_error=True won't matter here.)
         args = self.full_args()
         args.html_error = True
-        main(args)
+        app_runner.main(args)
         mock_flask.assert_called_once()
         mock_dash.assert_not_called()
