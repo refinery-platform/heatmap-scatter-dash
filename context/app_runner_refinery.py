@@ -10,6 +10,7 @@ import app_runner
 class DefaultArgs():
 
     def __init__(self):
+        self.port = 80
         self.demo = False
         self.debug = False
         self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
@@ -28,7 +29,6 @@ class RunnerArgs(DefaultArgs):
 
     def __init__(self, refinery_args):
         super().__init__()
-        self.port = refinery_args.port
 
         input = json.loads(refinery_args.input.read(None))
         parameters = {
@@ -36,13 +36,13 @@ class RunnerArgs(DefaultArgs):
         }
         assert len(parameters) == 2
 
-        assert type(parameters['Cluster Rows']) == bool
-        assert type(parameters['Cluster Cols']) == bool
         self.cluster_rows = parameters['Cluster Rows']
         self.cluster_cols = parameters['Cluster Cols']
+        assert type(self.cluster_rows) == bool
+        assert type(self.cluster_cols) == bool
 
-        assert type(input['api_prefix']) == str
         self.api_prefix = input['api_prefix']
+        assert type(self.api_prefix) == str
 
         data_directory = input['extra_directories'][0]
         try:
@@ -91,8 +91,6 @@ if __name__ == '__main__':
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input',
                         type=argparse.FileType('r'), required=True)
-    parser.add_argument('--port',
-                        type=int, default=80)
     args = RunnerArgs(parser.parse_args())
 
     app_runner.main(args)
