@@ -20,7 +20,7 @@ class TestAppRunnerRefinery(unittest.TestCase):
         refinery_args = app_runner_refinery.arg_parser().parse_args(['--input', path])
         runner_args = app_runner_refinery.RunnerArgs(refinery_args)
         app_runner.main(runner_args)
-        mock_flask.assert_not_called()
+        mock_flask.assert_called_once()
 
 
 class TestAppRunner(unittest.TestCase):

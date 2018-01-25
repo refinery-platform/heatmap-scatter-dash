@@ -9,8 +9,8 @@ import app_runner
 
 class RunnerArgs():
     """
-    Given an args object appropriate for app_runner_refinery.py,
-    produces an object appropriate for app_runner.py
+    Initialized with an args object for app_runner_refinery.py,
+    produces an args object for app_runner.py
     """
 
     def __init__(self, refinery_args):
@@ -69,16 +69,20 @@ class RunnerArgs():
             else:
                 name = url.split("/")[-1]
                 path = '{}{}'.format(data_dir, name)
-                files.append(path)  # TODO: More unique?
                 with open(path, 'wb') as f:
                     for chunk in response.iter_content(chunk_size=1024):
                         # filter out KEEP-ALIVE new chunks
                         if chunk:
                             f.write(chunk)
+                files.append(open(path))
             finally:
                 response.close()
         return files
 
+    def __repr__(self):
+        return '\n'.join(
+            ['{}: {}'.format(k, v) for k, v in vars(self).items()]
+        )
 
 def arg_parser():
     parser = argparse.ArgumentParser(
