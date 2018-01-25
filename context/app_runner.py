@@ -18,9 +18,11 @@ from app.vis.callbacks import VisCallbacks
 
 
 def file_dataframes(files):
-    return [
-        tabular.parse(file) for file in files
-    ]
+    frames = []
+    for file in files:
+        frames.append(tabular.parse(file))
+        file.close()
+    return frames
 
 
 def demo_dataframes(rows, cols):
