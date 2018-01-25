@@ -76,11 +76,14 @@ class RunnerArgs():
         return files
 
 
-if __name__ == '__main__':
+def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input',
                         type=argparse.FileType('r'), required=True)
-    args = RunnerArgs(parser.parse_args())
+    return parser
 
+
+if __name__ == '__main__':
+    args = RunnerArgs(arg_parser().parse_args())
     app_runner.main(args)
