@@ -76,6 +76,9 @@ $ python app_runner.py --demo 100 10
 $ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 
   # Read an input.json like that created by Refinery:
+  # (When run this way, it needs a directory for data.)
+$ sudo mkdir /refinery-data
+$ sudo chmod a+w /refinery-data
 $ python app_runner_refinery.py --input ../fixtures/good/input.json --port 8050
 ```
 
