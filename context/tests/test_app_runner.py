@@ -17,8 +17,9 @@ class TestAppRunnerRefinery(unittest.TestCase):
     @patch.object(Flask, 'run')
     def test_with_input(self, mock_flask):
         path = relative_path(__file__, '../../fixtures/good/input.json')
-        args = app_runner_refinery.arg_parser().parse_args(['--input', path])
-        app_runner.main(args)
+        refinery_args = app_runner_refinery.arg_parser().parse_args(['--input', path])
+        runner_args = app_runner_refinery.RunnerArgs(refinery_args)
+        app_runner.main(runner_args)
         mock_flask.assert_not_called()
 
 

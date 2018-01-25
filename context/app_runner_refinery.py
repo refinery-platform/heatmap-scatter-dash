@@ -14,8 +14,12 @@ class RunnerArgs():
     """
 
     def __init__(self, refinery_args):
-        defaults = app_runner.parse_args([])
-        for k, v in defaults:
+        defaults = app_runner.arg_parser().parse_args(['--demo', '1', '1'])
+        # We clobber the '--demo' setting just below.
+        # This seemed more clear than reading the JSON first,
+        # getting the files from it, and then passing them through parse_args,
+        # but I could be wrong.
+        for k, v in vars(defaults).items():
             setattr(self, k, v)
         self.port = 80
         self.demo = False
