@@ -84,6 +84,7 @@ class RunnerArgs():
             ['{}: {}'.format(k, v) for k, v in vars(self).items()]
         )
 
+
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')

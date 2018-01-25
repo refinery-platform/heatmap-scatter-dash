@@ -8,6 +8,7 @@ import app_runner
 import app_runner_refinery
 from app.utils.resource_loader import relative_path
 
+
 class TestAppRunnerRefinery(unittest.TestCase):
 
     def test_missing_input(self):
@@ -17,7 +18,8 @@ class TestAppRunnerRefinery(unittest.TestCase):
     @patch.object(Flask, 'run')
     def test_with_input(self, mock_flask):
         path = relative_path(__file__, '../../fixtures/good/input.json')
-        refinery_args = app_runner_refinery.arg_parser().parse_args(['--input', path])
+        refinery_args = app_runner_refinery.arg_parser().parse_args([
+            '--input', path])
         runner_args = app_runner_refinery.RunnerArgs(refinery_args)
         app_runner.main(runner_args)
         mock_flask.assert_called_once()
