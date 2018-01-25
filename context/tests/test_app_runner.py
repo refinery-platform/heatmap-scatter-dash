@@ -10,11 +10,9 @@ import app_runner_refinery
 
 class TestAppRunnerRefinery(unittest.TestCase):
 
-    @patch.object(Flask, 'run')
-    def test_missing_input(self, mock_flask):
+    def test_missing_input(self):
         with self.assertRaises(SystemExit):
             app_runner_refinery.arg_parser().parse_args()
-        mock_flask.assert_not_called()
 
     # @patch.object(Flask, 'run')
     # def test_with_input(self, mock_flask):
@@ -29,8 +27,12 @@ class TestAppRunner(unittest.TestCase):
     def demo_args(self):
         return app_runner.arg_parser().parse_args(['--demo', '10', '10'])
 
+    def test_missing_demo_and_files(self):
+        with self.assertRaises(SystemExit):
+            app_runner.arg_parser().parse_args()
+
     @patch.object(Flask, 'run')
-    def test_default_args(self, mock_flask):
+    def test_demo_args(self, mock_flask):
         args = self.demo_args()
         app_runner.main(args)
         mock_flask.assert_called_once()
