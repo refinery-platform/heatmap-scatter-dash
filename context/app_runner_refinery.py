@@ -10,10 +10,17 @@ import app_runner
 class DefaultArgs():
 
     def __init__(self):
+        # It should never actually use demo, but we want something valid here.
+        self.demo = [2, 2]
+        self.files = None
+        self.diffs = None
+        self.api_prefix = None
+        self.cluster_rows = False
+        self.cluster_cols = False
+        self.profile = False
         self.port = 80
-        self.demo = False
         self.debug = False
-        self.heatmap = 'svg'  # TODO: Make a canvas that isn't fuzzy
+        self.heatmap = 'svg'
         self.skip_zero = True
         self.colors = 'Greys'
         self.most_variable_rows = 500
@@ -29,6 +36,7 @@ class RunnerArgs(DefaultArgs):
 
     def __init__(self, refinery_args):
         super().__init__()
+        self.demo = False
 
         input = json.loads(refinery_args.input.read(None))
         parameters = {

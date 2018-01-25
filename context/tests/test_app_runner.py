@@ -12,23 +12,21 @@ class TestAppRunner(unittest.TestCase):
 
     def full_args(self):
         args = DefaultArgs()
-        args.port = 12345
-        args.demo = [2, 2]
-        args.files = []
-        args.diffs = []
-        args.api_prefix = None
-        args.cluster_rows = False
-        args.cluster_cols = False
-        args.profile = False
+        # args.port = 12345
+        # args.demo = [2, 2]
+        # args.files = []
+        # args.diffs = []
+        # args.api_prefix = None
+        # args.cluster_rows = False
+        # args.cluster_cols = False
         return args
 
-    def test_default_args(self):
+    @patch.object(Flask, 'run')
+    def test_default_args(self, mock_flask):
         args = DefaultArgs()
-        with self.assertRaisesRegex(
-                AttributeError,
-                r"'DefaultArgs' object has no attribute 'port'"
-        ):
-            main(args)
+        main(args)
+        mock_flask.assert_called_once()
+
 
     @patch.object(Flask, 'run')
     @patch.object(Dash, 'run_server')
