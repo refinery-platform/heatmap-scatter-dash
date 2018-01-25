@@ -76,7 +76,7 @@ $ python app_runner.py --demo 100 10
 $ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 
   # Read an input.json like that created by Refinery:
-$ python app_runner_refinery.py --input ../fixtures/good/input.json
+$ python app_runner_refinery.py --input ../fixtures/good/input.json --port 8050
 ```
 
 and visit `http://localhost:8050/`.

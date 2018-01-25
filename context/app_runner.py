@@ -53,11 +53,7 @@ def init(args, parser):
             diff_dataframes = {}
             for diff_file in args.diffs:
                 diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                # app_runner and refinery pass different things in here...
-                # TODO:  Get rid of "if / else"
-                key = basename(diff_file.name
-                               if hasattr(diff_file, 'name')
-                               else diff_file)
+                key = basename(diff_file.name)
                 value = vulcanize(find_index(diff_dataframe, genes))
                 diff_dataframes[key] = value
         else:

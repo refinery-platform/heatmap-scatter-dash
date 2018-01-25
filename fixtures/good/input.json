@@ -1,5 +1,5 @@
 {
-  "api_prefix": "/visualizations/container-name/",
+  "api_prefix": "/",
   "file_relationships": [
     ["https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/counts.csv"],
     [

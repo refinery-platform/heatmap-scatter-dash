@@ -21,8 +21,8 @@ class RunnerArgs():
         # but I could be wrong.
         for k, v in vars(defaults).items():
             setattr(self, k, v)
-        self.port = 80
         self.demo = False
+        self.port = refinery_args.port
 
         input = json.loads(refinery_args.input.read(None))
         parameters = {
@@ -90,6 +90,9 @@ def arg_parser():
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input',
                         type=argparse.FileType('r'), required=True)
+    parser.add_argument('--port',
+                        type=int, default=80)
+    # During development, it's useful to be able to specify a high port.
     return parser
 
 
