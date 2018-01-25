@@ -1,10 +1,8 @@
-import os
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from app.utils.resource_loader import ResourceLoader
+from app.utils.resource_loader import ResourceLoader, relative_path
 
 
 class HelpApp(ResourceLoader):
@@ -23,7 +21,7 @@ class HelpApp(ResourceLoader):
             })
         self.app.title = 'Heatmap + Scatterplots: Help'
 
-        with open(relative_path('help.md')) as f:
+        with open(relative_path(__file__, 'help.md')) as f:
             markdown = f.read()
 
         self.app.layout = html.Div([
@@ -33,8 +31,3 @@ class HelpApp(ResourceLoader):
                 ], className='col-md-12'),
             ], className='row'),
         ], className='container-fluid')
-
-
-def relative_path(file):
-    # https://stackoverflow.com/questions/4060221 for more options
-    return os.path.join(os.path.dirname(__file__), file)

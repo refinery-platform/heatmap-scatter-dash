@@ -6,7 +6,7 @@ from flask import Flask
 
 import app_runner
 import app_runner_refinery
-
+from app.utils.resource_loader import relative_path
 
 class TestAppRunnerRefinery(unittest.TestCase):
 
@@ -14,12 +14,12 @@ class TestAppRunnerRefinery(unittest.TestCase):
         with self.assertRaises(SystemExit):
             app_runner_refinery.arg_parser().parse_args()
 
-    # @patch.object(Flask, 'run')
-    # def test_with_input(self, mock_flask):
-    #     args = app_runner_refinery.arg_parser().parse_args()
-    #     args.input = 'foo'
-    #     app_runner.main(args)
-    #     mock_flask.assert_not_called()
+    @patch.object(Flask, 'run')
+    def test_with_input(self, mock_flask):
+        path = relative_path(__file__, '../../fixtures/good/input.json')
+        args = app_runner_refinery.arg_parser().parse_args(['--input', path])
+        app_runner.main(args)
+        mock_flask.assert_not_called()
 
 
 class TestAppRunner(unittest.TestCase):
