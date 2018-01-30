@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2071f22a23307c485f4c87959bafca25cf5d79c0ad93fdf31e3e0fd17839e3fc"
+            "sha256": "c93e40f7df6c436c2536dcec088715154359f286e10838958b2f8191f290c113"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -70,15 +70,15 @@
         },
         "dash": {
             "hashes": [
-                "sha256:a5780ba1e16988d51cfb67fe1918b957cffa5878b571c6c8aa4f8c2b930bd613"
+                "sha256:71a4fc6bce89bc983fd9dddbd29db9ffb3e2132dd0036cf10a614fe64f20714b"
             ],
-            "version": "==0.19.0"
+            "version": "==0.20.0"
         },
         "dash-core-components": {
             "hashes": [
-                "sha256:4394660cdf3830a223dc20f26dc2a1834dcbb1f38ad9af6f4ef45aa555eb4eb9"
+                "sha256:96764f9c30f2348eac618b53178e0d1c5fa1cb0c7dfc41914ef2b6876e26271e"
             ],
-            "version": "==0.17.0"
+            "version": "==0.18.1"
         },
         "dash-html-components": {
             "hashes": [
@@ -248,9 +248,9 @@
         },
         "plotly": {
             "hashes": [
-                "sha256:dadd2263f1c0449b248fd3742a077d9594935921a9597529be76d6a841237ab0"
+                "sha256:95e72273699108f215886ab961dbf0890904d39583be39eabcd0788bc7ccf695"
             ],
-            "version": "==2.2.3"
+            "version": "==2.3.0"
         },
         "python-dateutil": {
             "hashes": [
@@ -417,9 +417,9 @@
     "develop": {
         "autopep8": {
             "hashes": [
-                "sha256:ff787bffb812818c3071784b5ce9a35f8c481a0de7ea0ce4f8b68b8788a12f30"
+                "sha256:c7be71ab0cb2f50c9c22c82f0c9acaafc6f57492c3fbfee9790c415005c2b9a5"
             ],
-            "version": "==1.3.3"
+            "version": "==1.3.4"
         },
         "flake8": {
             "hashes": [
