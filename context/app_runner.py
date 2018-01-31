@@ -34,7 +34,7 @@ def demo_dataframes(rows, cols):
                              index=row_labels)]
 
 
-def init(args, parser):
+def init(args, parser):  # TODO: Why is parser here?
     profile_manager = (
         profiler.active_profiler
         if args.profile
