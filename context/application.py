@@ -1,6 +1,5 @@
 import app_runner
 
-if __name__ == "__main__":
-    parser = app_runner.arg_parser()
-    args = parser.parse_args(['--demo', '10', '10'])
-    app_runner.main(args, parser)
+# TODO: reference files in gitignored subdirectory
+args = app_runner.arg_parser().parse_args(['--demo', '10', '10'])
+application = app_runner.init(args, None)
