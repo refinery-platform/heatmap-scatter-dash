@@ -1,0 +1,9 @@
+dash==0.19.0
+dash-renderer==0.11.2
+dash-html-components==0.8.0
+dash-core-components==0.17.0
+plotly==2.2.3
+pandas==0.22.0
+scipy==1.0.0
+scikit-learn==0.19.1
+# TODO?: whoosh==2.7.4
