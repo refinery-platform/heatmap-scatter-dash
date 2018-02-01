@@ -5,7 +5,7 @@ python:
 - 3.6.0
 install:
 - pip install pipenv
-- pushd context; pipenv install -d --system; popd
+- pushd context; pipenv install --dev --system; popd
 - npm install cypress --save-dev
 
 # TODO: Is the Travis Node/NPM good enough?
