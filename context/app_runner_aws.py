@@ -23,37 +23,18 @@ def arg_parser():
     # During development, it's useful to be able to specify a high port.
     return parser
 
-def input():
+def input(file_urls=[], diff_urls=[]):
     return {
       "api_prefix": "/",
       "api_prefix NOTE": "Should actually be something like: /visualizations/container-name/",
       "file_relationships": [
-        ["file:///data/counts.csv"],
-        [
-          "file:///data/stats-with-genes-in-col-1.csv",
-          "file:///data/stats-with-genes-in-col-2.tsv"
-        ]
+        file_urls,
+        diff_urls
       ],
       "extra_directories": [
         "/data/"
       ],
-      "node_info": {
-        "some-refinery-uuid-1": {
-          "file_url": "file:///data/counts.csv",
-          "node_solr_info": {
-            "A lot of data here...": "but I feel uncomfortable binding myself to these ugly internal names.",
-            "It needs a clean API": "True!"
-          }
-        },
-        "some-refinery-uuid-2": {
-          "file_url": "file:///data/stats-with-genes-in-col-1.csv",
-          "node_solr_info": {}
-        },
-        "some-refinery-uuid-3": {
-          "file_url": "file:///data/stats-with-genes-in-col-2.tsv",
-          "node_solr_info": {}
-        }
-      },
+      "node_info": {},
       "parameters": [
         {
           "name": "Cluster Rows",
@@ -74,6 +55,15 @@ def input():
 
 if __name__ == '__main__':
     args = arg_parser().parse_args()
-    input_json = json.dumps(input())
+    input_json = json.dumps(
+        input(
+            file_urls=["file:///data/counts.csv"],
+            diff_urls=[
+              "file:///data/stats-with-genes-in-col-1.csv",
+              "file:///data/stats-with-genes-in-col-2.tsv"
+            ]
+        ),
+        sort_keys=True, indent=4,
+    )
     with open(relative_path(__file__,'data/input.json'), 'w') as f:
         f.write(input_json)
