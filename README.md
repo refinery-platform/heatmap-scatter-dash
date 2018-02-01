@@ -59,7 +59,7 @@ Check out the project and install dependencies:
 ```bash
   # Requires Python3:
 $ python --version
-$ git clone https://github.com/mccalluc/heatmap-scatter-dash.git
+$ git clone https://github.com/refinery-project/heatmap-scatter-dash.git
 $ cd heatmap-scatter-dash
 $ pip install -r context/requirements.txt
 ```
