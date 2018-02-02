@@ -3,6 +3,7 @@ import argparse
 import json
 
 import requests
+from requests_file import FileAdapter
 
 import app_runner
 
@@ -60,8 +61,10 @@ class RunnerArgs():
 
         for url in urls:
             try:
+                session = requests.Session()
+                session.mount('file://', FileAdapter())
                 # Streaming GET for potentially large files
-                response = requests.get(url, stream=True)
+                response = session.get(url, stream=True)
             except requests.exceptions.RequestException as e:
                 raise Exception(
                     "Error fetching {} : {}".format(url, e)

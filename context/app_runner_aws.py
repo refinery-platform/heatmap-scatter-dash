@@ -93,7 +93,10 @@ if __name__ == '__main__':
     with open(join(data_dir, 'input.json'), 'w') as f:
         f.write(input_json)
 
-    chdir(dirname(__file__))
+    context_dir = dirname(__file__)
+    chdir(context_dir)
     subprocess.run(['eb', 'create', args.name], check=True)
     subprocess.run(['eb', 'status'], check=True)
-    print('To kill the server: "eb terminate {}"'.format(args.name))
+    print('To kill the server: "cd {}; eb terminate {}"'.format(
+        context_dir, args.name
+    ))
