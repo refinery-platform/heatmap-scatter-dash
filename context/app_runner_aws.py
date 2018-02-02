@@ -9,6 +9,7 @@ from shutil import rmtree
 
 from app.utils.resource_loader import relative_path
 
+
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
@@ -31,36 +32,38 @@ def arg_parser():
     # During development, it's useful to be able to specify a high port.
     return parser
 
+
 def input(file_urls=[], diff_urls=[]):
     return {
-      "api_prefix": "/",
-      "api_prefix NOTE": "Should be something like: /visualizations/container-name/",
-      "api_prefix NOTE2": "... except not sure we have the container name from EB before launch?",
-      "file_relationships": [
-        file_urls,
-        diff_urls
-      ],
-      "extra_directories": [
-        "/data/"
-      ],
-      "node_info": {},
-      "parameters": [
-        {
-          "name": "Cluster Rows",
-          "description": "Should rows of heatmap be clustered?",
-          "value_type": "BOOLEAN",
-          "default_value": False,
-          "value": True
-        },
-        {
-          "name": "Cluster Cols",
-          "description": "Should columns of heatmap be clustered?",
-          "value_type": "BOOLEAN",
-          "default_value": False,
-          "value": True
-        }
-      ]
+        "api_prefix": "/",
+        "api_prefix NOTE": "Something like: /visualizations/container-name/",
+        "api_prefix NOTE2": "... but no container name from EB before launch?",
+        "file_relationships": [
+            file_urls,
+            diff_urls
+        ],
+        "extra_directories": [
+            "/data/"
+        ],
+        "node_info": {},
+        "parameters": [
+            {
+                "name": "Cluster Rows",
+                "description": "Should rows of heatmap be clustered?",
+                "value_type": "BOOLEAN",
+                "default_value": False,
+                "value": True
+            },
+            {
+                "name": "Cluster Cols",
+                "description": "Should columns of heatmap be clustered?",
+                "value_type": "BOOLEAN",
+                "default_value": False,
+                "value": True
+            }
+        ]
     }
+
 
 def links_and_urls(files, data_dir):
     # Given a list of files, creates links and returns a list of urls.
@@ -72,6 +75,7 @@ def links_and_urls(files, data_dir):
         symlink(abspath(file.name), dest)  # Fails if dest already exists.
         file_urls.append("file:///{}/{}".format(dir_base, dest_base))
     return file_urls
+
 
 if __name__ == '__main__':
     args = arg_parser().parse_args()
