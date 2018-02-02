@@ -2,7 +2,10 @@
 import argparse
 import json
 
-import requests
+from os import mkdir
+from os.path import basename, join
+from shutil import rmtree
+
 from app.utils.resource_loader import relative_path
 
 def arg_parser():
@@ -26,7 +29,8 @@ def arg_parser():
 def input(file_urls=[], diff_urls=[]):
     return {
       "api_prefix": "/",
-      "api_prefix NOTE": "Should actually be something like: /visualizations/container-name/",
+      "api_prefix NOTE": "Should be something like: /visualizations/container-name/",
+      "api_prefix NOTE2": "... except not sure we have the container name from EB before launch?",
       "file_relationships": [
         file_urls,
         diff_urls
@@ -55,15 +59,26 @@ def input(file_urls=[], diff_urls=[]):
 
 if __name__ == '__main__':
     args = arg_parser().parse_args()
+
+    data_dir = relative_path(__file__, 'data')
+    rmtree(data_dir)
+    mkdir(data_dir)
+
     input_json = json.dumps(
         input(
-            file_urls=["file:///data/counts.csv"],
+            file_urls=[
+                "file:///data/{}".format(basename(file.name))
+                for file in args.files
+            ],
             diff_urls=[
-              "file:///data/stats-with-genes-in-col-1.csv",
-              "file:///data/stats-with-genes-in-col-2.tsv"
-            ]
+                "file:///data/{}".format(basename(file.name))
+                for file in args.diffs
+            ],
         ),
         sort_keys=True, indent=4,
     )
-    with open(relative_path(__file__,'data/input.json'), 'w') as f:
+    with open(join(data_dir, 'input.json'), 'w') as f:
         f.write(input_json)
+
+    # TODO: symlinks files
+    # TODO: start EB
