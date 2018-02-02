@@ -49,7 +49,7 @@ fi
 
 $OPT_SUDO docker pull $REPO
 $OPT_SUDO docker build --cache-from $REPO --tag $IMAGE context
-$OPT_SUDO docker build --cache-from $IMAGE --tag ${IMAGE}_refinery --file Dockerfile.refinery context
+$OPT_SUDO docker build --cache-from $IMAGE --tag ${IMAGE}_refinery --file context/Dockerfile.refinery context
 
 PORT=8888
 CONTAINER_NAME=$IMAGE-container

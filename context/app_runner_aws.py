@@ -2,7 +2,7 @@
 import argparse
 import json
 import subprocess
-from os import chdir, mkdir, link
+from os import chdir, link, mkdir
 from os.path import abspath, basename, dirname, join
 from shutil import rmtree
 
