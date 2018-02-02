@@ -2,7 +2,7 @@
 import argparse
 import json
 import subprocess
-from os import chdir, mkdir, symlink
+from os import chdir, mkdir, link
 from os.path import abspath, basename, dirname, join
 from shutil import rmtree
 
@@ -71,7 +71,7 @@ def links_and_urls(files, data_dir):
     for file in files:
         dest_base = basename(file.name)
         dest = join(data_dir, dest_base)
-        symlink(abspath(file.name), dest)  # Fails if dest already exists.
+        link(abspath(file.name), dest)  # Fails if dest already exists.
         file_urls.append("file:///{}/{}".format(dir_base, dest_base))
     return file_urls
 
