@@ -2,9 +2,8 @@
 import argparse
 import json
 import subprocess
-
-from os import mkdir, symlink, chdir
-from os.path import basename, join, abspath, dirname
+from os import chdir, mkdir, symlink
+from os.path import abspath, basename, dirname, join
 from shutil import rmtree
 
 from app.utils.resource_loader import relative_path
