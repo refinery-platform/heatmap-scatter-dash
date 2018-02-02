@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import argparse
 import json
+import subprocess
 
-from os import mkdir, symlink
-from os.path import basename, join, abspath
+from os import mkdir, symlink, chdir
+from os.path import basename, join, abspath, dirname
 from shutil import rmtree
 
 from app.utils.resource_loader import relative_path
@@ -11,6 +12,10 @@ from app.utils.resource_loader import relative_path
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
+    parser.add_argument(
+        '--name', type=str, required=True,
+        help='Name of Elastic Beanstalk stack to create. '
+             'This string will appear in the url.')
     parser.add_argument(
         '--files', nargs='+', metavar='CSV', required=True,
         type=argparse.FileType('r'),
@@ -64,7 +69,7 @@ def links_and_urls(files, data_dir):
     for file in files:
         dest_base = basename(file.name)
         dest = join(data_dir, dest_base)
-        symlink(abspath(file.name), dest)
+        symlink(abspath(file.name), dest)  # Fails if dest already exists.
         file_urls.append("file:///{}/{}".format(dir_base, dest_base))
     return file_urls
 
@@ -88,5 +93,7 @@ if __name__ == '__main__':
     with open(join(data_dir, 'input.json'), 'w') as f:
         f.write(input_json)
 
-
-    # TODO: start EB
+    chdir(dirname(__file__))
+    subprocess.run(['eb', 'create', args.name], check=True)
+    subprocess.run(['eb', 'status'], check=True)
+    print('To kill the server: "eb terminate {}"'.format(args.name))
