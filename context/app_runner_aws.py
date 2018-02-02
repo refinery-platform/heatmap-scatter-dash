@@ -2,8 +2,8 @@
 import argparse
 import json
 
-from os import mkdir
-from os.path import basename, join
+from os import mkdir, symlink
+from os.path import basename, join, abspath
 from shutil import rmtree
 
 from app.utils.resource_loader import relative_path
@@ -57,6 +57,17 @@ def input(file_urls=[], diff_urls=[]):
       ]
     }
 
+def links_and_urls(files, data_dir):
+    # Given a list of files, creates links and returns a list of urls.
+    dir_base = basename(data_dir)
+    file_urls = []
+    for file in files:
+        dest_base = basename(file.name)
+        dest = join(data_dir, dest_base)
+        symlink(abspath(file.name), dest)
+        file_urls.append("file:///{}/{}".format(dir_base, dest_base))
+    return file_urls
+
 if __name__ == '__main__':
     args = arg_parser().parse_args()
 
@@ -64,21 +75,18 @@ if __name__ == '__main__':
     rmtree(data_dir)
     mkdir(data_dir)
 
+    file_urls = links_and_urls(args.files, data_dir)
+    diff_urls = links_and_urls(args.diffs, data_dir)
+
     input_json = json.dumps(
         input(
-            file_urls=[
-                "file:///data/{}".format(basename(file.name))
-                for file in args.files
-            ],
-            diff_urls=[
-                "file:///data/{}".format(basename(file.name))
-                for file in args.diffs
-            ],
+            file_urls=file_urls,
+            diff_urls=diff_urls,
         ),
         sort_keys=True, indent=4,
     )
     with open(join(data_dir, 'input.json'), 'w') as f:
         f.write(input_json)
 
-    # TODO: symlinks files
+
     # TODO: start EB
