@@ -10,7 +10,5 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN pip install -r requirements.txt
 
-VOLUME data
-
 CMD ["python", "app_runner_refinery.py", "--input", "/data/input.json"]
 EXPOSE 80

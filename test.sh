@@ -48,23 +48,25 @@ if [ ! -z "$TRAVIS" ]; then
 fi
 
 $OPT_SUDO docker pull $REPO
-$OPT_SUDO docker build  --cache-from $REPO --tag $IMAGE context
+$OPT_SUDO docker build --cache-from $REPO --tag $IMAGE context
+$OPT_SUDO docker build --cache-from $IMAGE --tag ${IMAGE}_refinery --file Dockerfile.refinery context
 
 PORT=8888
+CONTAINER_NAME=$IMAGE-container
 # Preferred syntax, Docker version >= 17.06
 #    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
 #    --mount type=volume,target=/refinery-data/ \
-$OPT_SUDO docker run --name $IMAGE-container --detach --publish $PORT:80 \
+$OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
     --volume $(pwd)/fixtures/good/input.json:/data/input.json \
     --volume /refinery-data/ \
-    $IMAGE
+    ${IMAGE}_refinery
     # TODO : volume mounting
 
 TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
     echo "$TRIES: not up yet"
     if (( $TRIES > 5 )); then
-        $OPT_SUDO docker logs $IMAGE-container
+        $OPT_SUDO docker logs $CONTAINER_NAME
         die "HTTP requests to app in Docker container never succeeded"
     fi
     (( TRIES++ ))
@@ -72,7 +74,7 @@ until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
 done
 echo "docker is responsive"
 
-docker stop $IMAGE-container
-docker rm $IMAGE-container
+docker stop $CONTAINER_NAME
+docker rm $CONTAINER_NAME
 echo "container cleaned up"
 end docker
