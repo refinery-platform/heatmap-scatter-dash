@@ -100,6 +100,11 @@ if __name__ == '__main__':
     chdir(context_dir)
     subprocess.run(['eb', 'create', args.name], check=True)
     subprocess.run(['eb', 'status'], check=True)
-    print('To kill the server: "cd {}; eb terminate {}"'.format(
-        context_dir, args.name
+    print('''
+Management:        https://console.aws.amazon.com/elasticbeanstalk
+Logs:              cd {context}; eb logs {name}
+Kill the stack:    cd {context}; eb terminate {name}
+'''.format(
+        context=context_dir,
+        name=args.name
     ))

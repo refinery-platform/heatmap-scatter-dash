@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import argparse
 import json
+import os
+from urllib.parse import urlparse
 
 import requests
-from requests_file import FileAdapter
 
 import app_runner
 
@@ -60,11 +61,18 @@ class RunnerArgs():
         files = []
 
         for url in urls:
+            parsed = urlparse(url)
+            if parsed.scheme == 'file':
+                url_path_root = os.path.split(parsed.path)[0]
+                abs_data_dir = os.path.abspath(data_dir)
+                assert url_path_root == abs_data_dir, \
+                    '{} != /{}'.format(url_path_root, abs_data_dir)
+                assert os.path.isfile(parsed.path)
+                # The file is already in the right place: no need to move it
+                continue
             try:
-                session = requests.Session()
-                session.mount('file://', FileAdapter())
                 # Streaming GET for potentially large files
-                response = session.get(url, stream=True)
+                response = requests.get(url, stream=True)
             except requests.exceptions.RequestException as e:
                 raise Exception(
                     "Error fetching {} : {}".format(url, e)

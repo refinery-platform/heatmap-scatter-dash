@@ -41,6 +41,9 @@ def init(args, parser):  # TODO: Why is parser here?
         else profiler.null_profiler
     )
     with profile_manager():
+        # TODO: remove when done debugging:
+        import traceback
+        traceback.print_stack()
         if args.files:
             dataframes = file_dataframes(args.files)
         elif args.demo:
