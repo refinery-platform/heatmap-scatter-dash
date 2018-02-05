@@ -3,7 +3,6 @@ import argparse
 import json
 import os
 from urllib.parse import urlparse
-import logging
 
 import requests
 
@@ -110,7 +109,7 @@ def arg_parser():
 
 if __name__ == '__main__':
     args = RunnerArgs(arg_parser().parse_args())
-    
+
     print('args from {}: {}'.format(__name__, args))
     assert args.files
 

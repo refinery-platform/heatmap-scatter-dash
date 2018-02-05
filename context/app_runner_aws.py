@@ -102,6 +102,7 @@ if __name__ == '__main__':
     subprocess.run(['eb', 'status'], check=True)
     print('''
 Management:        https://console.aws.amazon.com/elasticbeanstalk
+Run locally:       cd {context}; eb local run
 Logs:              cd {context}; eb logs {name}
 Kill the stack:    cd {context}; eb terminate {name}
 '''.format(

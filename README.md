@@ -81,7 +81,7 @@ and visit `http://localhost:8050/`.
 To run it on AWS:
 
 ```bash
-$ ./app_runner_aws.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
+$ ./app_runner_aws.py --name demo --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 ```
 
 After a few minutes, the server will start and the URL to visit will be displayed.
