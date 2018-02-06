@@ -81,6 +81,13 @@ and visit `http://localhost:8050/`.
 To run it on AWS:
 
 ```bash
+$ cd context
+$ mkdir data
+
+  # AWS needs to know where to create your resources.
+  # This will fail if your AWS credentials are not in place.
+$ eb init
+
 $ ./app_runner_aws.py --name demo --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 ```
 
