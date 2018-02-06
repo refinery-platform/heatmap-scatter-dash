@@ -111,12 +111,11 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         if is_log_scale:
             values = [x for x in dataframe.values.flatten() if x > 0]
             # We will take the log, so exclude zeros.
-            adjusted_color_scale = _log_interpolate(
-                self._color_scale,
-                min(values),
-                max(values))
+            adjusted_color_scale = \
+                self._color_scale.log(min(values), max(values))
         else:
-            adjusted_color_scale = _linear(self._color_scale)
+            adjusted_color_scale = \
+                self._color_scale.linear()
 
         return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
@@ -157,35 +156,3 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
-
-
-def _log_interpolate(color_scale, min, max):
-    if len(color_scale) > 2:
-        raise Exception('Expected just two points on color scale')
-    log10(min)
-    points = int(log10(max) - log10(min)) + 2
-    interpolated = n_colors(
-        unlabel_rgb(color_scale[1]),
-        unlabel_rgb(color_scale[0]),
-        points)
-    missing_zero = [
-        [10 ** -i, label_rgb(interpolated[i])]
-        for i in reversed(range(points))
-    ]
-    # Without a point at zero, Plotly gives a color scale
-    # that is mostly greys. No idea why.
-    return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
-
-
-def _linear(color_scale):
-    return [[0, color_scale[0]], [1, color_scale[1]]]
-
-
-def _match_booleans(search_term, index_set, targets):
-    # search_term may be None on first load.
-    # index set should be ignored if empty
-    return [
-        (search_term or '') in s
-        and (i in index_set or not index_set)
-        for (i, s) in enumerate(targets)
-    ]

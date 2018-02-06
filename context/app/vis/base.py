@@ -7,6 +7,8 @@ from app.utils.profiler import null_profiler
 from app.utils.search import SimpleIndex
 
 
+from app.utils import color_scale
+
 class VisBase():
 
     def __init__(self,
@@ -35,9 +37,9 @@ class VisBase():
         for gene in self._genes:
             self._genes_index.add(gene)
         if reverse_colors:
-            self._color_scale = list(reversed(PLOTLY_SCALES[colors]))
+            self._color_scale = color_scale.greys  # TODO: reverse and pick color
         else:
-            self._color_scale = PLOTLY_SCALES[colors]
+            self._color_scale = color_scale.greys  # TODO: pick color
         self._debug = debug
         self.app = dash.Dash(server=server,
                              url_base_pathname=url_base_pathname)
