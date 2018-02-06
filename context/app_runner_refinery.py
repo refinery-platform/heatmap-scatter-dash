@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import argparse
 import json
+import os
+from urllib.parse import urlparse
 
 import requests
 
@@ -59,6 +61,15 @@ class RunnerArgs():
         files = []
 
         for url in urls:
+            parsed = urlparse(url)
+            if parsed.scheme == 'file':
+                url_path_root = os.path.split(parsed.path)[0]
+                abs_data_dir = os.path.abspath(data_dir)
+                assert url_path_root == abs_data_dir, \
+                    '{} != {}'.format(url_path_root, abs_data_dir)
+                # The file is already in the right place: no need to move it
+                files.append(open(parsed.path))
+                continue
             try:
                 # Streaming GET for potentially large files
                 response = requests.get(url, stream=True)
@@ -98,4 +109,8 @@ def arg_parser():
 
 if __name__ == '__main__':
     args = RunnerArgs(arg_parser().parse_args())
+
+    print('args from {}: {}'.format(__name__, args))
+    assert args.files
+
     app_runner.main(args)

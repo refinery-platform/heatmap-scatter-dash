@@ -1,8 +1,8 @@
 # heatmap-scatter-dash
 
 A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
-Can be run as a Flask app from the commandline,
-or as Docker container for [Refinery](https://github.com/refinery-platform/refinery-platform) visualizations.
+From the commandline it can be started on localhost or AWS, or it can be run
+from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 
 ![screen shot](context/app/static/screen-shot.png)
 
@@ -59,30 +59,39 @@ Check out the project and install dependencies:
 ```bash
   # Requires Python3:
 $ python --version
-$ git clone https://github.com/mccalluc/heatmap-scatter-dash.git
+$ git clone https://github.com/refinery-project/heatmap-scatter-dash.git
 $ cd heatmap-scatter-dash
 $ pip install -r context/requirements.txt
 ```
 
-Then try one of these:
+To run it locally:
 
 ```bash
 $ cd context
 
   # Generate a random matrix:
-$ python app_runner.py --demo 100 10
+$ ./app_runner.py --demo 100 10
 
   # Load data from disk:
-$ python app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
-
-  # Read an input.json like that created by Refinery:
-  # (When run this way, it needs a directory for data.)
-$ sudo mkdir /refinery-data
-$ sudo chmod a+w /refinery-data
-$ python app_runner_refinery.py --input ../fixtures/good/input.json --port 8050
+$ ./app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
 ```
 
 and visit `http://localhost:8050/`.
+
+To run it on AWS:
+
+```bash
+$ cd context
+$ mkdir data
+
+  # AWS needs to know where to create your resources.
+  # This will fail if your AWS credentials are not in place.
+$ eb init
+
+$ ./app_runner_aws.py --name demo --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
+```
+
+After a few minutes, the server will start and the URL to visit will be displayed.
 
 ## Testing
 

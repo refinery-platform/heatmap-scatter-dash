@@ -141,7 +141,7 @@ def arg_parser():
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',
-        type=argparse.FileType('r'), default=[],
+        type=argparse.FileType('r'), default=(),
         help='Read CSV or TSV files containing differential expression data.')
 
     parser.add_argument(

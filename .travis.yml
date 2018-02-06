@@ -4,8 +4,8 @@ language: python
 python:
 - 3.6.0
 install:
-- pip install pipenv
-- pushd context; pipenv install -d --system; popd
+- pip install -r context/requirements.txt
+- pip install -r requirements-dev.txt
 - npm install cypress --save-dev
 
 # TODO: Is the Travis Node/NPM good enough?
@@ -27,19 +27,24 @@ after_success:
 
 - sudo docker login -u $DOCKER_USER -p $DOCKER_PASS
 # Always update "latest": the cache will be used for the next build.
-- tag_push $IMAGE $REPO
+- tag_push ${IMAGE} $REPO
+- tag_push ${IMAGE}_refinery $REPO
 - >
     if [ "$TRAVIS_EVENT_TYPE" == "pull_request" ]; then
       echo "PR!";
       BRANCH=`echo ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} | perl -pne 'chomp;s{.*/}{};s/\W/-/g'`;
-      tag_push $IMAGE $REPO:$BRANCH;
-      tag_push $IMAGE $REPO:latest-pr;
+      tag_push ${IMAGE} $REPO:$BRANCH;
+      tag_push ${IMAGE} $REPO:latest-pr;
+      tag_push ${IMAGE}_refinery $REPO:$BRANCH;
+      tag_push ${IMAGE}_refinery $REPO:latest-pr;
     fi
 - >
     if [ ! -z "$TRAVIS_TAG" ]; then
       echo "Git tag!";
-      tag_push $IMAGE $REPO:$TRAVIS_TAG;
-      tag_push $IMAGE $REPO:latest;
+      tag_push ${IMAGE} $REPO:$TRAVIS_TAG;
+      tag_push ${IMAGE} $REPO:latest;
+      tag_push ${IMAGE}_refinery $REPO:$TRAVIS_TAG;
+      tag_push ${IMAGE}_refinery $REPO:latest;
     fi
 env:
   global:
