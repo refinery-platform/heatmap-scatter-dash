@@ -26,20 +26,20 @@ def arg_parser():
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',
-        type=argparse.FileType('r'), default=[],
+        type=argparse.FileType('r'), default=(),
         help='Read CSV or TSV files containing differential expression data.')
     # During development, it's useful to be able to specify a high port.
     return parser
 
 
-def input(file_urls=[], diff_urls=[]):
+def input(file_urls=None, diff_urls=None):
     return {
         "api_prefix": "/",
         "api_prefix NOTE": "Something like: /visualizations/container-name/",
         "api_prefix NOTE2": "... but no container name from EB before launch?",
         "file_relationships": [
-            file_urls,
-            diff_urls
+            file_urls if file_urls else [],
+            diff_urls if diff_urls else []
         ],
         "extra_directories": [
             "/data/"
