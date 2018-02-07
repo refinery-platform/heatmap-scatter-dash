@@ -93,10 +93,11 @@ class VisLayout(VisBase, ResourceLoader):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('Conditions:', 'PCA', 'IDs', help_button=True),
+            _tabs('Conditions:', 'PCA', 'IDs', 'Options', help_button=True),
             html.Div([
                 self._scatter('pca', pc_options, active=True),
-                _iframe('ids')
+                _iframe('ids'),
+                self._options_div('options')
             ], className='tab-content'),
 
             _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table', 'List'),
@@ -134,6 +135,13 @@ class VisLayout(VisBase, ResourceLoader):
             ],
             style={'display': 'block' if self._debug else 'none'}
         )
+
+    def _options_div(self, id):
+        nodes = [
+            html.Span('options!')
+        ]
+        return html.Div(nodes, className='tab-pane',
+                        id=id, style={'height': '40vh'})
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [
@@ -229,7 +237,7 @@ def _tabs(*names, help_button=False):
         for (index, name) in enumerate(names)
     ]
 
-    css_classes = 'btn btn-primary pull-right btn-sm'
+    css_classes = 'btn pull-right'
     if help_button:
         li_list.append(html.A(
             ['Help'], href='help',
