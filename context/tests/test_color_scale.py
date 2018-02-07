@@ -1,9 +1,24 @@
 import unittest
 
+from app.utils.color_scale import _ColorScale
+
 
 class TestColorScale(unittest.TestCase):
 
-    pass
+    def test_linear_two_points(self):
+        scale = _ColorScale('#000000', '#FFFFFF')
+        self.assertEqual(
+            scale.linear(),
+            [[0, 'rgb(0,0,0)'],
+             [1, 'rgb(255,255,255)']])
+
+    def test_linear_two_points_reversed(self):
+        scale = _ColorScale('#000000', '#FFFFFF').reversed
+        self.assertEqual(
+            scale.linear(),
+            [[0, 'rgb(255,255,255)'],
+             [1, 'rgb(0,0,0)']])
+
     # def test_log_interpolate_10_10K(self):
     #     linear = ['rgb(0,0,0)', 'rgb(255,255,255)']
     #     self.assertEqual(
