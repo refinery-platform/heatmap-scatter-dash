@@ -1,26 +1,26 @@
 import unittest
 
-from app.utils.color_scale import _ColorScale
+from app.utils.color import _Palette
 
 
 class TestColorScale(unittest.TestCase):
 
     def test_linear_two_points(self):
-        scale = _ColorScale('#000000', '#FFFFFF')
+        scale = _Palette('#000000', '#FFFFFF')
         self.assertEqual(
             scale.linear(),
             [[0, 'rgb(0,0,0)'],
              [1, 'rgb(255,255,255)']])
 
     def test_linear_two_points_reversed(self):
-        scale = _ColorScale('#000000', '#FFFFFF').reversed
+        scale = _Palette('#000000', '#FFFFFF').reversed
         self.assertEqual(
             scale.linear(),
             [[0, 'rgb(255,255,255)'],
              [1, 'rgb(0,0,0)']])
 
     def test_linear_three_points(self):
-        scale = _ColorScale('#0000FF', '#FFFFFF', '#FF0000')
+        scale = _Palette('#0000FF', '#FFFFFF', '#FF0000')
         self.assertEqual(
             scale.linear(),
             [[0, 'rgb(0,0,255)'],
@@ -28,7 +28,7 @@ class TestColorScale(unittest.TestCase):
              [1, 'rgb(255,0,0)']])
 
     def test_linear_three_points_reversed(self):
-        scale = _ColorScale('#0000FF', '#FFFFFF', '#FF0000').reversed
+        scale = _Palette('#0000FF', '#FFFFFF', '#FF0000').reversed
         self.assertEqual(
             scale.linear(),
             [[0, 'rgb(255,0,0)'],
@@ -36,7 +36,7 @@ class TestColorScale(unittest.TestCase):
              [1, 'rgb(0,0,255)']])
 
     def test_log_interpolations_two_points(self):
-        scale = _ColorScale('#000000', '#FFFFFF')
+        scale = _Palette('#000000', '#FFFFFF')
         self.assertEqual(
             scale._log_interpolations(4, 64),
             [[(0.0, 0.0, 0.0),  # 4
@@ -46,7 +46,7 @@ class TestColorScale(unittest.TestCase):
               (255.0, 255.0, 255.0)]])  # 64
 
     def test_log_interpolations_three_points(self):
-        scale = _ColorScale('#0000FF', '#FFFFFF', '#FF0000')
+        scale = _Palette('#0000FF', '#FFFFFF', '#FF0000')
         self.assertEqual(
             scale._log_interpolations(4, 8),
             [[(0.0, 0.0, 255.0), (255.0, 255.0, 255.0)],
@@ -62,7 +62,7 @@ class TestColorScale(unittest.TestCase):
               (255.0, 0.0, 0.0)]])
 
     def test_log_two_points(self):
-        scale = _ColorScale('#000000', '#FFFFFF')
+        scale = _Palette('#000000', '#FFFFFF')
         self.assertEqual(
             scale.log(4, 8),
             [[0, 'rgb(0.0, 0.0, 0.0)'],
@@ -78,7 +78,7 @@ class TestColorScale(unittest.TestCase):
              [1, 'rgb(255.0, 255.0, 255.0)']])
 
     def test_log_three_points(self):
-        scale = _ColorScale('#0000FF', '#FFFFFF', '#FF0000')
+        scale = _Palette('#0000FF', '#FFFFFF', '#FF0000')
         self.assertEqual(
             scale.log(4, 8),
             [[0, 'rgb(0.0, 0.0, 255.0)'],

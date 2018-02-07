@@ -11,7 +11,6 @@ from flask import Flask, send_from_directory
 
 from app.help.help_app import HelpApp
 from app.utils import profiler, tabular
-from app.utils.color_scale import palettes
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -75,8 +74,6 @@ def init(args, parser):  # TODO: Why is parser here?
             url_base_pathname='/',
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
-            colors=args.colors,
-            reverse_colors=args.reverse_colors,
             api_prefix=args.api_prefix,
             debug=args.debug,
             most_variable_rows=args.most_variable_rows,
@@ -156,12 +153,6 @@ def arg_parser():
         '--cluster_cols', action='store_true',
         help='For the heatmap, hierarchically cluster columns.')
 
-    parser.add_argument(
-        '--colors', choices=palettes.keys(), default='black-white',
-        help='Color scale for the heatmap. Defaults to grey scale.')
-    parser.add_argument(
-        '--reverse_colors', action='store_true',
-        help='Reverse the color scale of the heatmap.')
     parser.add_argument(
         '--port', type=int, default=8050,
         help='Specify a port to run the server on. Defaults to 8050.')

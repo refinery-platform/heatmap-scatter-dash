@@ -8,8 +8,8 @@ from dash.dependencies import Input
 
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
+from app.utils.color import palettes
 from app.utils.frames import sort_by_variance
-from app.utils.color_scale import palettes
 from app.vis.condition_callbacks import VisConditionCallbacks
 from app.vis.gene_callbacks import VisGeneCallbacks
 

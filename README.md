@@ -10,10 +10,9 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS | --files CSV [CSV ...])
                      [--diffs CSV [CSV ...]] [--most_variable_rows ROWS]
-                     [--cluster_rows] [--cluster_cols]
-                     [--colors {greys,blue-white-red,blue-black-red,blue-yellow,red-yellow}]
-                     [--reverse_colors] [--port PORT] [--profile]
-                     [--html_error] [--debug] [--api_prefix PREFIX]
+                     [--cluster_rows] [--cluster_cols] [--port PORT]
+                     [--profile] [--html_error] [--debug]
+                     [--api_prefix PREFIX]
 
 Light-weight visualization for differential expression
 
@@ -35,9 +34,6 @@ optional arguments:
                         to 500.
   --cluster_rows        For the heatmap, hierarchically cluster rows.
   --cluster_cols        For the heatmap, hierarchically cluster columns.
-  --colors {greys,blue-white-red,blue-black-red,blue-yellow,red-yellow}
-                        Color scale for the heatmap. Defaults to grey scale.
-  --reverse_colors      Reverse the color scale of the heatmap.
   --port PORT           Specify a port to run the server on. Defaults to 8050.
 
 Refinery/Developer:

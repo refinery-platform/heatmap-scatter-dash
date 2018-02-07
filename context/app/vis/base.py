@@ -1,7 +1,6 @@
 import dash
 import pandas
 
-from app.utils.color_scale import palettes
 from app.utils.pca import pca
 from app.utils.profiler import null_profiler
 from app.utils.search import SimpleIndex
@@ -12,8 +11,6 @@ class VisBase():
     def __init__(self,
                  union_dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
-                 colors='black-white',
-                 reverse_colors=False,
                  most_variable_rows=500,
                  cluster_rows=False,
                  cluster_cols=False,
@@ -34,10 +31,6 @@ class VisBase():
         self._profiler = profiler
         for gene in self._genes:
             self._genes_index.add(gene)
-        if reverse_colors:
-            self._color_scale = palettes[colors].reversed
-        else:
-            self._color_scale = palettes[colors]
         self._debug = debug
         self.app = dash.Dash(server=server,
                              url_base_pathname=url_base_pathname)

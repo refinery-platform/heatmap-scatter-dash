@@ -10,11 +10,11 @@ def _hex_to_rgb(hex):
     return 'rgb({})'.format(','.join(rgb))
 
 
-class _ColorScale():
+class _Palette():
     def __init__(self, *hex_list, reverse=True):
         self._rgb_list = [_hex_to_rgb(h) for h in hex_list]
         if reverse:
-            self.reversed = _ColorScale(*reversed(hex_list), reverse=False)
+            self.reversed = _Palette(*reversed(hex_list), reverse=False)
 
     def _log_interpolations(self, min_val, max_val):
         points_per_pair = max(
@@ -64,9 +64,10 @@ def _palettes_from_names(*names):
         'blue': '#0000FF'
     }
     return {
-        name: _ColorScale(*[rgbs[rgb] for rgb in name.split('-')])
+        name: _Palette(*[rgbs[rgb] for rgb in name.split('-')])
         for name in names
     }
+
 
 palettes = _palettes_from_names(
     'black-white',
