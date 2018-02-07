@@ -1,12 +1,10 @@
 import json
 import re
 import time
-from math import log10
 
 import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input
-from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster

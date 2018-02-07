@@ -8,10 +8,10 @@ from warnings import warn
 import numpy as np
 import pandas
 from flask import Flask, send_from_directory
-from plotly.figure_factory.utils import PLOTLY_SCALES
 
 from app.help.help_app import HelpApp
 from app.utils import profiler, tabular
+from app.utils.color_scale import palettes
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -157,7 +157,7 @@ def arg_parser():
         help='For the heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
-        '--colors', choices=list(PLOTLY_SCALES), default='Greys',
+        '--colors', choices=palettes.keys(), default='greys',
         help='Color scale for the heatmap. Defaults to grey scale.')
     parser.add_argument(
         '--reverse_colors', action='store_true',
