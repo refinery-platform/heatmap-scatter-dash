@@ -1,6 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 
+from app.utils.color import palettes
 from app.utils.resource_loader import ResourceLoader
 from app.vis.base import VisBase
 
@@ -36,6 +37,11 @@ class VisLayout(VisBase, ResourceLoader):
         self.scale_options = [
             {'label': scale, 'value': scale}
             for scale in ['log', 'linear']
+        ]
+
+        self.palette_options = [
+            {'label': p, 'value': p}
+            for p in palettes.keys()
         ]
 
         self.file_options = [
@@ -76,15 +82,6 @@ class VisLayout(VisBase, ResourceLoader):
                             type="text",
                             className='form-control')
                     ], className='col-xs-5'),
-                    html.Label(['scale'],
-                               className='col-xs-1 control-label'
-                               ),
-                    dcc.Dropdown(
-                        id='scale-select',
-                        options=self.scale_options,
-                        value='log',
-                        className='col-xs-5'
-                    )
                 ], className='form-group'),
             ], className='form-horizontal')
         ]
@@ -93,10 +90,11 @@ class VisLayout(VisBase, ResourceLoader):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('Conditions:', 'PCA', 'IDs', help_button=True),
+            _tabs('Conditions:', 'PCA', 'IDs', 'Options', help_button=True),
             html.Div([
                 self._scatter('pca', pc_options, active=True),
-                _iframe('ids')
+                _iframe('ids'),
+                self._options_div('options')
             ], className='tab-content'),
 
             _tabs('Genes:', 'Sample-by-Sample', 'Volcano', 'Table', 'List'),
@@ -134,6 +132,33 @@ class VisLayout(VisBase, ResourceLoader):
             ],
             style={'display': 'block' if self._debug else 'none'}
         )
+
+    def _options_div(self, id):
+        nodes = [
+            html.Div([
+                html.Br(),
+                html.Div([
+                    html.Label(['scale'],
+                               className='col-xs-1 control-label'),
+                    dcc.Dropdown(
+                        id='scale-select',
+                        options=self.scale_options,
+                        value='log',
+                        className='col-xs-5'
+                    ),
+                    html.Label(['palette'],
+                               className='col-xs-1 control-label'),
+                    dcc.Dropdown(
+                        id='palette-select',
+                        options=self.palette_options,
+                        value='black-white',
+                        className='col-xs-5'
+                    ),
+                ], className='form-group'),
+            ], className='form-horizontal')
+        ]
+        return html.Div(nodes, className='tab-pane',
+                        id=id, style={'height': '40vh'})
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [
@@ -229,7 +254,7 @@ def _tabs(*names, help_button=False):
         for (index, name) in enumerate(names)
     ]
 
-    css_classes = 'btn btn-primary pull-right btn-sm'
+    css_classes = 'btn pull-right'
     if help_button:
         li_list.append(html.A(
             ['Help'], href='help',

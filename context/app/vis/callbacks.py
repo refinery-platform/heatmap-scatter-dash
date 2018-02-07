@@ -1,15 +1,14 @@
 import json
 import re
 import time
-from math import log10
 
 import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input
-from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
+from app.utils.color import palettes
 from app.utils.frames import sort_by_variance
 from app.vis.condition_callbacks import VisConditionCallbacks
 from app.vis.gene_callbacks import VisGeneCallbacks
@@ -24,7 +23,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             [
                 Input('selected-conditions-ids-json', 'children'),
                 Input('selected-genes-ids-json', 'children'),
-                Input('scale-select', 'value')
+                Input('scale-select', 'value'),
+                Input('palette-select', 'value')
             ]
         )(self._update_heatmap)
 
@@ -61,7 +61,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             self,
             selected_conditions_ids_json,
             selected_gene_ids_json,
-            scale):
+            scale,
+            palette):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
@@ -96,7 +97,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             bottom_margin = col_max * char_width
             return {
                 'data': [
-                    self._heatmap(cluster_dataframe, scale == 'log')
+                    self._heatmap(cluster_dataframe,
+                                  is_log_scale=(scale == 'log'),
+                                  palette=palettes[palette])
                 ],
                 'layout': go.Layout(
                     xaxis={'ticks': '', 'tickangle': 90},
@@ -107,16 +110,15 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 )
             }
 
-    def _heatmap(self, dataframe, is_log_scale):
+    def _heatmap(self, dataframe, is_log_scale, palette):
         if is_log_scale:
             values = [x for x in dataframe.values.flatten() if x > 0]
             # We will take the log, so exclude zeros.
-            adjusted_color_scale = _log_interpolate(
-                self._color_scale,
-                min(values),
-                max(values))
+            adjusted_color_scale = \
+                palette.log(min(values), max(values))
         else:
-            adjusted_color_scale = _linear(self._color_scale)
+            adjusted_color_scale = \
+                palette.linear()
 
         return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
@@ -157,35 +159,3 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
-
-
-def _log_interpolate(color_scale, min, max):
-    if len(color_scale) > 2:
-        raise Exception('Expected just two points on color scale')
-    log10(min)
-    points = int(log10(max) - log10(min)) + 2
-    interpolated = n_colors(
-        unlabel_rgb(color_scale[1]),
-        unlabel_rgb(color_scale[0]),
-        points)
-    missing_zero = [
-        [10 ** -i, label_rgb(interpolated[i])]
-        for i in reversed(range(points))
-    ]
-    # Without a point at zero, Plotly gives a color scale
-    # that is mostly greys. No idea why.
-    return [[0, label_rgb(interpolated[points - 1])]] + missing_zero
-
-
-def _linear(color_scale):
-    return [[0, color_scale[0]], [1, color_scale[1]]]
-
-
-def _match_booleans(search_term, index_set, targets):
-    # search_term may be None on first load.
-    # index set should be ignored if empty
-    return [
-        (search_term or '') in s
-        and (i in index_set or not index_set)
-        for (i, s) in enumerate(targets)
-    ]

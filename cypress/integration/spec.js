@@ -2,14 +2,30 @@ describe('App', function(){
   it('should have a title', function() {
     cy.visit('http://localhost:8888/');
     cy.title().should('equal', 'Heatmap + Scatterplots');
+
+    // TODO: Test heatmap interactions
+
+    // TODO: Test sample-by-sample plot
+
     cy.contains('Volcano').click();
+    // TODO: Test volcano plot
 
-    cy.get('body').should('not.contain', 'linear');
-    cy.contains('log').parent().click();
-    //cy.get('body').should('contain', 'linear').click();
+    cy.contains('Table').click();
+    // TODO: Test gene table
 
-    // TODO: This has been flakey for me.
-    // cy.get('body').should('not.contain', 'log');
-    // cy.contains('linear').parent().click();
+    cy.contains('List').click();
+    // TODO: Test gene list
+
+
+    // TODO: Test PCA
+
+    cy.contains('IDs').click();
+    // TODO: Test IDs list
+
+    cy.contains('Options').click();
+    // TODO: Test options
+
+    cy.contains('Help').click();
+    // TODO: Test help
   });
 });

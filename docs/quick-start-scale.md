@@ -23,20 +23,19 @@ I'm still exploring, but right now Elastic Beanstalk seems like the best option
 
 ## Preferred Tech
 
-### [AWS: Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) (Python)
-
-It's successfully running with `--demo` right now, so I think I should invest more time here.
-The initial build takes some time. I also needed to add some python code to match
-the end-points they expected: There's very little required configuration...
-but more reliance on convention.
-
 ### [AWS: Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) (Docker)
 
-At least for now, working at the Python layer seems to introduce fewer variables,
-but once that's sorted out, I could imagine switching up to Docker, so that there's
-less variation between the stacks.
+At least for now. Want to see if we could use the same Docker images for Beanstalk
+and Docker Engine deployments: I think that would depend on being able to pass in
+files via url. (And having them available on public urls in the first place,
+which may not work for core.)
 
 ## Other Tech
+
+### [AWS: Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/) (Python)
+
+There is less overhead if we just target Python, but I think the loss of
+generality and the closer binding to AWS is not worth it.
 
 ### Galaxy
 
