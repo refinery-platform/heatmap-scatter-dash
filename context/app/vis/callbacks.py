@@ -9,6 +9,7 @@ from dash.dependencies import Input
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
 from app.utils.frames import sort_by_variance
+from app.utils.color_scale import palettes
 from app.vis.condition_callbacks import VisConditionCallbacks
 from app.vis.gene_callbacks import VisGeneCallbacks
 
@@ -22,7 +23,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             [
                 Input('selected-conditions-ids-json', 'children'),
                 Input('selected-genes-ids-json', 'children'),
-                Input('scale-select', 'value')
+                Input('scale-select', 'value'),
+                Input('palette-select', 'value')
             ]
         )(self._update_heatmap)
 
@@ -59,7 +61,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             self,
             selected_conditions_ids_json,
             selected_gene_ids_json,
-            scale):
+            scale,
+            palette):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
@@ -94,7 +97,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             bottom_margin = col_max * char_width
             return {
                 'data': [
-                    self._heatmap(cluster_dataframe, scale == 'log')
+                    self._heatmap(cluster_dataframe,
+                                  is_log_scale=(scale == 'log'),
+                                  palette=palettes[palette])
                 ],
                 'layout': go.Layout(
                     xaxis={'ticks': '', 'tickangle': 90},
@@ -105,15 +110,15 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 )
             }
 
-    def _heatmap(self, dataframe, is_log_scale):
+    def _heatmap(self, dataframe, is_log_scale, palette):
         if is_log_scale:
             values = [x for x in dataframe.values.flatten() if x > 0]
             # We will take the log, so exclude zeros.
             adjusted_color_scale = \
-                self._color_scale.log(min(values), max(values))
+                palette.log(min(values), max(values))
         else:
             adjusted_color_scale = \
-                self._color_scale.linear()
+                palette.linear()
 
         return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
