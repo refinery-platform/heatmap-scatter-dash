@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from app.utils.resource_loader import ResourceLoader
+from app.utils.color_scale import palettes
 from app.vis.base import VisBase
 
 
@@ -36,6 +37,11 @@ class VisLayout(VisBase, ResourceLoader):
         self.scale_options = [
             {'label': scale, 'value': scale}
             for scale in ['log', 'linear']
+        ]
+
+        self.palette_options = [
+            {'label': p, 'value': p}
+            for p in palettes.keys()
         ]
 
         self.file_options = [
@@ -133,14 +139,21 @@ class VisLayout(VisBase, ResourceLoader):
                 html.Br(),
                 html.Div([
                     html.Label(['scale'],
-                               className='col-xs-1 control-label'
-                               ),
+                               className='col-xs-1 control-label'),
                     dcc.Dropdown(
                         id='scale-select',
                         options=self.scale_options,
                         value='log',
                         className='col-xs-5'
-                    )
+                    ),
+                    html.Label(['palette'],
+                               className='col-xs-1 control-label'),
+                    dcc.Dropdown(
+                        id='palette-select',
+                        options=self.palette_options,
+                        value='greys',
+                        className='col-xs-5'
+                    ),
                 ], className='form-group'),
             ], className='form-horizontal')
         ]
