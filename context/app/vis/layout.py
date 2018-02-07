@@ -76,15 +76,6 @@ class VisLayout(VisBase, ResourceLoader):
                             type="text",
                             className='form-control')
                     ], className='col-xs-5'),
-                    html.Label(['scale'],
-                               className='col-xs-1 control-label'
-                               ),
-                    dcc.Dropdown(
-                        id='scale-select',
-                        options=self.scale_options,
-                        value='log',
-                        className='col-xs-5'
-                    )
                 ], className='form-group'),
             ], className='form-horizontal')
         ]
@@ -138,7 +129,20 @@ class VisLayout(VisBase, ResourceLoader):
 
     def _options_div(self, id):
         nodes = [
-            html.Span('options!')
+            html.Div([
+                html.Br(),
+                html.Div([
+                    html.Label(['scale'],
+                               className='col-xs-1 control-label'
+                               ),
+                    dcc.Dropdown(
+                        id='scale-select',
+                        options=self.scale_options,
+                        value='log',
+                        className='col-xs-5'
+                    )
+                ], className='form-group'),
+            ], className='form-horizontal')
         ]
         return html.Div(nodes, className='tab-pane',
                         id=id, style={'height': '40vh'})
