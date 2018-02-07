@@ -55,10 +55,25 @@ class _ColorScale():
                 for (i, color) in enumerate(self._rgb_list)]
 
 
-palettes = {
-    'greys': _ColorScale('#000000', '#FFFFFF'),
-    'blue-white-red': _ColorScale('#0000FF', '#FFFFFF', '#FF0000'),
-    'blue-black-red': _ColorScale('#0000FF', '#000000', '#FF0000'),
-    'blue-yellow': _ColorScale('#0000FF', '#FFFF00'),
-    'red-yellow': _ColorScale('#FF0000', '#FFFF00')
-}
+def _palettes_from_names(*names):
+    rgbs = {
+        'black': '#000000',
+        'white': '#FFFFFF',
+        'yellow': '#FFFF00',
+        'red': '#FF0000',
+        'blue': '#0000FF'
+    }
+    return {
+        name: _ColorScale(*[rgbs[rgb] for rgb in name.split('-')])
+        for name in names
+    }
+
+palettes = _palettes_from_names(
+    'black-white',
+    'white-black',
+    'blue-white-red',
+    'red-white-blue',
+    'blue-black-red',
+    'red-black-blue',
+    'red-yellow',
+    'yellow-red')

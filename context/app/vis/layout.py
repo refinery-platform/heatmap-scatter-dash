@@ -151,7 +151,7 @@ class VisLayout(VisBase, ResourceLoader):
                     dcc.Dropdown(
                         id='palette-select',
                         options=self.palette_options,
-                        value='greys',
+                        value='black-white',
                         className='col-xs-5'
                     ),
                 ], className='form-group'),

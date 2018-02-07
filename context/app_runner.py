@@ -157,7 +157,7 @@ def arg_parser():
         help='For the heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
-        '--colors', choices=palettes.keys(), default='greys',
+        '--colors', choices=palettes.keys(), default='black-white',
         help='Color scale for the heatmap. Defaults to grey scale.')
     parser.add_argument(
         '--reverse_colors', action='store_true',

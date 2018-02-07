@@ -12,7 +12,7 @@ class VisBase():
     def __init__(self,
                  union_dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
-                 colors='greys',
+                 colors='black-white',
                  reverse_colors=False,
                  most_variable_rows=500,
                  cluster_rows=False,
