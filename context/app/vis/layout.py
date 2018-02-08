@@ -145,7 +145,7 @@ class VisLayout(VisBase, ResourceLoader):
                         'rows', 'label-rows-select', self.label_options) +
                     _label_dropdown(
                         'cols', 'label-cols-select', self.label_options),
-                    className = 'form-group'),
+                    className='form-group'),
             ], className='form-horizontal')
         ]
         return html.Div(nodes, className='tab-pane',
@@ -202,7 +202,7 @@ def _label_dropdown(label, id, options):
     # Returns a two element list
     return [
         html.Label([label],
-               className='col-xs-1 control-label'),
+                   className='col-xs-1 control-label'),
         dcc.Dropdown(
             id=id,
             options=options,
