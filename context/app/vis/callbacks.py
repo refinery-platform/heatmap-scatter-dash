@@ -1,10 +1,11 @@
 import json
 import re
 import time
+from urllib.parse import parse_qs, urlencode, urlparse
 
 import pandas
 import plotly.graph_objs as go
-from dash.dependencies import Input
+from dash.dependencies import Input, Output
 
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
@@ -27,6 +28,29 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('palette-select', 'value')
             ]
         )(self._update_heatmap)
+
+        url_keys = ['scale', 'palette']
+        self._write_query_callback(url_keys)
+        for key in url_keys:
+            self._read_query_callback(key)
+
+    def _read_query_callback(self, key):
+        # Registers a callback which fills in a selector
+        # with a value from the url query.
+        self.app.callback(
+            Output(key + '-select', 'value'),
+            [Input('location', component_property='href')]
+        )(lambda query: _parse_url(query, key))
+
+    def _write_query_callback(self, keys):
+        # We read from location.href and write to location.search
+        # to avoid an infinite loop.
+        self.app.callback(
+            Output('location', 'search'),
+            [Input(key + '-select', 'value') for key in keys]
+        )(lambda *args: '?' + urlencode(
+            {key: args[i] for (i, key) in enumerate(keys)}
+        ))
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
@@ -159,3 +183,17 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
+
+
+def _parse_url(url, key):
+    if url:
+        query = urlparse(url).query
+        if query:
+            values = parse_qs(query).get(key)
+            if values:
+                return values[0]
+    defaults = {
+        'scale': 'log',
+        'palette': 'black-white'
+    }
+    return defaults[key]
