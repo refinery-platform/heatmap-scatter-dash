@@ -34,7 +34,6 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         for key in url_keys:
             self._read_query_callback(key)
 
-
     def _read_query_callback(self, key):
         # Registers a callback which fills in a selector
         # with a value from the url query.
@@ -50,8 +49,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             Output('location', 'search'),
             [Input(key + '-select', 'value') for key in keys]
         )(lambda *args: '?' + urlencode(
-                      {key:args[i] for (i, key) in enumerate(keys)}
-                  ))
+            {key: args[i] for (i, key) in enumerate(keys)}
+        ))
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
