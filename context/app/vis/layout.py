@@ -136,7 +136,9 @@ class VisLayout(VisBase, ResourceLoader):
     def _options_div(self, id):
         nodes = [
             html.Div([
-                html.Br(),
+                html.H3(['Heatmap colors']),
+                'Selecting log scale will also update the axes '
+                'of the scatter plot.',
                 html.Div([
                     html.Label(['scale'],
                                className='col-xs-1 control-label'),
@@ -154,6 +156,29 @@ class VisLayout(VisBase, ResourceLoader):
                         value='black-white',
                         className='col-xs-5'
                     ),
+                ], className='form-group'),
+                html.H3(['Heatmap clustering']),
+                'After selecting points in the scatterplots, should the '
+                'heatmap be reclustered? This may make re-rendering slower, '
+                'and rows and columns may be reordered between views.',
+                html.Div([
+                    html.Label(['rows'],
+                               className='col-xs-1 control-label'),
+                    html.Div(['TODO'], className='col-xs-5'),
+                    html.Label(['cols'],
+                               className='col-xs-1 control-label'),
+                    html.Div(['TODO'], className='col-xs-5'),
+                ], className='form-group'),
+                html.H3(['Heatmap labels']),
+                'Row and column labels can be applied "always", "never", '
+                'or "automatically", when there is sufficient space.',
+                html.Div([
+                    html.Label(['rows'],
+                               className='col-xs-1 control-label'),
+                    html.Div(['TODO'], className='col-xs-5'),
+                    html.Label(['cols'],
+                               className='col-xs-1 control-label'),
+                    html.Div(['TODO'], className='col-xs-5'),
                 ], className='form-group'),
             ], className='form-horizontal')
         ]
