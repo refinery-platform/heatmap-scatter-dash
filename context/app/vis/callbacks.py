@@ -29,10 +29,10 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             ]
         )(self._update_heatmap)
 
-        self._read_query_callback('scale')
-        self._read_query_callback('palette')
-
-        self._write_query_callback(['scale', 'palette'])
+        url_keys = ['scale', 'palette']
+        self._write_query_callback(url_keys)
+        for key in url_keys:
+            self._read_query_callback(key)
 
 
     def _read_query_callback(self, key):
