@@ -1,10 +1,11 @@
 import json
 import re
 import time
+from urllib.parse import parse_qs
 
 import pandas
 import plotly.graph_objs as go
-from dash.dependencies import Input
+from dash.dependencies import Input, Output
 
 from app.utils.callbacks import figure_output
 from app.utils.cluster import cluster
@@ -13,6 +14,12 @@ from app.utils.frames import sort_by_variance
 from app.vis.condition_callbacks import VisConditionCallbacks
 from app.vis.gene_callbacks import VisGeneCallbacks
 
+
+def _parse_query(query, key):
+    if query:
+        values = parse_qs(query[1:])[key]
+        if values:
+            return values[0]
 
 class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
     def __init__(self, **kwargs):
@@ -27,6 +34,18 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('palette-select', 'value')
             ]
         )(self._update_heatmap)
+
+        @self.app.callback(
+            Output('scale-select', 'value'),
+            [
+                Input('location', component_property='search')
+            ]
+
+        )
+        def update_scale_select(query):
+            return _parse_query(query, 'scale')
+
+
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)

@@ -50,6 +50,7 @@ class VisLayout(VisBase, ResourceLoader):
         ]
 
         self.app.layout = html.Div([
+            dcc.Location(id='location', refresh=False),  # Not rendered
             html.Div([
                 html.Div(
                     self._left_column(),
