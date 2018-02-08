@@ -1,7 +1,7 @@
 import json
 import re
 import time
-from urllib.parse import parse_qs
+from urllib.parse import parse_qs, urlencode, urlparse
 
 import pandas
 import plotly.graph_objs as go
@@ -14,12 +14,6 @@ from app.utils.frames import sort_by_variance
 from app.vis.condition_callbacks import VisConditionCallbacks
 from app.vis.gene_callbacks import VisGeneCallbacks
 
-
-def _parse_query(query, key):
-    if query:
-        values = parse_qs(query[1:])[key]
-        if values:
-            return values[0]
 
 class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
     def __init__(self, **kwargs):
@@ -35,16 +29,27 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             ]
         )(self._update_heatmap)
 
-        self._query_callback('scale')
-        self._query_callback('palette')
+        self._read_query_callback('scale')
+        self._read_query_callback('palette')
 
-    def _query_callback(self, key):
+        @self.app.callback(
+            Output('location', 'search'),
+            [
+                Input('scale-select', 'value'),
+                Input('palette-select', 'value')
+            ]
+        )
+        def _update_query(scale, palette):
+            q = urlencode({'scale': scale, 'palette': palette})
+            return '?' + q
+
+    def _read_query_callback(self, key):
         # Registers a callback which fills in a selector
         # with a value from the url query.
         self.app.callback(
             Output(key + '-select', 'value'),
-            [Input('location', component_property='search')]
-        )(lambda query: _parse_query(query, key))
+            [Input('location', component_property='href')]
+        )(lambda query: _parse_url(query, key))
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
@@ -177,3 +182,12 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 def _remove_rowname_header(s):
     return re.sub(r'<tr[^>]*>[^<]*<th>(rowname|0)</th>.*?</tr>', '', s,
                   count=1, flags=re.DOTALL)
+
+
+def _parse_url(url, key):
+    if url:
+        query = urlparse(url).query
+        if query:
+            values = parse_qs(query[1:])[key]
+            if values:
+                return values[0]
