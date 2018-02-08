@@ -12,16 +12,12 @@ class VisBase():
                  union_dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
                  most_variable_rows=500,
-                 cluster_rows=False,
-                 cluster_cols=False,
                  api_prefix=None,
                  debug=False,
                  server=None,
                  url_base_pathname=None,
                  profiler=null_profiler):
         self._most_variable_rows = most_variable_rows
-        self._cluster_rows = cluster_rows
-        self._cluster_cols = cluster_cols
         self._union_dataframe = union_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
         self._diff_dataframes = diff_dataframes

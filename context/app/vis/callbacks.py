@@ -25,11 +25,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('selected-conditions-ids-json', 'children'),
                 Input('selected-genes-ids-json', 'children'),
                 Input('scale-select', 'value'),
-                Input('palette-select', 'value')
+                Input('palette-select', 'value'),
+                Input('cluster-rows-select', 'value'),
+                Input('cluster-cols-select', 'value')
             ]
         )(self._update_heatmap)
 
-        url_keys = ['scale', 'palette']
+        url_keys = _DEFAULTS.keys()
         self._write_query_callback(url_keys)
         for key in url_keys:
             self._read_query_callback(key)
@@ -86,7 +88,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             selected_conditions_ids_json,
             selected_gene_ids_json,
             scale,
-            palette):
+            palette,
+            cluster_rows,
+            cluster_cols):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
@@ -103,8 +107,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             )
             cluster_dataframe = cluster(
                 truncated_dataframe,
-                cluster_rows=self._cluster_rows,
-                cluster_cols=self._cluster_cols)
+                cluster_rows=(cluster_rows=='cluster'),
+                cluster_cols=(cluster_cols=='cluster'))
 
             show_genes = len(cluster_dataframe.index.tolist()) < 40
 
@@ -185,6 +189,13 @@ def _remove_rowname_header(s):
                   count=1, flags=re.DOTALL)
 
 
+_DEFAULTS = {
+    'scale': 'log',
+    'palette': 'black-white',
+    'cluster-rows': 'cluster',
+    'cluster-cols': 'cluster'
+}
+
 def _parse_url(url, key):
     if url:
         query = urlparse(url).query
@@ -192,8 +203,4 @@ def _parse_url(url, key):
             values = parse_qs(query).get(key)
             if values:
                 return values[0]
-    defaults = {
-        'scale': 'log',
-        'palette': 'black-white'
-    }
-    return defaults[key]
+    return _DEFAULTS[key]

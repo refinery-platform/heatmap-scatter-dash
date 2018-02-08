@@ -64,6 +64,7 @@ def init(args, parser):  # TODO: Why is parser here?
 
         server = Flask(__name__, static_url_path='')
 
+        # TODO: lambda?
         @server.route('/static/<path:path>')
         def serve_static(path):
             return send_from_directory('app/static', path)
@@ -77,8 +78,6 @@ def init(args, parser):  # TODO: Why is parser here?
             api_prefix=args.api_prefix,
             debug=args.debug,
             most_variable_rows=args.most_variable_rows,
-            cluster_rows=args.cluster_rows,
-            cluster_cols=args.cluster_cols,
             profiler=profile_manager
         )
         HelpApp(
@@ -145,13 +144,6 @@ def arg_parser():
         '--most_variable_rows', type=int, default=500, metavar='ROWS',
         help='For the heatmap, we first sort by row variance, and then take '
              'the number of rows specified here. Defaults to 500.')
-
-    parser.add_argument(
-        '--cluster_rows', action='store_true',
-        help='For the heatmap, hierarchically cluster rows.')
-    parser.add_argument(
-        '--cluster_cols', action='store_true',
-        help='For the heatmap, hierarchically cluster columns.')
 
     parser.add_argument(
         '--port', type=int, default=8050,

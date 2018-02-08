@@ -30,12 +30,7 @@ class RunnerArgs():
         parameters = {
             p['name']: p['value'] for p in input['parameters']
         }
-        assert len(parameters) == 2
-
-        self.cluster_rows = parameters['Cluster Rows']
-        self.cluster_cols = parameters['Cluster Cols']
-        assert type(self.cluster_rows) == bool
-        assert type(self.cluster_cols) == bool
+        assert len(parameters) == 0
 
         self.api_prefix = input['api_prefix']
         assert type(self.api_prefix) == str

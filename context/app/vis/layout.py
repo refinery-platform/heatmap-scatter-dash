@@ -44,6 +44,11 @@ class VisLayout(VisBase, ResourceLoader):
             for p in palettes.keys()
         ]
 
+        self.cluster_options = [
+            {'label': c, 'value': c}
+            for c in ['cluster', 'no cluster']
+        ]
+
         self.file_options = [
             {'label': file, 'value': file}
             for file in self._diff_dataframes
@@ -146,7 +151,6 @@ class VisLayout(VisBase, ResourceLoader):
                     dcc.Dropdown(
                         id='scale-select',
                         options=self.scale_options,
-                        value='log',
                         className='col-xs-5'
                     ),
                     html.Label(['palette'],
@@ -154,7 +158,6 @@ class VisLayout(VisBase, ResourceLoader):
                     dcc.Dropdown(
                         id='palette-select',
                         options=self.palette_options,
-                        value='black-white',
                         className='col-xs-5'
                     ),
                 ], className='form-group'),
@@ -165,10 +168,18 @@ class VisLayout(VisBase, ResourceLoader):
                 html.Div([
                     html.Label(['rows'],
                                className='col-xs-1 control-label'),
-                    html.Div(['TODO'], className='col-xs-5'),
+                    dcc.Dropdown(
+                        id='cluster-rows-select',
+                        options=self.cluster_options,
+                        className='col-xs-5'
+                    ),
                     html.Label(['cols'],
                                className='col-xs-1 control-label'),
-                    html.Div(['TODO'], className='col-xs-5'),
+                    dcc.Dropdown(
+                        id='cluster-cols-select',
+                        options=self.cluster_options,
+                        className='col-xs-5'
+                    )
                 ], className='form-group'),
                 html.H3(['Heatmap labels']),
                 'Row and column labels can be applied "always", "never", '
