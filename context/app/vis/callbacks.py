@@ -35,17 +35,16 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             ]
         )(self._update_heatmap)
 
-        @self.app.callback(
-            Output('scale-select', 'value'),
-            [
-                Input('location', component_property='search')
-            ]
+        self._query_callback('scale')
+        self._query_callback('palette')
 
-        )
-        def update_scale_select(query):
-            return _parse_query(query, 'scale')
-
-
+    def _query_callback(self, key):
+        # Registers a callback which fills in a selector
+        # with a value from the url query.
+        self.app.callback(
+            Output(key + '-select', 'value'),
+            [Input('location', component_property='search')]
+        )(lambda query: _parse_query(query, key))
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
