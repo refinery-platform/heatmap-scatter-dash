@@ -142,9 +142,9 @@ class VisLayout(VisBase, ResourceLoader):
     def _options_div(self, id):
         nodes = [
             html.Div([
-                html.H3(['Heatmap colors']),
-                'Selecting log scale will also update the axes '
-                'of the scatter plot.',
+                dcc.Markdown(
+                    '**Colors:** Selecting log scale will also update the '
+                    'axes of the scatter plot.'),
                 html.Div([
                     html.Label(['scale'],
                                className='col-xs-1 control-label'),
@@ -161,10 +161,11 @@ class VisLayout(VisBase, ResourceLoader):
                         className='col-xs-5'
                     ),
                 ], className='form-group'),
-                html.H3(['Heatmap clustering']),
-                'After selecting points in the scatterplots, should the '
-                'heatmap be reclustered? This may make re-rendering slower, '
-                'and rows and columns may be reordered between views.',
+                dcc.Markdown(
+                    '**Clustering:** After selecting points in the '
+                    'scatterplots, should the heatmap be reclustered? '
+                    'This may make rendering slower, and rows and '
+                    'columns may be reordered between views.'),
                 html.Div([
                     html.Label(['rows'],
                                className='col-xs-1 control-label'),
@@ -181,9 +182,10 @@ class VisLayout(VisBase, ResourceLoader):
                         className='col-xs-5'
                     )
                 ], className='form-group'),
-                html.H3(['Heatmap labels']),
-                'Row and column labels can be applied "always", "never", '
-                'or "automatically", when there is sufficient space.',
+                dcc.Markdown(
+                    '**Labels:** Row and column labels can be applied '
+                    '`always`, `never`, or `automatically`, if there is '
+                    'sufficient space.'),
                 html.Div([
                     html.Label(['rows'],
                                className='col-xs-1 control-label'),
