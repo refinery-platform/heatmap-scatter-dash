@@ -107,8 +107,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             )
             cluster_dataframe = cluster(
                 truncated_dataframe,
-                cluster_rows=(cluster_rows=='cluster'),
-                cluster_cols=(cluster_cols=='cluster'))
+                cluster_rows=(cluster_rows == 'cluster'),
+                cluster_cols=(cluster_cols == 'cluster'))
 
             show_genes = len(cluster_dataframe.index.tolist()) < 40
 
@@ -195,6 +195,7 @@ _DEFAULTS = {
     'cluster-rows': 'cluster',
     'cluster-cols': 'cluster'
 }
+
 
 def _parse_url(url, key):
     if url:
