@@ -44,14 +44,14 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         )(lambda query: _parse_url(query, key))
 
     def _write_query_callback(self, keys):
-        @self.app.callback(
+        # We read from location.href and write to location.search
+        # to avoid an infinite loop.
+        self.app.callback(
             Output('location', 'search'),
             [Input(key + '-select', 'value') for key in keys]
-        )
-        def _update_query(*args):
-            params = {key:args[i] for (i, key) in enumerate(keys)}
-            q = urlencode(params)
-            return '?' + q
+        )(lambda *args: '?' + urlencode(
+                      {key:args[i] for (i, key) in enumerate(keys)}
+                  ))
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
