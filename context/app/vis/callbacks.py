@@ -32,16 +32,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         self._read_query_callback('scale')
         self._read_query_callback('palette')
 
-        @self.app.callback(
-            Output('location', 'search'),
-            [
-                Input('scale-select', 'value'),
-                Input('palette-select', 'value')
-            ]
-        )
-        def _update_query(scale, palette):
-            q = urlencode({'scale': scale, 'palette': palette})
-            return '?' + q
+        self._write_query_callback(['scale', 'palette'])
+
 
     def _read_query_callback(self, key):
         # Registers a callback which fills in a selector
@@ -50,6 +42,16 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             Output(key + '-select', 'value'),
             [Input('location', component_property='href')]
         )(lambda query: _parse_url(query, key))
+
+    def _write_query_callback(self, keys):
+        @self.app.callback(
+            Output('location', 'search'),
+            [Input(key + '-select', 'value') for key in keys]
+        )
+        def _update_query(*args):
+            params = {key:args[i] for (i, key) in enumerate(keys)}
+            q = urlencode(params)
+            return '?' + q
 
     def _search_to_ids_json(self, input):
         ids = self._genes_index.search(input)
@@ -188,6 +190,11 @@ def _parse_url(url, key):
     if url:
         query = urlparse(url).query
         if query:
-            values = parse_qs(query[1:])[key]
+            values = parse_qs(query).get(key)
             if values:
                 return values[0]
+    defaults = {
+        'scale': 'log',
+        'palette': 'black-white'
+    }
+    return defaults[key]
