@@ -145,43 +145,23 @@ class VisLayout(VisBase, ResourceLoader):
                 dcc.Markdown(
                     '**Colors:** Selecting log scale will also update the '
                     'axes of the scatter plot.'),
-                html.Div([
-                    html.Label(['scale'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='scale-select',
-                        options=self.scale_options,
-                        className='col-xs-5'
-                    ),
-                    html.Label(['palette'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='palette-select',
-                        options=self.palette_options,
-                        className='col-xs-5'
-                    ),
-                ], className='form-group'),
+                html.Div(
+                    _label_dropdown(
+                        'scale', 'scale-select', self.scale_options) +
+                    _label_dropdown(
+                        'palette', 'palette-select', self.palette_options),
+                    className='form-group'),
                 dcc.Markdown(
                     '**Clustering:** After selecting points in the '
                     'scatterplots, should the heatmap be reclustered? '
                     'This may make rendering slower, and rows and '
                     'columns may be reordered between views.'),
-                html.Div([
-                    html.Label(['rows'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='cluster-rows-select',
-                        options=self.cluster_options,
-                        className='col-xs-5'
-                    ),
-                    html.Label(['cols'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='cluster-cols-select',
-                        options=self.cluster_options,
-                        className='col-xs-5'
-                    )
-                ], className='form-group'),
+                html.Div(
+                    _label_dropdown(
+                        'rows', 'cluster-rows-select', self.cluster_options) +
+                    _label_dropdown(
+                        'cols', 'cluster-cols-select', self.cluster_options)
+                    , className='form-group'),
                 dcc.Markdown(
                     '**Labels:** Row and column labels can be applied '
                     '`always`, `never`, or `automatically`, if there is '
@@ -237,6 +217,19 @@ class VisLayout(VisBase, ResourceLoader):
         if active:
             className += ' active'
         return html.Div(nodes, className=className, id=id)
+
+
+def _label_dropdown(label, id, options):
+    # Returns a two element list
+    return [
+        html.Label([label],
+               className='col-xs-1 control-label'),
+        dcc.Dropdown(
+            id=id,
+            options=options,
+            className='col-xs-5'
+        )
+    ]
 
 
 def _iframe(id):
