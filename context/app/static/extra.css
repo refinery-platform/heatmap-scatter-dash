@@ -28,6 +28,16 @@ td, th {
 	display: none;
 }
 
+/* Our funky timestamped/non-idempotent events mean the out-of-the-box undo does not work. */
+._dash-undo-redo {
+	display: none;
+}
+
+/* Messages from Plotly, like "Double-click to zoom back out" don't seem to be true, at least for us. */
+.plotly-notifier {
+	display: none;
+}
+
 /* "Please Wait" overlay */
 ._dash-loading-callback {
 	position: absolute;
