@@ -18,7 +18,7 @@ td, th {
 	padding: 0 5px;
 }
 
-/* Bring baseline of button closer to that of the text, and space btween buttons. */
+/* Bring baseline of button closer to that of the text, and space between buttons. */
 .nav-tabs > .btn {
 	margin: 5px 0 0 5px;
 }

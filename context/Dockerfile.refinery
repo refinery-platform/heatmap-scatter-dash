@@ -1,3 +1,4 @@
-FROM mccalluc/heatmap_scatter_dash
+FROM heatmap_scatter_dash_base
 
 VOLUME data
+# Refinery can pass data by putting an input.json in the mounted volume.
