@@ -27,7 +27,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('scale-select', 'value'),
                 Input('palette-select', 'value'),
                 Input('cluster-rows-select', 'value'),
-                Input('cluster-cols-select', 'value')
+                Input('cluster-cols-select', 'value'),
+                Input('label-rows-select', 'value'),
+                Input('label-cols-select', 'value')
             ]
         )(self._update_heatmap)
 
@@ -90,7 +92,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             scale,
             palette,
             cluster_rows,
-            cluster_cols):
+            cluster_cols,
+            label_rows_mode,
+            label_cols_mode):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
@@ -110,7 +114,10 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 cluster_rows=(cluster_rows == 'cluster'),
                 cluster_cols=(cluster_cols == 'cluster'))
 
-            show_genes = len(cluster_dataframe.index.tolist()) < 40
+            show_genes = (len(cluster_dataframe.index.tolist()) < 40
+                          and label_rows_mode == 'auto') or \
+                         label_rows_mode == 'always'
+            show_conditions = label_cols_mode in ['always', 'auto']
 
             # With a proportional font, this is only an estimate.
             char_width = 10
@@ -121,8 +128,12 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             else:
                 left_margin = 75
 
-            col_max = max([len(s) for s in list(cluster_dataframe)])
-            bottom_margin = col_max * char_width
+            if show_conditions:
+                col_max = max([len(s) for s in list(cluster_dataframe)])
+                bottom_margin = col_max * char_width
+            else:
+                bottom_margin = 10
+
             return {
                 'data': [
                     self._heatmap(cluster_dataframe,
@@ -130,11 +141,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                                   palette=palettes[palette])
                 ],
                 'layout': go.Layout(
-                    xaxis={'ticks': '', 'tickangle': 90},
+                    xaxis={'ticks': '', 'showticklabels': show_conditions,
+                           'tickangle': 90},
                     yaxis={'ticks': '', 'showticklabels': show_genes},
                     margin={'l': left_margin,
-                            'b': bottom_margin, 't': 30, 'r': 0}
-                    # Need top margin so infobox on hover is not truncated
+                            'b': bottom_margin,
+                            't': 30,  # so infobox on hover is not truncated
+                            'r': 0}
                 )
             }
 
@@ -193,7 +206,9 @@ _DEFAULTS = {
     'scale': 'log',
     'palette': 'black-white',
     'cluster-rows': 'cluster',
-    'cluster-cols': 'cluster'
+    'cluster-cols': 'cluster',
+    'label-rows': 'auto',
+    'label-cols': 'auto'
 }
 
 
