@@ -29,6 +29,12 @@ Update README.md:
 end usage
 
 
+start pip
+diff <(pip freeze) requirements-freeze.txt || \
+die 'Update by hand, or run "pip freeze > requirements-freeze.txt"'
+end pip
+
+
 start cypress
 python context/app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888 &
 node_modules/.bin/cypress run
