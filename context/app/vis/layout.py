@@ -153,8 +153,8 @@ class VisLayout(VisBase, ResourceLoader):
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [
-            _dropdown(id, options, 'x', 0),
-            _dropdown(id, options, 'y', 1)
+            _axis_label_dropdown(id, options, 'x', 0),
+            _axis_label_dropdown(id, options, 'y', 1)
         ]
         if volcano:
             dropdowns.append(
@@ -211,21 +211,7 @@ def _label_dropdown(label, id, options):
     ]
 
 
-def _iframe(id):
-    return html.Div([
-        html.Br(),
-        html.Iframe(id=id + '-iframe',
-                    srcDoc='First select a subset')
-        # or
-        #   dcc.Graph(id='gene-table',
-        #   figure=ff.create_table(self._union_dataframe.to_html()))
-        #   (but that's slow)
-        # or
-        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-    ], className='tab-pane', id=id)
-
-
-def _dropdown(id, options, axis, axis_index):
+def _axis_label_dropdown(id, options, axis, axis_index):
     if options:
         value = options[axis_index]['value']
     else:
@@ -244,6 +230,20 @@ def _dropdown(id, options, axis, axis_index):
             )
         ]
     )
+
+
+def _iframe(id):
+    return html.Div([
+        html.Br(),
+        html.Iframe(id=id + '-iframe',
+                    srcDoc='First select a subset')
+        # or
+        #   dcc.Graph(id='gene-table',
+        #   figure=ff.create_table(self._union_dataframe.to_html()))
+        #   (but that's slow)
+        # or
+        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
+    ], className='tab-pane', id=id)
 
 
 def _class_from_index(i):

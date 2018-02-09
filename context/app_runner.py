@@ -64,10 +64,9 @@ def init(args, parser):  # TODO: Why is parser here?
 
         server = Flask(__name__, static_url_path='')
 
-        # TODO: lambda?
-        @server.route('/static/<path:path>')
-        def serve_static(path):
-            return send_from_directory('app/static', path)
+        server.route('/static/<path:path>')(
+            lambda path: send_from_directory('app/static', path)
+        )
 
         # TODO: Just calling constructor shouldn't do stuff.
         VisCallbacks(
