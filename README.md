@@ -54,7 +54,7 @@ Check out the project and install dependencies:
 $ python --version
 $ git clone https://github.com/refinery-project/heatmap-scatter-dash.git
 $ cd heatmap-scatter-dash
-$ pip install -r context/requirements.txt
+$ pip install -r context/requirements-freeze.txt
 ```
 
 To run it locally:
