@@ -28,20 +28,5 @@
       "node_solr_info": {}
     }
   },
-  "parameters": [
-    {
-      "name": "Cluster Rows",
-      "description": "Should rows of heatmap be clustered?",
-      "value_type": "BOOLEAN",
-      "default_value": false,
-      "value": true
-    },
-    {
-      "name": "Cluster Cols",
-      "description": "Should columns of heatmap be clustered?",
-      "value_type": "BOOLEAN",
-      "default_value": false,
-      "value": true
-    }
-  ]
+  "parameters": []
 }

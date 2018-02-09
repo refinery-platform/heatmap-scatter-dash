@@ -25,11 +25,15 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('selected-conditions-ids-json', 'children'),
                 Input('selected-genes-ids-json', 'children'),
                 Input('scale-select', 'value'),
-                Input('palette-select', 'value')
+                Input('palette-select', 'value'),
+                Input('cluster-rows-select', 'value'),
+                Input('cluster-cols-select', 'value'),
+                Input('label-rows-select', 'value'),
+                Input('label-cols-select', 'value')
             ]
         )(self._update_heatmap)
 
-        url_keys = ['scale', 'palette']
+        url_keys = _DEFAULTS.keys()
         self._write_query_callback(url_keys)
         for key in url_keys:
             self._read_query_callback(key)
@@ -86,7 +90,11 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             selected_conditions_ids_json,
             selected_gene_ids_json,
             scale,
-            palette):
+            palette,
+            cluster_rows,
+            cluster_cols,
+            label_rows_mode,
+            label_cols_mode):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
@@ -103,10 +111,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             )
             cluster_dataframe = cluster(
                 truncated_dataframe,
-                cluster_rows=self._cluster_rows,
-                cluster_cols=self._cluster_cols)
+                cluster_rows=(cluster_rows == 'cluster'),
+                cluster_cols=(cluster_cols == 'cluster'))
 
-            show_genes = len(cluster_dataframe.index.tolist()) < 40
+            show_genes = (len(cluster_dataframe.index.tolist()) < 40
+                          and label_rows_mode == 'auto') or \
+                label_rows_mode == 'always'
+            show_conditions = label_cols_mode in ['always', 'auto']
 
             # With a proportional font, this is only an estimate.
             char_width = 10
@@ -117,8 +128,12 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             else:
                 left_margin = 75
 
-            col_max = max([len(s) for s in list(cluster_dataframe)])
-            bottom_margin = col_max * char_width
+            if show_conditions:
+                col_max = max([len(s) for s in list(cluster_dataframe)])
+                bottom_margin = col_max * char_width
+            else:
+                bottom_margin = 10
+
             return {
                 'data': [
                     self._heatmap(cluster_dataframe,
@@ -126,11 +141,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                                   palette=palettes[palette])
                 ],
                 'layout': go.Layout(
-                    xaxis={'ticks': '', 'tickangle': 90},
+                    xaxis={'ticks': '', 'showticklabels': show_conditions,
+                           'tickangle': 90},
                     yaxis={'ticks': '', 'showticklabels': show_genes},
                     margin={'l': left_margin,
-                            'b': bottom_margin, 't': 30, 'r': 0}
-                    # Need top margin so infobox on hover is not truncated
+                            'b': bottom_margin,
+                            't': 30,  # so infobox on hover is not truncated
+                            'r': 0}
                 )
             }
 
@@ -185,6 +202,16 @@ def _remove_rowname_header(s):
                   count=1, flags=re.DOTALL)
 
 
+_DEFAULTS = {
+    'scale': 'log',
+    'palette': 'black-white',
+    'cluster-rows': 'cluster',
+    'cluster-cols': 'cluster',
+    'label-rows': 'auto',
+    'label-cols': 'auto'
+}
+
+
 def _parse_url(url, key):
     if url:
         query = urlparse(url).query
@@ -192,8 +219,4 @@ def _parse_url(url, key):
             values = parse_qs(query).get(key)
             if values:
                 return values[0]
-    defaults = {
-        'scale': 'log',
-        'palette': 'black-white'
-    }
-    return defaults[key]
+    return _DEFAULTS[key]

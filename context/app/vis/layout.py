@@ -14,40 +14,19 @@ class VisLayout(VisBase, ResourceLoader):
         self._add_dom()
 
     def _add_dom(self):
-        conditions_options = [
-            {'label': cond, 'value': cond}
-            for cond in self._conditions
-        ]
-
-        pc_options = [
-            {'label': pc, 'value': pc}
-            for pc in ['pc1', 'pc2', 'pc3', 'pc4']  # TODO: DRY
-        ]
-
         list_of_sets = [set(df.columns.tolist())
                         for df in self._diff_dataframes.values()]
         diff_heads = ({} if not list_of_sets
                       else set.intersection(*list_of_sets))
-        volcano_options = [
-            {'label': diff_head, 'value': diff_head}
-            for diff_head in sorted(diff_heads, reverse=True)
-            # reversed, because the y axis label begins with "-"
-        ]
 
-        self.scale_options = [
-            {'label': scale, 'value': scale}
-            for scale in ['log', 'linear']
-        ]
-
-        self.palette_options = [
-            {'label': p, 'value': p}
-            for p in palettes.keys()
-        ]
-
-        self.file_options = [
-            {'label': file, 'value': file}
-            for file in self._diff_dataframes
-        ]
+        conditions_options = _lv_pairs(self._conditions)
+        pc_options = _lv_pairs(['pc1', 'pc2', 'pc3', 'pc4'])
+        volcano_options = _lv_pairs(sorted(diff_heads, reverse=True))
+        self.scale_options = _lv_pairs(['log', 'linear'])
+        self.palette_options = _lv_pairs(palettes.keys())
+        self.cluster_options = _lv_pairs(['cluster', 'no cluster'])
+        self.label_options = _lv_pairs(['always', 'never', 'auto'])
+        self.file_options = _lv_pairs(self._diff_dataframes)
 
         self.app.layout = html.Div([
             dcc.Location(id='location', refresh=False),  # Not rendered
@@ -137,25 +116,36 @@ class VisLayout(VisBase, ResourceLoader):
     def _options_div(self, id):
         nodes = [
             html.Div([
-                html.Br(),
-                html.Div([
-                    html.Label(['scale'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='scale-select',
-                        options=self.scale_options,
-                        value='log',
-                        className='col-xs-5'
-                    ),
-                    html.Label(['palette'],
-                               className='col-xs-1 control-label'),
-                    dcc.Dropdown(
-                        id='palette-select',
-                        options=self.palette_options,
-                        value='black-white',
-                        className='col-xs-5'
-                    ),
-                ], className='form-group'),
+                dcc.Markdown(
+                    '**Colors:** Selecting log scale will also update the '
+                    'axes of the scatter plot.'),
+                html.Div(
+                    _label_dropdown(
+                        'scale', 'scale-select', self.scale_options) +
+                    _label_dropdown(
+                        'palette', 'palette-select', self.palette_options),
+                    className='form-group'),
+                dcc.Markdown(
+                    '**Clustering:** After selecting points in the '
+                    'scatterplots, should the heatmap be reclustered? '
+                    'This may make rendering slower, and rows and '
+                    'columns may be reordered between views.'),
+                html.Div(
+                    _label_dropdown(
+                        'rows', 'cluster-rows-select', self.cluster_options) +
+                    _label_dropdown(
+                        'cols', 'cluster-cols-select', self.cluster_options),
+                    className='form-group'),
+                dcc.Markdown(
+                    '**Labels:** Row and column labels can be applied '
+                    '`always`, `never`, or `automatically`, if there is '
+                    'sufficient space.'),
+                html.Div(
+                    _label_dropdown(
+                        'rows', 'label-rows-select', self.label_options) +
+                    _label_dropdown(
+                        'cols', 'label-cols-select', self.label_options),
+                    className='form-group'),
             ], className='form-horizontal')
         ]
         return html.Div(nodes, className='tab-pane',
@@ -163,8 +153,8 @@ class VisLayout(VisBase, ResourceLoader):
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [
-            _dropdown(id, options, 'x', 0),
-            _dropdown(id, options, 'y', 1)
+            _axis_label_dropdown(id, options, 'x', 0),
+            _axis_label_dropdown(id, options, 'y', 1)
         ]
         if volcano:
             dropdowns.append(
@@ -201,21 +191,27 @@ class VisLayout(VisBase, ResourceLoader):
         return html.Div(nodes, className=className, id=id)
 
 
-def _iframe(id):
-    return html.Div([
-        html.Br(),
-        html.Iframe(id=id + '-iframe',
-                    srcDoc='First select a subset')
-        # or
-        #   dcc.Graph(id='gene-table',
-        #   figure=ff.create_table(self._union_dataframe.to_html()))
-        #   (but that's slow)
-        # or
-        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-    ], className='tab-pane', id=id)
+def _lv_pairs(opts):
+    return [
+        {'label': opt, 'value': opt}
+        for opt in opts
+    ]
 
 
-def _dropdown(id, options, axis, axis_index):
+def _label_dropdown(label, id, options):
+    # Returns a two element list
+    return [
+        html.Label([label],
+                   className='col-xs-1 control-label'),
+        dcc.Dropdown(
+            id=id,
+            options=options,
+            className='col-xs-5'
+        )
+    ]
+
+
+def _axis_label_dropdown(id, options, axis, axis_index):
     if options:
         value = options[axis_index]['value']
     else:
@@ -234,6 +230,20 @@ def _dropdown(id, options, axis, axis_index):
             )
         ]
     )
+
+
+def _iframe(id):
+    return html.Div([
+        html.Br(),
+        html.Iframe(id=id + '-iframe',
+                    srcDoc='First select a subset')
+        # or
+        #   dcc.Graph(id='gene-table',
+        #   figure=ff.create_table(self._union_dataframe.to_html()))
+        #   (but that's slow)
+        # or
+        #   https://community.plot.ly/t/display-tables-in-dash/4707/13
+    ], className='tab-pane', id=id)
 
 
 def _class_from_index(i):
