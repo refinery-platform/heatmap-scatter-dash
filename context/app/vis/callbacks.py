@@ -116,7 +116,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 
             show_genes = (len(cluster_dataframe.index.tolist()) < 40
                           and label_rows_mode == 'auto') or \
-                         label_rows_mode == 'always'
+                label_rows_mode == 'always'
             show_conditions = label_cols_mode in ['always', 'auto']
 
             # With a proportional font, this is only an estimate.
