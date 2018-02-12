@@ -4,8 +4,7 @@ language: python
 python:
 - 3.6.0
 install:
-- pip install -r context/requirements.txt
-- pip install -r requirements-dev.txt
+- pip install -r requirements-freeze.txt
 - npm install cypress --save-dev
 
 # TODO: Is the Travis Node/NPM good enough?
