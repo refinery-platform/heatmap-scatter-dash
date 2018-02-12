@@ -19,7 +19,7 @@ def scatter_inputs(id, scale_select=False):
     return inputs
 
 
-_light = 'rgb(127,216,127)'
+_light = 'rgb(200,200,200)'
 _dark = 'rgb(0,0,127)'
 
 _dark_dot = {
