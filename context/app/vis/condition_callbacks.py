@@ -18,9 +18,10 @@ class VisConditionCallbacks(VisLayout):
         self.app.callback(
             figure_output('scatter-pca'),
             [Input('selected-conditions-ids-json', 'children')] +
-            scatter_inputs('pca', meta_select=True) +
             [Input('palette-select', 'value')] +
-            scatter_inputs('sample-by-sample')
+            scatter_inputs('sample-by-sample') +
+            scatter_inputs('pca',
+                           meta_select=not self._meta_dataframe.empty)
         )(self._update_scatter_pca)
 
         self.app.callback(
@@ -35,9 +36,9 @@ class VisConditionCallbacks(VisLayout):
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json,
-            x_axis, y_axis, selected_metadata,
             palette_name,
-            gene_x_axis, gene_y_axis):
+            gene_x_axis, gene_y_axis,
+            x_axis, y_axis, selected_metadata=None):
         with self._profiler():
             everyone = self._pca_dataframe
             selected = self._filter_by_condition_ids_json(
@@ -52,7 +53,8 @@ class VisConditionCallbacks(VisLayout):
                 x_axis, y_axis, everyone, selected,
                 highlight=highlight,
                 selected_highlight=selected_highlight,
-                color_by=self._meta_dataframe[selected_metadata],
+                color_by=None if self._meta_dataframe.empty
+                else self._meta_dataframe[selected_metadata],
                 palette=palettes[palette_name])
             return {
                 'data': data,

@@ -46,7 +46,10 @@ def init(args, parser):  # TODO: Why is parser here?
     with profile_manager():
         if args.files:
             dataframes = file_dataframes(args.files)
-            meta_dataframes = file_dataframes([args.meta])
+            if args.meta:
+                meta_dataframes = file_dataframes([args.meta])
+            else:
+                meta_dataframes = []
         elif args.demo:
             (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
         else:
