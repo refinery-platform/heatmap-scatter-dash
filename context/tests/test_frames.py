@@ -1,7 +1,7 @@
 import tempfile
 import unittest
-from unittest import skip
 from io import StringIO
+from unittest import skip
 
 import numpy as np
 import pandas
