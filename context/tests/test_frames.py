@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from unittest import skip
 from io import StringIO
 
 import numpy as np
@@ -12,12 +13,12 @@ from app_runner import file_dataframes
 
 class TestDataFrames(unittest.TestCase):
 
-    def assertEqualDataFrames(self, a, b):
+    def assertEqualDataFrames(self, a, b, message=None):
         a_np = np.array(a.as_matrix().tolist())
         b_np = np.array(b.as_matrix().tolist())
-        np.testing.assert_equal(a_np, b_np)
-        self.assertEqual(a.columns.tolist(),     b.columns.tolist())
-        self.assertEqual(a.index.tolist(),       b.index.tolist())
+        np.testing.assert_equal(a_np, b_np, message)
+        self.assertEqual(a.columns.tolist(), b.columns.tolist(), message)
+        self.assertEqual(a.index.tolist(), b.index.tolist(), message)
 
 
 class TestTabularParser(TestDataFrames):
@@ -29,12 +30,12 @@ class TestTabularParser(TestDataFrames):
             index=[1]
         )
 
-    def assertFileRead(self, input_text):
+    def assertFileRead(self, input_text, message=None):
         file = tempfile.NamedTemporaryFile(mode=self.mode)
         file.write(input_text)
         file.seek(0)
         dfs = file_dataframes([file])
-        self.assertEqualDataFrames(dfs[0], self.target)
+        self.assertEqualDataFrames(dfs[0], self.target, message)
 
 
 class TestTabularParserStrings(TestTabularParser):
@@ -57,7 +58,9 @@ class TestTabularParserStrings(TestTabularParser):
 
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
-            self.assertFileRead('{0}b{0}c\n1{0}2{0}3'.format(c))
+            self.assertFileRead(
+                '{0}b{0}c\n1{0}2{0}3'.format(c),
+                'Failed with {} as delimiter'.format(c))
 
 
 class TestTabularParserBytes(TestTabularParser):
@@ -65,6 +68,13 @@ class TestTabularParserBytes(TestTabularParser):
     def setUp(self):
         super().setUp()
         self.mode = 'wb+'
+
+    @skip  # TODO: Why does this fail, when the string version works?
+    def test_read_crazy_delimiters(self):
+        for c in '~!@#$%^&*|:;':
+            self.assertFileRead(
+                bytes('{0}b{0}c\n1{0}2{0}3'.format(c), 'utf-8'),
+                'Failed with {} as delimiter'.format(c))
 
     def test_read_csv(self):
         self.assertFileRead(b',b,c\n1,2,3')
