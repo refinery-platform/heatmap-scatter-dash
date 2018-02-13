@@ -71,7 +71,9 @@ $ cd context
 $ ./app_runner.py --demo 100 10 5
 
   # Load data from disk:
-$ ./app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
+$ ./app_runner.py --files ../fixtures/good/data/counts.csv \
+                  --diffs ../fixtures/good/data/stats-* \
+                  --meta ../fixtures/good/data/metadata.csv
 ```
 
 and visit `http://localhost:8050/`.
