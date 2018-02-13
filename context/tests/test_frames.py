@@ -79,15 +79,15 @@ class TestTabularParserBytes(TestTabularParser):
     def test_read_csv(self):
         self.assertFileRead(b',b,c\n1,2,3')
 
-    # def test_read_zip(self):
-    #     # Easier just to make this on the commandline
-    #     # than to create it inside python:
-    #     #   $ gzip fake.csv
-    #     #   >>> open('fake.csv.gz', 'rb').read()
-    #     self.assertFileRead(
-    #         b'\x1f\x8b\x08\x08\xe5\xf2\x82Z\x00\x03fake.csv'
-    #         b'\x00\xd3I\xd2I\xe62\xd41\xd21\x06\x00\xfb\x9a'
-    #         b'\xc9\xa6\n\x00\x00\x00')
+    def test_read_zip(self):
+        # Easier just to make this on the commandline
+        # than to create it inside python:
+        #   $ gzip fake.csv
+        #   >>> open('fake.csv.gz', 'rb').read()
+        self.assertFileRead(
+            b'\x1f\x8b\x08\x08\xe5\xf2\x82Z\x00\x03fake.csv'
+            b'\x00\xd3I\xd2I\xe62\xd41\xd21\x06\x00\xfb\x9a'
+            b'\xc9\xa6\n\x00\x00\x00')
 
 
 class TestMerge(TestDataFrames):
