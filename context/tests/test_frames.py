@@ -77,17 +77,23 @@ class TestTabularParserBytes(TestTabularParser):
                 'Failed with {} as delimiter'.format(c))
 
     def test_read_csv(self):
+        # Just a sanity check
         self.assertFileRead(b',b,c\n1,2,3')
 
-    def test_read_zip(self):
-        # Easier just to make this on the commandline
-        # than to create it inside python:
-        #   $ gzip fake.csv
-        #   >>> open('fake.csv.gz', 'rb').read()
+    # Easier just to make the data on the commandline
+    # than to create it inside python:
+    #   $ gzip fake.csv
+    #   >>> open('fake.csv.gz', 'rb').read()
+
+    def test_read_gzip(self):
         self.assertFileRead(
-            b'\x1f\x8b\x08\x08\xe5\xf2\x82Z\x00\x03fake.csv'
-            b'\x00\xd3I\xd2I\xe62\xd41\xd21\x06\x00\xfb\x9a'
-            b'\xc9\xa6\n\x00\x00\x00')
+            b'\x1f\x8b\x08\x08\xe5\xf2\x82Z\x00\x03fake.csv\x00\xd3I\xd2I\xe62\xd41\xd21\x06\x00\xfb\x9a\xc9\xa6\n\x00\x00\x00')  # noqa: E501
+
+    def test_read_zip(self):
+        self.assertFileRead(
+            b'PK\x03\x04\n\x00\x00\x00\x00\x00\x8dZML\xfb\x9a\xc9\xa6\n\x00\x00\x00\n\x00\x00\x00\x08\x00\x1c\x00fake.csvUT\t\x00\x03J\x10\x83Zk\x11\x83Zux\x0b\x00\x01\x04\xf6\x01\x00\x00\x04\x14\x00\x00\x00,b,c\n1,2,3PK\x01\x02\x1e\x03\n\x00\x00\x00\x00\x00\x8dZML\xfb\x9a\xc9\xa6\n\x00\x00\x00\n\x00\x00\x00\x08\x00\x18\x00\x00\x00\x00\x00\x01\x00\x00\x00\xa4\x81\x00\x00\x00\x00fake.csvUT\x05\x00\x03J\x10\x83Zux\x0b\x00\x01\x04\xf6\x01\x00\x00\x04\x14\x00\x00\x00PK\x05\x06\x00\x00\x00\x00\x01\x00\x01\x00N\x00\x00\x00L\x00\x00\x00\x00\x00'  # noqa: E501
+        )
+
 
 
 class TestMerge(TestDataFrames):
