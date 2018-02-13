@@ -30,7 +30,7 @@ class TestAppRunnerRefinery(unittest.TestCase):
 class TestAppRunner(unittest.TestCase):
 
     def demo_args(self):
-        return app_runner.arg_parser().parse_args(['--demo', '10', '10'])
+        return app_runner.arg_parser().parse_args(['--demo', '10', '10', '5'])
 
     def test_missing_demo_and_files(self):
         with self.assertRaises(SystemExit):
