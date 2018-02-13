@@ -39,12 +39,11 @@ _big_light_dot = {
 def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame(),
-                        color_by=None):
+                        color_by=None, palette=None):
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
     # but I couldn't create a minimal reproducer.
-
     trace_defs = [
         {
             # Not strictly true that these are "unselected", but the duplicates
@@ -67,7 +66,7 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'marker': {
                 'color': color_by,
                 'size': 5,
-                'colorscale': 'Viridis',
+                'colorscale': palette.linear(),
                 'showscale': True
             }
         })
@@ -77,7 +76,7 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'marker': {
                 'color': color_by,
                 'size': 10,
-                'colorscale': 'Viridis'
+                'colorscale': palette.linear()
             }
         })
     else:

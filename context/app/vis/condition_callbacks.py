@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output
 
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
+from app.utils.color import palettes
 from app.vis.layout import VisLayout
 
 
@@ -18,6 +19,7 @@ class VisConditionCallbacks(VisLayout):
             figure_output('scatter-pca'),
             [Input('selected-conditions-ids-json', 'children')] +
             scatter_inputs('pca', meta_select=True) +
+            [Input('palette-select', 'value')] +
             scatter_inputs('sample-by-sample')
         )(self._update_scatter_pca)
 
@@ -34,6 +36,7 @@ class VisConditionCallbacks(VisLayout):
     def _update_scatter_pca(
             self, selected_conditions_ids_json,
             x_axis, y_axis, selected_metadata,
+            palette_name,
             gene_x_axis, gene_y_axis):
         with self._profiler():
             everyone = self._pca_dataframe
@@ -49,7 +52,8 @@ class VisConditionCallbacks(VisLayout):
                 x_axis, y_axis, everyone, selected,
                 highlight=highlight,
                 selected_highlight=selected_highlight,
-                color_by=self._meta_dataframe[selected_metadata])
+                color_by=self._meta_dataframe[selected_metadata],
+                palette=palettes[palette_name])
             return {
                 'data': data,
                 'layout': ScatterLayout(x_axis, y_axis)
