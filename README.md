@@ -63,7 +63,7 @@ To run it locally:
 $ cd context
 
   # Generate a random matrix:
-$ ./app_runner.py --demo 100 10
+$ ./app_runner.py --demo 100 10 5
 
   # Load data from disk:
 $ ./app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*

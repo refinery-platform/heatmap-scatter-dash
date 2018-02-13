@@ -24,13 +24,17 @@ def file_dataframes(files):
     return frames
 
 
-def demo_dataframes(rows, cols):
-    array = np.random.rand(rows, cols)
-    col_labels = ['cond-{}'.format(i) for i in range(cols)]
-    row_labels = ['gene-{}'.format(i) for i in range(rows)]
-    return [pandas.DataFrame(array,
-                             columns=col_labels,
-                             index=row_labels)]
+def demo_dataframes(rows, cols, metas):
+    data_array = np.random.rand(rows, cols)
+    cond_labels = ['cond-{}'.format(i) for i in range(cols)]
+    gene_labels = ['gene-{}'.format(i) for i in range(rows)]
+
+    meta_array = np.random.rand(cols, metas)
+    meta_labels = ['meta-{}'.format(i) for i in range(metas)]
+    return (
+        [pandas.DataFrame(data_array, columns=cond_labels, index=gene_labels)],
+        [pandas.DataFrame(meta_array, columns=meta_labels, index=cond_labels)]
+    )
 
 
 def init(args, parser):  # TODO: Why is parser here?
@@ -42,8 +46,9 @@ def init(args, parser):  # TODO: Why is parser here?
     with profile_manager():
         if args.files:
             dataframes = file_dataframes(args.files)
+            # TODO: meta_dataframes = meta_dataframes(args.metas)
         elif args.demo:
-            dataframes = demo_dataframes(*args.demo)
+            (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
         else:
             # Argparser validation should keep us from reaching this point.
             raise Exception('Either "demo" or "files" is required')
@@ -62,6 +67,8 @@ def init(args, parser):  # TODO: Why is parser here?
                 'No differential files given': pandas.DataFrame()
             }
 
+        union_meta_dataframe = merge(meta_dataframes)
+
         server = Flask(__name__, static_url_path='')
 
         server.route('/static/<path:path>')(
@@ -74,6 +81,7 @@ def init(args, parser):  # TODO: Why is parser here?
             url_base_pathname='/',
             union_dataframe=union_dataframe,
             diff_dataframes=diff_dataframes,
+            meta_dataframe=union_meta_dataframe,
             api_prefix=args.api_prefix,
             debug=args.debug,
             most_variable_rows=args.most_variable_rows,
@@ -125,8 +133,10 @@ def arg_parser():
 
     input_source = parser.add_mutually_exclusive_group(required=True)
     input_source.add_argument(
-        '--demo', nargs=2, type=int, metavar=('ROWS', 'COLS'),
-        help='Generates a random matrix with the rows and columns specified.')
+        '--demo', nargs=3, type=int, metavar=('ROWS', 'COLS', 'META'),
+        help='Generates a random matrix with the number of rows and columns '
+             'specified. In addition, "META" determines the number of mock '
+             'metadata fields to associate with each column.')
     input_source.add_argument(
         '--files', nargs='+', metavar='CSV', type=argparse.FileType('r'),
         help='Read CSV or TSV files. Identifiers should be in the first '
@@ -138,6 +148,13 @@ def arg_parser():
         '--diffs', nargs='+', metavar='CSV',
         type=argparse.FileType('r'), default=(),
         help='Read CSV or TSV files containing differential expression data.')
+
+    parser.add_argument(
+        '--meta', metavar='CSV',
+        # TODO: Do multiple metadata files need to be supported?
+        type=argparse.FileType('r'),
+        help='Read CSV or TSV files containing metadata: Row labels should '
+             'match column headers of the raw data.')
 
     parser.add_argument(
         '--most_variable_rows', type=int, default=500, metavar='ROWS',
