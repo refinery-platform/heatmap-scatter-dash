@@ -7,15 +7,15 @@ def figure_output(id):
     return Output(id, 'figure')
 
 
-def scatter_inputs(id, scale_select=False):
+def scatter_inputs(id, scale_select=False, meta_select=False):
     inputs = [
         Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
         for axis in ['x', 'y']
     ]
     if scale_select:
-        inputs.append(
-            Input('scale-select', 'value')
-        )
+        inputs.append(Input('scale-select', 'value'))
+    if meta_select:
+        inputs.append(Input('meta-select', 'value'))
     return inputs
 
 
@@ -38,11 +38,13 @@ _big_light_dot = {
 
 def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
-                        selected_highlight=pandas.DataFrame()):
+                        selected_highlight=pandas.DataFrame(),
+                        color_by=None):
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
     # but I couldn't create a minimal reproducer.
+
     trace_defs = [
         {
             # Not strictly true that these are "unselected", but the duplicates
@@ -53,21 +55,42 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'marker': _light_dot
         },
         {
-            'name': 'selected',
-            'dataframe': selected,
-            'marker': _dark_dot
-        },
-        {
             'name': 'gene axis',
             'dataframe': highlight,
             'marker': _big_light_dot
-        },
-        {
+        }
+    ]
+    if color_by is not None:
+        trace_defs.append({
+            'name': 'selected',
+            'dataframe': selected,
+            'marker': {
+                'color': color_by,
+                'size': 5,
+                'colorscale': 'Viridis',
+                'showscale': True
+            }
+        })
+        trace_defs.append({
+            'name': 'gene axis',
+            'dataframe': selected_highlight,
+            'marker': {
+                'color': color_by,
+                'size': 10,
+                'colorscale': 'Viridis'
+            }
+        })
+    else:
+        trace_defs.append({
+            'name': 'selected',
+            'dataframe': selected,
+            'marker': _dark_dot
+        })
+        trace_defs.append({
             'name': 'gene axis',
             'dataframe': selected_highlight,
             'marker': _big_dark_dot
-        }
-    ]
+        })
     return [
         go.Scattergl(
             x=trace['dataframe'][x_axis],

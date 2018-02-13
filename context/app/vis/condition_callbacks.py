@@ -17,7 +17,7 @@ class VisConditionCallbacks(VisLayout):
         self.app.callback(
             figure_output('scatter-pca'),
             [Input('selected-conditions-ids-json', 'children')] +
-            scatter_inputs('pca') +
+            scatter_inputs('pca', meta_select=True) +
             scatter_inputs('sample-by-sample')
         )(self._update_scatter_pca)
 
@@ -33,7 +33,7 @@ class VisConditionCallbacks(VisLayout):
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json,
-            x_axis, y_axis,
+            x_axis, y_axis, selected_metadata,
             gene_x_axis, gene_y_axis):
         with self._profiler():
             everyone = self._pca_dataframe
@@ -44,10 +44,12 @@ class VisConditionCallbacks(VisLayout):
             highlight = everyone.loc[[gene_x_axis, gene_y_axis]]
             selected_highlight = everyone.loc[
                 list(set(selected.index) & set(highlight.index))
-            ]  # pandas.merge loses the index, sadly, so pick a hack.
-            data = traces_all_selected(x_axis, y_axis, everyone, selected,
-                                       highlight=highlight,
-                                       selected_highlight=selected_highlight)
+            ]  # pandas.merge loses the index, sadly, so this is a hack.
+            data = traces_all_selected(
+                x_axis, y_axis, everyone, selected,
+                highlight=highlight,
+                selected_highlight=selected_highlight,
+                color_by=self._meta_dataframe[selected_metadata])
             return {
                 'data': data,
                 'layout': ScatterLayout(x_axis, y_axis)
