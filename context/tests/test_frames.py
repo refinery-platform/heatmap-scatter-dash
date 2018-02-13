@@ -30,11 +30,18 @@ class TestTabularParser(TestDataFrames):
         )
 
     def assertFileRead(self, input_text):
-        file = tempfile.NamedTemporaryFile(mode='w+')
+        file = tempfile.NamedTemporaryFile(mode=self.mode)
         file.write(input_text)
         file.seek(0)
         dfs = file_dataframes([file])
         self.assertEqualDataFrames(dfs[0], self.target)
+
+
+class TestTabularParserStrings(TestTabularParser):
+
+    def setUp(self):
+        super().setUp()
+        self.mode = 'w+'
 
     def test_read_csv(self):
         self.assertFileRead(',b,c\n1,2,3')
@@ -51,6 +58,26 @@ class TestTabularParser(TestDataFrames):
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
             self.assertFileRead('{0}b{0}c\n1{0}2{0}3'.format(c))
+
+
+class TestTabularParserBytes(TestTabularParser):
+
+    def setUp(self):
+        super().setUp()
+        self.mode = 'wb+'
+
+    def test_read_csv(self):
+        self.assertFileRead(b',b,c\n1,2,3')
+
+    # def test_read_zip(self):
+    #     # Easier just to make this on the commandline
+    #     # than to create it inside python:
+    #     #   $ gzip fake.csv
+    #     #   >>> open('fake.csv.gz', 'rb').read()
+    #     self.assertFileRead(
+    #         b'\x1f\x8b\x08\x08\xe5\xf2\x82Z\x00\x03fake.csv'
+    #         b'\x00\xd3I\xd2I\xe62\xd41\xd21\x06\x00\xfb\x9a'
+    #         b'\xc9\xa6\n\x00\x00\x00')
 
 
 class TestMerge(TestDataFrames):

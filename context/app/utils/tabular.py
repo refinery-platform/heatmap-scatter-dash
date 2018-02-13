@@ -8,7 +8,7 @@ def parse(file, col_zero_index=True):
     # We could use read_csv with separator=None...
     # but that requires the python parser, which seems to be about
     # three times as slow as the c parser.
-    dialect = Sniffer().sniff(file.readline())
+    dialect = Sniffer().sniff(str(file.readline()))
     file.seek(0)
     with warnings.catch_warnings():
         # https://github.com/pandas-dev/pandas/issues/18845
