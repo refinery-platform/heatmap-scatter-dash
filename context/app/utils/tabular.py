@@ -5,23 +5,21 @@ from pandas import read_csv
 
 
 def parse(file, col_zero_index=True):
-    two_bytes = file.read(2)
+    compression_type = {
+        b'\x1f\x8b': 'gzip',
+        b'\x50\x4b': 'zip'
+    }.get(file.read(2))
     file.seek(0)
     index_col = 0 if col_zero_index else None
-    if (two_bytes == b'\x1f\x8b'):
+
+    if compression_type:
         # TODO: Both zip and gzip reading will be slow because
         # internally the python parser is used... but for now this
-        # seems better than unzipping to sniff the first line
+        # seems better than unzipping to sniff the first line.
         dataframe = read_csv(
             file,
             index_col=index_col,
-            compression='gzip'
-        )
-    elif (two_bytes == b'\x50\x4b'):  # There are variants in bytes 3 and 4.
-        dataframe = read_csv(
-            file,
-            index_col=index_col,
-            compression='zip'
+            compression=compression_type
         )
     else:
         # We could use read_csv with separator=None...
