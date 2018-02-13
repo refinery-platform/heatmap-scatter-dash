@@ -95,7 +95,6 @@ class TestTabularParserBytes(TestTabularParser):
         )
 
 
-
 class TestMerge(TestDataFrames):
 
     def setUp(self):

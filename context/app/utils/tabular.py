@@ -15,7 +15,7 @@ def parse(file, col_zero_index=True):
         dataframe = read_csv(
             file,
             index_col=index_col,
-            compression = 'gzip'
+            compression='gzip'
         )
     elif (two_bytes == b'\x50\x4b'):  # There are variants in bytes 3 and 4.
         dataframe = read_csv(
