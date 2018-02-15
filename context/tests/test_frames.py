@@ -6,8 +6,8 @@ from unittest import skip
 import numpy as np
 import pandas
 
-from app.utils.frames import (
-    find_index, merge, sort_by_variance, center_and_scale_rows)
+from app.utils.frames import (center_and_scale_rows, find_index, merge,
+                              sort_by_variance)
 from app.utils.vulcanize import vulcanize
 from app_runner import file_dataframes
 

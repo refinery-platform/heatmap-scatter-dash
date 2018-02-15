@@ -1,9 +1,9 @@
 import dash
 import pandas
 
+from app.utils.frames import center_and_scale_rows
 from app.utils.pca import pca
 from app.utils.profiler import null_profiler
-from app.utils.frames import center_and_scale_rows
 from app.utils.search import SimpleIndex
 
 
