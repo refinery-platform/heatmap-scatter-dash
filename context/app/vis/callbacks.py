@@ -29,7 +29,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                 Input('cluster-rows-select', 'value'),
                 Input('cluster-cols-select', 'value'),
                 Input('label-rows-select', 'value'),
-                Input('label-cols-select', 'value')
+                Input('label-cols-select', 'value'),
+                Input('scaling-select', 'value')
             ]
         )(self._update_heatmap)
 
@@ -94,12 +95,17 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             cluster_rows,
             cluster_cols,
             label_rows_mode,
-            label_cols_mode):
+            label_cols_mode,
+            row_scaling_mode):
         with self._profiler():
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
                 or self._conditions)
-            selected_conditions_df = self._union_dataframe[selected_conditions]
+            base_df = (
+                self._union_dataframe if row_scaling_mode == 'no rescale'
+                else self._scaled_dataframe
+            )
+            selected_conditions_df = base_df[selected_conditions]
             selected_conditions_genes_df = self._filter_by_gene_ids_json(
                 selected_conditions_df,
                 selected_gene_ids_json
