@@ -208,7 +208,8 @@ _DEFAULTS = {
     'cluster-rows': 'cluster',
     'cluster-cols': 'cluster',
     'label-rows': 'auto',
-    'label-cols': 'auto'
+    'label-cols': 'auto',
+    'scaling': 'no rescale'
 }
 
 

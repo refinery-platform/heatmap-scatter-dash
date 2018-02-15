@@ -27,6 +27,7 @@ class VisLayout(VisBase, ResourceLoader):
         self.cluster_options = _lv_pairs(['cluster', 'no cluster'])
         self.label_options = _lv_pairs(['always', 'never', 'auto'])
         self.file_options = _lv_pairs(self._diff_dataframes)
+        self.scaling_options = _lv_pairs(['no rescale', 'center and scale'])
 
         self.app.layout = html.Div([
             dcc.Location(id='location', refresh=False),  # Not rendered
@@ -115,41 +116,46 @@ class VisLayout(VisBase, ResourceLoader):
 
     def _options_div(self, id):
         nodes = [
-            html.Div([
-                dcc.Markdown(
-                    '**Colors:** Selecting log scale will also update the '
-                    'axes of the scatter plot.'),
-                html.Div(
-                    _label_dropdown(
-                        'scale', 'scale-select', self.scale_options) +
-                    _label_dropdown(
-                        'palette', 'palette-select', self.palette_options),
-                    className='form-group'),
-                dcc.Markdown(
-                    '**Clustering:** After selecting points in the '
-                    'scatterplots, should the heatmap be reclustered? '
-                    'This may make rendering slower, and rows and '
-                    'columns may be reordered between views.'),
-                html.Div(
-                    _label_dropdown(
-                        'rows', 'cluster-rows-select', self.cluster_options) +
-                    _label_dropdown(
-                        'cols', 'cluster-cols-select', self.cluster_options),
-                    className='form-group'),
-                dcc.Markdown(
-                    '**Labels:** Row and column labels can be applied '
-                    '`always`, `never`, or `automatically`, if there is '
-                    'sufficient space.'),
-                html.Div(
-                    _label_dropdown(
-                        'rows', 'label-rows-select', self.label_options) +
-                    _label_dropdown(
-                        'cols', 'label-cols-select', self.label_options),
-                    className='form-group'),
-            ], className='form-horizontal')
+            dcc.Markdown(
+                '**Colors:** Selecting log scale will also update the '
+                'axes of the scatter plot.'),
+            _form_group_div(
+                _label_dropdown(
+                    'scale', 'scale-select', self.scale_options) +
+                _label_dropdown(
+                    'palette', 'palette-select', self.palette_options)),
+            dcc.Markdown(
+                '**Clustering:** After selecting points in the '
+                'scatterplots, should the heatmap be reclustered? '
+                'This may make rendering slower, and rows and '
+                'columns may be reordered between views.'),
+            _form_group_div(
+                _label_dropdown(
+                    'rows', 'cluster-rows-select', self.cluster_options) +
+                _label_dropdown(
+                    'cols', 'cluster-cols-select', self.cluster_options)),
+            dcc.Markdown(
+                '**Labels:** Row and column labels can be applied '
+                '`always`, `never`, or `automatically`, if there is '
+                'sufficient space.'),
+            _form_group_div(
+                _label_dropdown(
+                    'rows', 'label-rows-select', self.label_options) +
+                _label_dropdown(
+                    'cols', 'label-cols-select', self.label_options)),
+            dcc.Markdown(
+                '**Center and Scale:** Optionally, for each row, '
+                'subtract the mean value, and divide by the '
+                'standard deviation.'),
+            _form_group_div(
+                _label_dropdown(
+                    'scaling', 'scaling-select', self.scaling_options))
         ]
-        return html.Div(nodes, className='tab-pane',
-                        id=id, style={'height': '40vh'})
+        return html.Div(
+            html.Div(nodes, className='form-horizontal'),
+            className='tab-pane',
+            id=id,
+            style={'height': '40vh'})
 
     def _scatter(self, id, options, active=False, volcano=False):
         dropdowns = [
@@ -189,6 +195,10 @@ class VisLayout(VisBase, ResourceLoader):
         if active:
             className += ' active'
         return html.Div(nodes, className=className, id=id)
+
+
+def _form_group_div(content):
+    return html.Div(content, className='form-group')
 
 
 def _lv_pairs(opts):
