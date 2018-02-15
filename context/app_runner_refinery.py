@@ -16,7 +16,9 @@ class RunnerArgs():
     """
 
     def __init__(self, refinery_args):
-        defaults = app_runner.arg_parser().parse_args(['--demo', '1', '1'])
+        defaults = app_runner.arg_parser().parse_args(
+            ['--demo', '1', '1', '1']
+        )
         # We clobber the '--demo' setting just below.
         # This seemed more clear than reading the JSON first,
         # getting the files from it, and then passing them through parse_args,

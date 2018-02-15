@@ -7,15 +7,15 @@ def figure_output(id):
     return Output(id, 'figure')
 
 
-def scatter_inputs(id, scale_select=False):
+def scatter_inputs(id, scale_select=False, meta_select=False):
     inputs = [
         Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
         for axis in ['x', 'y']
     ]
     if scale_select:
-        inputs.append(
-            Input('scale-select', 'value')
-        )
+        inputs.append(Input('scale-select', 'value'))
+    if meta_select:
+        inputs.append(Input('meta-select', 'value'))
     return inputs
 
 
@@ -38,7 +38,8 @@ _big_light_dot = {
 
 def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
-                        selected_highlight=pandas.DataFrame()):
+                        selected_highlight=pandas.DataFrame(),
+                        color_by=None, palette=None):
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
@@ -53,19 +54,27 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'marker': _light_dot
         },
         {
-            'name': 'selected',
-            'dataframe': selected,
-            'marker': _dark_dot
-        },
-        {
             'name': 'gene axis',
             'dataframe': highlight,
             'marker': _big_light_dot
         },
         {
+            'name': 'selected',
+            'dataframe': selected,
+            'marker': _dark_dot if color_by is None else {
+                'color': color_by,
+                'size': 5,
+                'colorscale': palette.linear()
+            }
+        },
+        {
             'name': 'gene axis',
             'dataframe': selected_highlight,
-            'marker': _big_dark_dot
+            'marker': _big_dark_dot if color_by is None else {
+                'color': color_by,
+                'size': 10,
+                'colorscale': palette.linear()
+            }
         }
     ]
     return [

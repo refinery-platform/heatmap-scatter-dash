@@ -12,17 +12,20 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 
 ```
 $ python app_runner.py -h
-usage: app_runner.py [-h] (--demo ROWS COLS | --files CSV [CSV ...])
-                     [--diffs CSV [CSV ...]] [--most_variable_rows ROWS]
-                     [--port PORT] [--profile] [--html_error] [--debug]
-                     [--api_prefix PREFIX]
+usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
+                     [--diffs CSV [CSV ...]] [--meta CSV]
+                     [--most_variable_rows ROWS] [--port PORT] [--profile]
+                     [--html_error] [--debug] [--api_prefix PREFIX]
 
 Light-weight visualization for differential expression
 
 optional arguments:
   -h, --help            show this help message and exit
-  --demo ROWS COLS      Generates a random matrix with the rows and columns
-                        specified.
+  --demo ROWS COLS META
+                        Generates a random matrix with the number of rows and
+                        columns specified. In addition, "META" determines the
+                        number of mock metadata fields to associate with each
+                        column.
   --files CSV [CSV ...]
                         Read CSV or TSV files. Identifiers should be in the
                         first column and multiple files will be joined on
@@ -31,6 +34,8 @@ optional arguments:
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
+  --meta CSV            Read CSV or TSV files containing metadata: Row labels
+                        should match column headers of the raw data.
   --most_variable_rows ROWS
                         For the heatmap, we first sort by row variance, and
                         then take the number of rows specified here. Defaults
@@ -67,10 +72,12 @@ To run it locally:
 $ cd context
 
   # Generate a random matrix:
-$ ./app_runner.py --demo 100 10
+$ ./app_runner.py --demo 100 10 5
 
   # Load data from disk:
-$ ./app_runner.py --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
+$ ./app_runner.py --files ../fixtures/good/data/counts.csv \
+                  --diffs ../fixtures/good/data/stats-* \
+                  --meta ../fixtures/good/data/metadata.csv
 ```
 
 and visit `http://localhost:8050/`.
