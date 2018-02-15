@@ -14,7 +14,8 @@ class VisGeneCallbacks(VisLayout):
         self.app.callback(
             figure_output('scatter-sample-by-sample'),
             [Input('selected-genes-ids-json', 'children')] +
-            scatter_inputs('sample-by-sample', scale_select=True)
+            scatter_inputs('sample-by-sample', scale_select=True) +
+            [Input('scaling-select', 'value')]
         )(self._update_scatter_genes)
 
         self.app.callback(
@@ -84,10 +85,14 @@ class VisGeneCallbacks(VisLayout):
     def _update_scatter_genes(
             self,
             selected_gene_ids_json,
-            x_axis, y_axis, scale):
+            x_axis, y_axis, scale,
+            row_scaling_mode):
         with self._profiler():
             is_log = scale == 'log'
-            everyone = self._union_dataframe
+            everyone = (
+                self._union_dataframe if row_scaling_mode == 'no rescale'
+                else self._scaled_dataframe
+            )
             selected = self._filter_by_gene_ids_json(
                 everyone,
                 selected_gene_ids_json
