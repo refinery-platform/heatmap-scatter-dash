@@ -6,19 +6,37 @@ from unittest import skip
 import numpy as np
 import pandas
 
-from app.utils.frames import find_index, merge, sort_by_variance
+from app.utils.frames import (
+    find_index, merge, sort_by_variance, center_and_scale_rows)
 from app.utils.vulcanize import vulcanize
 from app_runner import file_dataframes
 
 
 class TestDataFrames(unittest.TestCase):
 
-    def assertEqualDataFrames(self, a, b, message=None):
+    def assertEqualDataFrames(self, a, b, message=''):
         a_np = np.array(a.as_matrix().tolist())
         b_np = np.array(b.as_matrix().tolist())
         np.testing.assert_equal(a_np, b_np, message)
         self.assertEqual(a.columns.tolist(), b.columns.tolist(), message)
         self.assertEqual(a.index.tolist(), b.index.tolist(), message)
+
+
+class TestCenterAndScale(TestDataFrames):
+
+    def test_center_and_scale(self):
+        df = pandas.DataFrame([
+            [1, 2, 3],
+            [2, 4, 6]
+        ])
+        scaled_df = center_and_scale_rows(df)
+        self.assertEqualDataFrames(
+            pandas.DataFrame([
+                [-1, 0, 1],
+                [-2, 0, 2]
+            ]),
+            scaled_df
+        )
 
 
 class TestTabularParser(TestDataFrames):

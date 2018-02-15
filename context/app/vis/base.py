@@ -3,6 +3,7 @@ import pandas
 
 from app.utils.pca import pca
 from app.utils.profiler import null_profiler
+from app.utils.frames import center_and_scale_rows
 from app.utils.search import SimpleIndex
 
 
@@ -20,6 +21,7 @@ class VisBase():
         self._most_variable_rows = most_variable_rows
         self._union_dataframe = union_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
+        self._scaled_dataframe = center_and_scale_rows(self._union_dataframe)
         self._diff_dataframes = diff_dataframes
         self._conditions = self._union_dataframe.axes[1].tolist()
         self._genes = self._union_dataframe.axes[0].tolist()

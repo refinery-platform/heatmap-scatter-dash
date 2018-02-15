@@ -52,3 +52,9 @@ def sort_by_variance(frame):
     """
     new_order = frame.var('columns').sort_values(ascending=False).index
     return frame.reindex(labels=new_order, axis='rows')
+
+
+def center_and_scale_rows(dataframe):
+    """For each row of the dataframe,
+    subtract the row mean, and divide by the row standard deviation."""
+    return dataframe.sub(dataframe.mean(axis=1), axis=0)
