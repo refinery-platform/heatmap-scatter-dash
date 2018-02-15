@@ -54,7 +54,8 @@ def sort_by_variance(frame):
     return frame.reindex(labels=new_order, axis='rows')
 
 
-def center_and_scale_rows(dataframe):
+def center_and_scale_rows(df):
     """For each row of the dataframe,
     subtract the row mean, and divide by the row standard deviation."""
-    return dataframe.sub(dataframe.mean(axis=1), axis=0)
+    centered = df.sub(df.mean(axis=1), axis=0)
+    return centered.div(centered.std(axis=1), axis=0)
