@@ -57,42 +57,26 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             'name': 'gene axis',
             'dataframe': highlight,
             'marker': _big_light_dot
+        },
+        {
+            'name': 'selected',
+            'dataframe': selected,
+            'marker': _dark_dot if color_by is None else {
+                'color': color_by,
+                'size': 5,
+                'colorscale': palette.linear()
+            }
+        },
+        {
+            'name': 'gene axis',
+            'dataframe': selected_highlight,
+            'marker': _big_dark_dot if color_by is None else {
+                'color': color_by,
+                'size': 10,
+                'colorscale': palette.linear()
+            }
         }
     ]
-    if color_by is not None:
-        trace_defs.extend([
-            {
-                'name': 'selected',
-                'dataframe': selected,
-                'marker': {
-                    'color': color_by,
-                    'size': 5,
-                    'colorscale': palette.linear()
-                }
-            },
-            {
-                'name': 'gene axis',
-                'dataframe': selected_highlight,
-                'marker': {
-                    'color': color_by,
-                    'size': 10,
-                    'colorscale': palette.linear()
-                }
-            }
-        ])
-    else:
-        trace_defs.extend([
-            {
-                'name': 'selected',
-                'dataframe': selected,
-                'marker': _dark_dot
-            },
-            {
-                'name': 'gene axis',
-                'dataframe': selected_highlight,
-                'marker': _big_dark_dot
-            }
-        ])
     return [
         go.Scattergl(
             x=trace['dataframe'][x_axis],
