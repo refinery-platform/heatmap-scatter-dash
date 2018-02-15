@@ -4,6 +4,7 @@ from dash.dependencies import Input, Output
 
 from app.utils.callbacks import (ScatterLayout, figure_output, scatter_inputs,
                                  traces_all_selected)
+from app.utils.color import palettes
 from app.vis.layout import VisLayout
 
 
@@ -17,8 +18,10 @@ class VisConditionCallbacks(VisLayout):
         self.app.callback(
             figure_output('scatter-pca'),
             [Input('selected-conditions-ids-json', 'children')] +
-            scatter_inputs('pca') +
-            scatter_inputs('sample-by-sample')
+            [Input('palette-select', 'value')] +
+            scatter_inputs('sample-by-sample') +
+            scatter_inputs('pca',
+                           meta_select=not self._meta_dataframe.empty)
         )(self._update_scatter_pca)
 
         self.app.callback(
@@ -33,8 +36,9 @@ class VisConditionCallbacks(VisLayout):
 
     def _update_scatter_pca(
             self, selected_conditions_ids_json,
-            x_axis, y_axis,
-            gene_x_axis, gene_y_axis):
+            palette_name,
+            gene_x_axis, gene_y_axis,
+            x_axis, y_axis, selected_metadata=None):
         with self._profiler():
             everyone = self._pca_dataframe
             selected = self._filter_by_condition_ids_json(
@@ -44,10 +48,14 @@ class VisConditionCallbacks(VisLayout):
             highlight = everyone.loc[[gene_x_axis, gene_y_axis]]
             selected_highlight = everyone.loc[
                 list(set(selected.index) & set(highlight.index))
-            ]  # pandas.merge loses the index, sadly, so pick a hack.
-            data = traces_all_selected(x_axis, y_axis, everyone, selected,
-                                       highlight=highlight,
-                                       selected_highlight=selected_highlight)
+            ]  # pandas.merge loses the index, sadly, so this is a hack.
+            data = traces_all_selected(
+                x_axis, y_axis, everyone, selected,
+                highlight=highlight,
+                selected_highlight=selected_highlight,
+                color_by=None if self._meta_dataframe.empty
+                else self._meta_dataframe[selected_metadata],
+                palette=palettes[palette_name])
             return {
                 'data': data,
                 'layout': ScatterLayout(x_axis, y_axis)

@@ -12,6 +12,7 @@ class VisBase():
     def __init__(self,
                  union_dataframe,
                  diff_dataframes={'none given': pandas.DataFrame()},
+                 meta_dataframe=None,
                  most_variable_rows=500,
                  api_prefix=None,
                  debug=False,
@@ -19,12 +20,17 @@ class VisBase():
                  url_base_pathname=None,
                  profiler=null_profiler):
         self._most_variable_rows = most_variable_rows
+
         self._union_dataframe = union_dataframe
         self._pca_dataframe = pca(self._union_dataframe)
         self._scaled_dataframe = center_and_scale_rows(self._union_dataframe)
         self._diff_dataframes = diff_dataframes
+        self._meta_dataframe = meta_dataframe
+
         self._conditions = self._union_dataframe.axes[1].tolist()
         self._genes = self._union_dataframe.axes[0].tolist()
+        self._metas = self._meta_dataframe.axes[1].tolist()
+
         self._genes_index = SimpleIndex()
         self._profiler = profiler
         for gene in self._genes:

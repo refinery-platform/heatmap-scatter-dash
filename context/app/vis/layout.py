@@ -28,6 +28,7 @@ class VisLayout(VisBase, ResourceLoader):
         self.label_options = _lv_pairs(['always', 'never', 'auto'])
         self.file_options = _lv_pairs(self._diff_dataframes)
         self.scaling_options = _lv_pairs(['no rescale', 'center and scale'])
+        self.meta_options = _lv_pairs(self._metas)
 
         self.app.layout = html.Div([
             dcc.Location(id='location', refresh=False),  # Not rendered
@@ -73,7 +74,7 @@ class VisLayout(VisBase, ResourceLoader):
 
             _tabs('Conditions:', 'PCA', 'IDs', 'Options', help_button=True),
             html.Div([
-                self._scatter('pca', pc_options, active=True),
+                self._scatter('pca', pc_options, active=True, meta=True),
                 _iframe('ids'),
                 self._options_div('options')
             ], className='tab-content'),
@@ -157,11 +158,22 @@ class VisLayout(VisBase, ResourceLoader):
             id=id,
             style={'height': '40vh'})
 
-    def _scatter(self, id, options, active=False, volcano=False):
+    def _scatter(self, id, options, active=False, volcano=False, meta=False):
         dropdowns = [
             _axis_label_dropdown(id, options, 'x', 0),
             _axis_label_dropdown(id, options, 'y', 1)
         ]
+        if meta and self.meta_options:
+            dropdowns.append(
+                html.Label(['metadata'], className='col-xs-1 control-label')
+            )
+            dropdowns.append(
+                dcc.Dropdown(
+                    id='meta-select',
+                    options=self.meta_options,
+                    value=self.meta_options[0]['value'],
+                    className='col-xs-11'
+                ))
         if volcano:
             dropdowns.append(
                 html.Label(['file'], className='col-xs-1 control-label')

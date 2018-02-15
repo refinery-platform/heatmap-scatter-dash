@@ -16,6 +16,9 @@ class _Palette():
         if reverse:
             self.reversed = _Palette(*reversed(hex_list), reverse=False)
 
+    def __repr__(self):
+        return str(self._rgb_list)
+
     def _log_interpolations(self, min_val, max_val):
         points_per_pair = max(
             # Orders of magnitude spanned,

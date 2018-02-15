@@ -108,13 +108,22 @@ class TestDash():
             index=['r1', 'r2']
         )
 
+    def meta_dataframe(self):
+        return pandas.DataFrame([
+            [1, 2],
+            [3, 4]],
+            columns=['meta-1', 'meta-2'],
+            index=['c1', 'c2']
+        )
+
 
 class TestDashNoDifferentials(TestDash, unittest.TestCase):
 
     def setUp(self):
         self.app = VisCallbacks(
             url_base_pathname='/',
-            union_dataframe=self.counts_dataframe()
+            union_dataframe=self.counts_dataframe(),
+            meta_dataframe=self.meta_dataframe()
         ).app
 
 
@@ -127,5 +136,6 @@ class TestDashWithDifferentials(TestDash, unittest.TestCase):
             diff_dataframes={
                 'A': self.diff_dataframe(),
                 'B': self.diff_dataframe(),
-            }
+            },
+            meta_dataframe=self.meta_dataframe()
         ).app
