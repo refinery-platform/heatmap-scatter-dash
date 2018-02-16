@@ -4,7 +4,8 @@ describe('heatmap-scatterplot', function(){
     cy.title().should('equal', 'Heatmap + Scatterplots');
     cy.location('search').should('equal',
         '?scale=log&palette=black-white&cluster-rows=cluster'
-        + '&cluster-cols=cluster&label-rows=auto&label-cols=auto');
+        + '&cluster-cols=cluster&label-rows=auto&label-cols=auto'
+        + '&scaling=no+rescale');
     cy.get('#heatmap svg').should('be.visible');
     cy.get('#search-genes').click(); // TODO: type() fails
   });
