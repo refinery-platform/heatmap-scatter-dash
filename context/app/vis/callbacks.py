@@ -101,10 +101,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             selected_conditions = (
                 json.loads(selected_conditions_ids_json)
                 or self._conditions)
-            base_df = (
-                self._union_dataframe if row_scaling_mode == 'no rescale'
-                else self._scaled_dataframe
-            )
+            base_df = self._scale_dataframe(row_scaling_mode)
             selected_conditions_df = base_df[selected_conditions]
             selected_conditions_genes_df = self._filter_by_gene_ids_json(
                 selected_conditions_df,

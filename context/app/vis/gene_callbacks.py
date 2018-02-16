@@ -82,6 +82,11 @@ class VisGeneCallbacks(VisLayout):
              State('scatter-volcano-ids-json', 'children')]
         )(self._pick_latest)
 
+    def _scale_dataframe(self, mode):
+        if mode == 'no rescale':
+            return self._union_dataframe
+        return self._scaled_dataframe
+
     def _update_scatter_genes(
             self,
             selected_gene_ids_json,
@@ -89,10 +94,7 @@ class VisGeneCallbacks(VisLayout):
             row_scaling_mode):
         with self._profiler():
             is_log = scale == 'log'
-            everyone = (
-                self._union_dataframe if row_scaling_mode == 'no rescale'
-                else self._scaled_dataframe
-            )
+            everyone = self._scale_dataframe(row_scaling_mode)
             selected = self._filter_by_gene_ids_json(
                 everyone,
                 selected_gene_ids_json
