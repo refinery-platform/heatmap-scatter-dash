@@ -83,7 +83,7 @@ $OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
 TRIES=1
 until curl --silent --fail http://localhost:$PORT/ > /dev/null; do
     echo "$TRIES: not up yet"
-    if (( $TRIES > 5 )); then
+    if (( $TRIES > 10 )); then
         $OPT_SUDO docker logs $CONTAINER_NAME
         die "HTTP requests to app in Docker container never succeeded"
     fi
