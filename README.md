@@ -8,7 +8,7 @@ A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
 From the commandline it can be started on localhost or AWS, or it can be run
 from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 
-![screen shot](context/app/static/screen-shot.png)
+![v0.1.2-screenshot](https://user-images.githubusercontent.com/730388/36332441-2ba33e9c-1340-11e8-900a-6f16549f1f6b.png)
 
 ```
 $ python app_runner.py -h
