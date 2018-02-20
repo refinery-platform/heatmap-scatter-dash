@@ -134,6 +134,7 @@ def arg_parser():
     parser = argparse.ArgumentParser(
         description='Light-weight visualization for differential expression')
 
+    binary_file = argparse.FileType('rb')
     input_source = parser.add_mutually_exclusive_group(required=True)
     input_source.add_argument(
         '--demo', nargs=3, type=int, metavar=('ROWS', 'COLS', 'META'),
@@ -141,21 +142,20 @@ def arg_parser():
              'specified. In addition, "META" determines the number of mock '
              'metadata fields to associate with each column.')
     input_source.add_argument(
-        '--files', nargs='+', metavar='CSV', type=argparse.FileType('r'),
+        '--files', nargs='+', metavar='CSV', type=binary_file,
         help='Read CSV or TSV files. Identifiers should be in the first '
              'column and multiple files will be joined on identifier. '
-             'Compressed files are also handled, '
-             'if correct extension is given. (ie ".csv.gz")')
+             'Gzip and Zip files are also handled.')
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',
-        type=argparse.FileType('r'), default=(),
+        type=binary_file, default=(),
         help='Read CSV or TSV files containing differential expression data.')
 
     parser.add_argument(
         '--meta', metavar='CSV',
         # TODO: Do multiple metadata files need to be supported?
-        type=argparse.FileType('r'),
+        type=binary_file,
         help='Read CSV or TSV files containing metadata: Row labels should '
              'match column headers of the raw data.')
 
