@@ -45,7 +45,7 @@ end usage
 
 
 start cypress
-diff fixtures/good/data/counts.csv <(gzcat fixtures/good/data/counts-copy.csv.gz) || \
+diff fixtures/good/data/counts.csv <(gunzip --to-stdout fixtures/good/data/counts-copy.csv.gz) || \
 die 'Zip file should match raw file'
 python context/app_runner.py --files fixtures/good/data/counts-copy.csv.gz --diffs fixtures/good/data/stats-* --port 8888 &
 node_modules/.bin/cypress run
