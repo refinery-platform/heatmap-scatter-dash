@@ -45,7 +45,9 @@ end usage
 
 
 start cypress
-python context/app_runner.py --files fixtures/good/data/counts.csv --diffs fixtures/good/data/stats-* --port 8888 &
+diff fixtures/good/data/counts.csv <(gzcat fixtures/good/data/counts-copy.csv.gz) || \
+die 'Zip file should match raw file'
+python context/app_runner.py --files fixtures/good/data/counts-copy.csv.gz --diffs fixtures/good/data/stats-* --port 8888 &
 node_modules/.bin/cypress run
 kill `jobs -p`
 end cypress
