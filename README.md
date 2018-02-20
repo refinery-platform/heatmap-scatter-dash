@@ -29,8 +29,7 @@ optional arguments:
   --files CSV [CSV ...]
                         Read CSV or TSV files. Identifiers should be in the
                         first column and multiple files will be joined on
-                        identifier. Compressed files are also handled, if
-                        correct extension is given. (ie ".csv.gz")
+                        identifier. Gzip and Zip files are also handled.
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
