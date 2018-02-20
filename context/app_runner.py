@@ -141,7 +141,7 @@ def arg_parser():
              'specified. In addition, "META" determines the number of mock '
              'metadata fields to associate with each column.')
     input_source.add_argument(
-        '--files', nargs='+', metavar='CSV', type=argparse.FileType('r'),
+        '--files', nargs='+', metavar='CSV', type=argparse.FileType('rb'),
         help='Read CSV or TSV files. Identifiers should be in the first '
              'column and multiple files will be joined on identifier. '
              'Compressed files are also handled, '
@@ -149,13 +149,13 @@ def arg_parser():
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',
-        type=argparse.FileType('r'), default=(),
+        type=argparse.FileType('rb'), default=(),
         help='Read CSV or TSV files containing differential expression data.')
 
     parser.add_argument(
         '--meta', metavar='CSV',
         # TODO: Do multiple metadata files need to be supported?
-        type=argparse.FileType('r'),
+        type=argparse.FileType('rb'),
         help='Read CSV or TSV files containing metadata: Row labels should '
              'match column headers of the raw data.')
 
