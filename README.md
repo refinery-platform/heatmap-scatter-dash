@@ -13,7 +13,7 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
-                     [--diffs CSV [CSV ...]] [--meta CSV]
+                     [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
                      [--most_variable_rows ROWS] [--port PORT] [--profile]
                      [--html_error] [--debug] [--api_prefix PREFIX]
 
@@ -33,7 +33,8 @@ optional arguments:
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
-  --meta CSV            Read CSV or TSV files containing metadata: Row labels
+  --metas CSV [CSV ...]
+                        Read CSV or TSV files containing metadata: Row labels
                         should match column headers of the raw data.
   --most_variable_rows ROWS
                         For the heatmap, we first sort by row variance, and
