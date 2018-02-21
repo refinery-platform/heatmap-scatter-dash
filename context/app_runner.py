@@ -46,7 +46,7 @@ def init(args, parser):  # TODO: Why is parser here?
     with profile_manager():
         if args.files:
             dataframes = file_dataframes(args.files)
-            meta_dataframes = file_dataframes(args.meta)
+            meta_dataframes = file_dataframes(args.metas)
         elif args.demo:
             (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
         else:
@@ -150,7 +150,7 @@ def arg_parser():
         help='Read CSV or TSV files containing differential expression data.')
 
     parser.add_argument(
-        '--meta', nargs='+', metavar='CSV',
+        '--metas', nargs='+', metavar='CSV',
         type=binary_file, default=(),
         help='Read CSV or TSV files containing metadata: Row labels should '
              'match column headers of the raw data.')
