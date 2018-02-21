@@ -46,7 +46,7 @@ class RunnerArgs():
             diff_urls = input['file_relationships'][1]
             meta_urls = []  # TODO: Not supported by Refinery
         else:
-            data_directory = os.environ['DATA_DIR']
+            data_directory = os.environ.get('DATA_DIR', '/tmp')
 
             file_urls = _split_envvar('FILE_URLS')
             diff_urls = _split_envvar('DIFF_URLS')
