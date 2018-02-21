@@ -74,8 +74,10 @@ diff fixtures/good/data/counts.csv \
      <(gunzip --to-stdout fixtures/good/data/counts-copy.csv.gz) || \
 die 'Zip file should match raw file'
 python context/app_runner.py \
-       --files fixtures/good/data/counts-copy.csv.gz \
-       --diffs fixtures/good/data/stats-* --port $PORT &
+  --files fixtures/good/data/counts* \
+  --diffs fixtures/good/data/stats-* \
+  --metas fixtures/good/data/metadata.* \
+  --port $PORT &
 node_modules/.bin/cypress run
 kill `jobs -p`
 end cypress

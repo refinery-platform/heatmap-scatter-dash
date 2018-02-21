@@ -1,5 +1,3 @@
-condition,meta-1,meta-2,meta-3
+condition,meta1,meta2,meta3
 c1,1,-2,1
 c2,2,-1,10
-c3,3,0,100
-c4,4,1,1000
