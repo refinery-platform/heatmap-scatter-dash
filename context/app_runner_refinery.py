@@ -2,8 +2,8 @@
 import argparse
 import json
 import os
-from urllib.parse import urlparse
 import re
+from urllib.parse import urlparse
 
 import requests
 
@@ -105,14 +105,14 @@ def _download_files(urls, data_dir):
             response.close()
     return files
 
+
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input', type=str, required=True,
                         help='If the specified file does not exist, '
                         'falls back to environment variables: '
-                        'FILES, DIFFS, METAS.'
-                        )
+                        'FILE_URLS, DIFF_URLS, META_URLS.')
     parser.add_argument('--port', type=int, default=80)
     # During development, it's useful to be able to specify a high port.
     return parser
