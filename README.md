@@ -13,7 +13,7 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
-                     [--diffs CSV [CSV ...]] [--meta CSV]
+                     [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
                      [--most_variable_rows ROWS] [--port PORT] [--profile]
                      [--html_error] [--debug] [--api_prefix PREFIX]
 
@@ -33,7 +33,8 @@ optional arguments:
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
-  --meta CSV            Read CSV or TSV files containing metadata: Row labels
+  --metas CSV [CSV ...]
+                        Read CSV or TSV files containing metadata: Row labels
                         should match column headers of the raw data.
   --most_variable_rows ROWS
                         For the heatmap, we first sort by row variance, and
@@ -56,6 +57,21 @@ Refinery/Developer:
 
 ## Getting Started
 
+### Docker
+
+If you have Docker installed, and data available at public URLs,
+this is the easiest way to get started:
+
+```bash
+$ docker run --detach --publish 8888:80 \
+  -e "FILE_URLS=http://example.com/counts.csv" \
+  -e "DIFF_URLS=http://example.com/diff.csv" \
+  -e "META_URLS=http://example.com/meta.csv"
+  mccalluc/heatmap_scatter_dash
+```
+
+### From Source
+
 Check out the project and install dependencies:
 ```bash
   # Requires Python3:
@@ -65,7 +81,7 @@ $ cd heatmap-scatter-dash
 $ pip install -r context/requirements-freeze.txt
 ```
 
-To run it locally:
+Then run it locally:
 
 ```bash
 $ cd context
@@ -80,21 +96,6 @@ $ ./app_runner.py --files ../fixtures/good/data/counts.csv \
 ```
 
 and visit `http://localhost:8050/`.
-
-To run it on AWS:
-
-```bash
-$ cd context
-$ mkdir data
-
-  # AWS needs to know where to create your resources.
-  # This will fail if your AWS credentials are not in place.
-$ eb init
-
-$ ./app_runner_aws.py --name demo --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
-```
-
-After a few minutes, the server will start and the URL to visit will be displayed.
 
 ## Testing
 
