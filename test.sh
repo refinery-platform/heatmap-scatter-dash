@@ -64,7 +64,6 @@ FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-da
 FILE_URLS="$FIXTURES/counts.csv" \
 DATA_DIR='/tmp/heatmap-data' \
 python context/app_runner_refinery.py --input /no/such/file --port $PORT &
-# TODO: DIFF_URLS, META_URLS
 retry
 kill `jobs -p`
 end cli
@@ -82,7 +81,7 @@ kill `jobs -p`
 end cypress
 
 
-start docker
+start docker_build
 source define_repo.sh
 
 # We don't want to run the whole script under sudo on Travis,
@@ -97,10 +96,11 @@ echo "REPO: $REPO"
 echo "IMAGE: $IMAGE"
 
 $OPT_SUDO docker pull $REPO
-$OPT_SUDO docker build --cache-from $REPO --tag ${IMAGE}_base context
-$OPT_SUDO docker build --cache-from ${IMAGE}_base --tag ${IMAGE}_refinery \
-                       --file context/Dockerfile.refinery context
+$OPT_SUDO docker build --cache-from $REPO --tag $IMAGE context
+end docker_build
 
+
+start docker_json
 CONTAINER_NAME=$IMAGE-container
 # Preferred syntax, Docker version >= 17.06
 #    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
@@ -108,13 +108,25 @@ CONTAINER_NAME=$IMAGE-container
 $OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
     --volume $(pwd)/fixtures/good/input.json:/data/input.json \
     --volume /refinery-data/ \
-    ${IMAGE}_refinery
-    # TODO : volume mounting
+    $IMAGE
 
 retry
-echo "docker is responsive"
+echo "docker is responsive with input.json"
 
 docker stop $CONTAINER_NAME
 docker rm $CONTAINER_NAME
 echo "container cleaned up"
-end docker
+end docker_json
+
+
+start docker_envvars
+$OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
+    -e "FILE_URLS=$FIXTURES/counts.csv" \
+    $IMAGE
+retry
+echo "docker is responsive with envvars"
+
+docker stop $CONTAINER_NAME
+docker rm $CONTAINER_NAME
+echo "container cleaned up"
+end docker_envvars
