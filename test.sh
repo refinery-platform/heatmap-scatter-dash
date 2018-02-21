@@ -62,11 +62,11 @@ end usage
 start cli
 FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
 FILE_URLS="$FIXTURES/counts.csv" \
-DIFF_URLS='' \
-META_URLS='' \
 DATA_DIR='/tmp/heatmap-data' \
-python context/app_runner_refinery.py --input /no/such/file --port $PORT
+python context/app_runner_refinery.py --input /no/such/file --port $PORT &
+# TODO: DIFF_URLS, META_URLS
 retry
+kill `jobs -p`
 end cli
 
 

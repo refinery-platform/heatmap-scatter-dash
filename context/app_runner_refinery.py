@@ -65,7 +65,8 @@ class RunnerArgs():
 
 
 def _split_envvar(name):
-    return re.split(r'\s+', os.environ.get(name) or '')
+    value = os.environ.get(name)
+    return re.split(r'\s+', value) if value else []
 
 
 def _download_files(urls, data_dir):
