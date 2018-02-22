@@ -2,10 +2,13 @@
   "api_prefix": "/",
   "api_prefix NOTE": "Should actually be something like: /visualizations/container-name/",
   "file_relationships": [
-    ["https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/counts.csv"],
     [
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/stats-with-genes-in-col-1.csv",
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/stats-with-genes-in-col-2.tsv"
+      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts.csv",
+      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts-copy.csv.gz"
+    ],
+    [
+      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-1.csv",
+      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-2.tsv"
     ]
   ],
   "extra_directories": [
@@ -13,18 +16,18 @@
   ],
   "node_info": {
     "some-refinery-uuid-1": {
-      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/counts.csv",
+      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts.csv",
       "node_solr_info": {
         "A lot of data here...": "but I feel uncomfortable binding myself to these ugly internal names.",
         "It needs a clean API": "True!"
       }
     },
     "some-refinery-uuid-2": {
-      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/stats-with-genes-in-col-1.csv",
+      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-1.csv",
       "node_solr_info": {}
     },
     "some-refinery-uuid-3": {
-      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.0.10/fixtures/good/data/stats-with-genes-in-col-2.tsv",
+      "file_url": "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-2.tsv",
       "node_solr_info": {}
     }
   },
