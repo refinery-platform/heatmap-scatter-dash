@@ -74,7 +74,9 @@ Then visit [http://localhost:8888].
 
 If multiple URLs are provided, use spaces in the value of the environment variables,
 as in the example.
-Besides providing files, you can also specify `DIFF_URLS` and `META_URLS`.
+Besides providing count data, you can also specify
+`DIFF_URLS` for differential expression data and
+`META_URLS` for metadata.
 
 
 ### From Source
