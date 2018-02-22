@@ -63,12 +63,18 @@ If you have Docker installed, and data available at public URLs,
 this is the easiest way to get started:
 
 ```bash
-$ docker run --detach --publish 8888:80 \
-  -e "FILE_URLS=http://example.com/counts.csv" \
-  -e "DIFF_URLS=http://example.com/diff.csv" \
-  -e "META_URLS=http://example.com/meta.csv"
+$ FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
+$ docker run --name heatmap --detach --publish 8888:80 \
+  -e "FILE_URLS=$FIXTURES/counts.csv $FIXTURES/counts-copy.csv.gz" \
   mccalluc/heatmap_scatter_dash
 ```
+
+Then visit [http://localhost:8888].
+
+If multiple URLs are provided, use spaces in the value of the environment variables,
+as in the example.
+Besides providing files, you can also specify `DIFF_URLS` and `META_URLS`.
+
 
 ### From Source
 
