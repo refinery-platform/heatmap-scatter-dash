@@ -94,14 +94,14 @@ def _download_files(urls, data_dir):
                 "Error fetching {} : {}".format(url, e)
             )
         else:
-            name = url.split("/")[-1]
-            path = '{}{}'.format(data_dir, name)
+            name = os.path.split(parsed.path)[-1]
+            path = os.path.join(data_dir, name)
             with open(path, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=1024):
                     # filter out KEEP-ALIVE new chunks
                     if chunk:
                         f.write(chunk)
-            files.append(open(path))
+            files.append(open(path, 'rb'))
         finally:
             response.close()
     return files

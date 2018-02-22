@@ -61,8 +61,8 @@ end usage
 
 start cli
 FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
-FILE_URLS="$FIXTURES/counts.csv" \
-DATA_DIR='/tmp/heatmap-data' \
+FILE_URLS="$FIXTURES/counts-copy.csv.gz" \
+DATA_DIR='/tmp' \
 python context/app_runner_refinery.py --input /no/such/file --port $PORT &
 retry
 kill `jobs -p`
