@@ -70,11 +70,13 @@ $ docker run --name heatmap --detach --publish 8888:80 \
   mccalluc/heatmap_scatter_dash:$V
 ```
 
-Then visit [http://localhost:8888].
+Then visit [http://localhost:8888](http://localhost:8888).
 
-If multiple URLs are provided, use spaces in the value of the environment variables,
-as in the example.
-Besides providing files, you can also specify `DIFF_URLS` and `META_URLS`.
+If multiple URLs are desired, use spaces in the value
+of the environment variables, as in the example.
+Besides providing count data, you can also specify
+`DIFF_URLS` for differential expression data and
+`META_URLS` for metadata.
 
 
 ### From Source
