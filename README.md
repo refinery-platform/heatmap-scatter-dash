@@ -63,10 +63,11 @@ If you have Docker installed, and data available at public URLs,
 this is the easiest way to get started:
 
 ```bash
-$ FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
+$ V=v0.1.5
+$ FIXTURES=https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/$V/fixtures/good/data
 $ docker run --name heatmap --detach --publish 8888:80 \
   -e "FILE_URLS=$FIXTURES/counts.csv $FIXTURES/counts-copy.csv.gz" \
-  mccalluc/heatmap_scatter_dash
+  mccalluc/heatmap_scatter_dash:$V
 ```
 
 Then visit [http://localhost:8888].
