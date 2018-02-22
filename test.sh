@@ -3,7 +3,7 @@ set -o errexit
 
 # xtrace turned on only within the travis folds
 start() { echo travis_fold':'start:$1; echo $1; set -v; }
-end() { set +v; echo travis_fold':'end:$1; }
+end() { set +v; echo travis_fold':'end:$1; echo; echo; }
 die() { set +v; echo "$*" 1>&2 ; exit 1; }
 retry() {
     TRIES=1
@@ -59,14 +59,15 @@ Update README.md:
 end usage
 
 
-start cli
+start refinery_envvar
+# Reading the JSON is covered by the Docker test below.
 FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
 FILE_URLS="$FIXTURES/counts-copy.csv.gz" \
 DATA_DIR='/tmp' \
 python context/app_runner_refinery.py --input /no/such/file --port $PORT &
 retry
 kill `jobs -p`
-end cli
+end refinery_envvar
 
 
 start cypress
