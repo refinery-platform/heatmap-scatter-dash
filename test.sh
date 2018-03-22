@@ -59,15 +59,17 @@ Update README.md:
 end usage
 
 
-start refinery_envvar
-# Reading the JSON is covered by the Docker test below.
-FIXTURES='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures/good/data'
-FILE_URLS="$FIXTURES/counts-copy.csv.gz" \
+start refinery_data_envvar
+# Since the input.json specifies a data directory which might not exist,
+# and we want to minimize changes to the host running the test,
+# we will check the other modes with the docker tests.
+FIXTURES_URL_BASE='https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.3/fixtures'
+FILE_URLS="$FIXTURES_URL_BASE/good/data/counts-copy.csv.gz" \
 DATA_DIR='/tmp' \
 python context/app_runner_refinery.py --input /no/such/file --port $PORT &
 retry
 kill `jobs -p`
-end refinery_envvar
+end refinery_data_envvar
 
 
 start cypress
@@ -103,7 +105,7 @@ $OPT_SUDO docker build --cache-from $REPO --tag $IMAGE context
 end docker_build
 
 
-start docker_json
+start docker_json_file
 CONTAINER_NAME=$IMAGE-container
 # Preferred syntax, Docker version >= 17.06
 #    --mount type=bind,src=$(pwd)/fixtures/good/input.json,dst=/data/input.json \
@@ -112,24 +114,38 @@ $OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
     --volume $(pwd)/fixtures/good/input.json:/data/input.json \
     --volume /refinery-data/ \
     $IMAGE
-
 retry
-echo "docker is responsive with input.json"
-
-docker stop $CONTAINER_NAME
-docker rm $CONTAINER_NAME
-echo "container cleaned up"
+docker stop $CONTAINER_NAME | xargs docker rm
 end docker_json
 
 
-start docker_envvars
+start docker_json_envvar
+INPUT_JSON=`cat $(pwd)/fixtures/good/input.json`
 $OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
-    -e "FILE_URLS=$FIXTURES/counts.csv" \
+    --volume /refinery-data/ \
+    -e "INPUT_JSON=$INPUT_JSON" \
     $IMAGE
 retry
-echo "docker is responsive with envvars"
+docker stop $CONTAINER_NAME | xargs docker rm
+end docker_json_envvar
 
-docker stop $CONTAINER_NAME
-docker rm $CONTAINER_NAME
-echo "container cleaned up"
+
+start docker_json_url_envvar
+INPUT_JSON_URL="$FIXTURES_URL_BASE/good/input.json"
+$OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
+    --volume /refinery-data/ \
+    -e "INPUT_JSON_URL=$INPUT_JSON_URL" \
+    $IMAGE
+retry
+docker stop $CONTAINER_NAME | xargs docker rm
+end docker_json_url_envvar
+
+
+start docker_envvars
+FILE_URLS="$FIXTURES_URL_BASE/good/data/counts.csv"
+$OPT_SUDO docker run --name $CONTAINER_NAME --detach --publish $PORT:80 \
+    -e "FILE_URLS=$FILE_URLS" \
+    $IMAGE
+retry
+docker stop $CONTAINER_NAME | xargs docker rm
 end docker_envvars
