@@ -29,9 +29,9 @@ class RunnerArgs():
         self.demo = False
         self.port = refinery_args.port
 
-        if os.path.isfile(refinery_args.input):
-            json_file = open(refinery_args.input, 'r')
-            input = json.loads(json_file.read(None))
+        input_json = self._get_input_json(refinery_args.input)
+        if input_json:
+            input = json.loads(input_json)
             parameters = {
                 p['name']: p['value'] for p in input['parameters']
             }
@@ -57,6 +57,25 @@ class RunnerArgs():
             self.metas = _download_files(meta_urls, data_directory)
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
+
+    def _get_input_json(self, possible_input_file):
+        '''
+        Checks three possible sources for JSON input,
+        and returns JSON string if found.
+        Returns None if all three fail.
+        '''
+        if possible_input_file and os.path.isfile(possible_input_file):
+            return open(possible_input_file, 'r').read(None)
+
+        json = os.environ.get('INPUT_JSON')
+        if json:
+            return json
+
+        url = os.environ.get('INPUT_JSON_URL')
+        if url:
+            return requests.get(url).text
+
+        return None
 
     def __repr__(self):
         return '\n'.join(
@@ -111,8 +130,12 @@ def arg_parser():
     parser = argparse.ArgumentParser(
         description='Webapp for visualizing differential expression')
     parser.add_argument('--input', type=str, required=True,
+                        # Because it's a "str" rather than "file",
+                        # does not require file to exist.
                         help='If the specified file does not exist, '
                         'falls back to environment variables: '
+                        'First, INPUT_JSON or INPUT_JSON_URL, '
+                        'and if neither of those exist, '
                         'FILE_URLS, DIFF_URLS, META_URLS.')
     parser.add_argument('--port', type=int, default=80)
     # During development, it's useful to be able to specify a high port.
