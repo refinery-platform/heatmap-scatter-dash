@@ -31,7 +31,6 @@ class RunnerArgs():
 
         input_json = self._get_input_json(refinery_args.input)
         if input_json:
-            print('input_json:' + input_json)
             input = json.loads(input_json)
             parameters = {
                 p['name']: p['value'] for p in input['parameters']
@@ -74,7 +73,6 @@ class RunnerArgs():
 
         url = os.environ.get('INPUT_JSON_URL')
         if url:
-            print('url: ' + url)
             return requests.get(url).text
 
         return None
