@@ -28,23 +28,23 @@ class RunnerArgs():
         self.demo = False
         self.port = refinery_args.port
 
-        input = json.loads(refinery_args.input.read(None))
+        input_json = json.loads(refinery_args.input.read(None))
         parameters = {
-            p['name']: p['value'] for p in input['parameters']
+            p['name']: p['value'] for p in input_json['parameters']
         }
         assert len(parameters) == 0
 
-        self.api_prefix = input['api_prefix']
+        self.api_prefix = input_json['api_prefix']
         assert type(self.api_prefix) == str
 
-        data_directory = input['extra_directories'][0]
+        data_directory = input_json['extra_directories'][0]
         try:
             self.files = self._download_files(
-                input['file_relationships'][0],
+                input_json['file_relationships'][0],
                 data_directory
             )
             self.diffs = self._download_files(
-                input['file_relationships'][1],
+                input_json['file_relationships'][1],
                 data_directory
             )
         except OSError as e:
