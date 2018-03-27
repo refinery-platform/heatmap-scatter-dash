@@ -32,19 +32,19 @@ class RunnerArgs():
         input_json = self._get_input_json(refinery_args.input)
         if input_json:
             print('input_json:' + input_json)
-            input = json.loads(input_json)
+            input_data = json.loads(input_json)
             parameters = {
-                p['name']: p['value'] for p in input['parameters']
+                p['name']: p['value'] for p in input_data['parameters']
             }
             assert len(parameters) == 0
 
-            self.api_prefix = input['api_prefix']
+            self.api_prefix = input_data['api_prefix']
             assert type(self.api_prefix) == str
 
-            data_directory = input['extra_directories'][0]
+            data_directory = input_data['extra_directories'][0]
 
-            file_urls = input['file_relationships'][0]
-            diff_urls = input['file_relationships'][1]
+            file_urls = input_data['file_relationships'][0]
+            diff_urls = input_data['file_relationships'][1]
             meta_urls = []  # TODO: Not supported by Refinery
         else:
             data_directory = os.environ.get('DATA_DIR', '/tmp')

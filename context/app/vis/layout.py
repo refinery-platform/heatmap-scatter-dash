@@ -115,7 +115,7 @@ class VisLayout(VisBase, ResourceLoader):
             style={'display': 'block' if self._debug else 'none'}
         )
 
-    def _options_div(self, id):
+    def _options_div(self, element_id):
         nodes = [
             dcc.Markdown(
                 '**Colors:** Selecting log scale will also update the '
@@ -155,13 +155,14 @@ class VisLayout(VisBase, ResourceLoader):
         return html.Div(
             html.Div(nodes, className='form-horizontal'),
             className='tab-pane',
-            id=id,
+            id=element_id,
             style={'height': '40vh'})
 
-    def _scatter(self, id, options, active=False, volcano=False, meta=False):
+    def _scatter(self, element_id, options,
+                 active=False, volcano=False, meta=False):
         dropdowns = [
-            _axis_label_dropdown(id, options, 'x', 0),
-            _axis_label_dropdown(id, options, 'y', 1)
+            _axis_label_dropdown(element_id, options, 'x', 0),
+            _axis_label_dropdown(element_id, options, 'y', 1)
         ]
         if meta and self.meta_options:
             dropdowns.append(
@@ -192,7 +193,7 @@ class VisLayout(VisBase, ResourceLoader):
         ]
         nodes = [
             dcc.Graph(
-                id='scatter-{}'.format(id),
+                id='scatter-{}'.format(element_id),
                 style={
                     'height': '33vh',
                     'width': '45vw'
@@ -206,7 +207,7 @@ class VisLayout(VisBase, ResourceLoader):
         className = 'tab-pane'
         if active:
             className += ' active'
-        return html.Div(nodes, className=className, id=id)
+        return html.Div(nodes, className=className, id=element_id)
 
 
 def _form_group_div(content):
@@ -220,20 +221,20 @@ def _lv_pairs(opts):
     ]
 
 
-def _label_dropdown(label, id, options):
+def _label_dropdown(label, element_id, options):
     # Returns a two element list
     return [
         html.Label([label],
                    className='col-xs-1 control-label'),
         dcc.Dropdown(
-            id=id,
+            id=element_id,
             options=options,
             className='col-xs-5'
         )
     ]
 
 
-def _axis_label_dropdown(id, options, axis, axis_index):
+def _axis_label_dropdown(element_id, options, axis, axis_index):
     if options:
         value = options[axis_index]['value']
     else:
@@ -245,7 +246,7 @@ def _axis_label_dropdown(id, options, axis, axis_index):
                 className='col-xs-1 control-label'
             ),
             dcc.Dropdown(
-                id='scatter-{}-{}-axis-select'.format(id, axis),
+                id='scatter-{}-{}-axis-select'.format(element_id, axis),
                 options=options,
                 value=value,
                 className='col-xs-5'
@@ -254,10 +255,10 @@ def _axis_label_dropdown(id, options, axis, axis_index):
     )
 
 
-def _iframe(id):
+def _iframe(element_id):
     return html.Div([
         html.Br(),
-        html.Iframe(id=id + '-iframe',
+        html.Iframe(id=element_id + '-iframe',
                     srcDoc='First select a subset')
         # or
         #   dcc.Graph(id='gene-table',
@@ -265,7 +266,7 @@ def _iframe(id):
         #   (but that's slow)
         # or
         #   https://community.plot.ly/t/display-tables-in-dash/4707/13
-    ], className='tab-pane', id=id)
+    ], className='tab-pane', id=element_id)
 
 
 def _class_from_index(i):

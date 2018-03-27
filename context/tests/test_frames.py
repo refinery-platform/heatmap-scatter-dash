@@ -207,9 +207,9 @@ class SortByVariance(TestDataFrames):
             columns=['c1', 'c2', 'c3', 'c4'],
             index=['r1', 'r2', 'r3', 'r4']
         )
-        sorted = sort_by_variance(dataframe)
+        by_variance = sort_by_variance(dataframe)
         self.assertEqualDataFrames(
-            sorted,
+            by_variance,
             pandas.DataFrame([
                 [8, 4, 8, 5],
                 [2, 4, 2, 5],

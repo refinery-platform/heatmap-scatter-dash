@@ -4,9 +4,9 @@ from math import log2
 from plotly.figure_factory.utils import label_rgb, n_colors, unlabel_rgb
 
 
-def _hex_to_rgb(hex):
-    assert re.fullmatch('#[0-9A-F]{6}', hex)
-    rgb = [str(int(hex[i:i + 2], 16)) for i in (1, 3, 5)]
+def _hex_to_rgb(hex_rgb):
+    assert re.fullmatch('#[0-9A-F]{6}', hex_rgb)
+    rgb = [str(int(hex_rgb[i:i + 2], 16)) for i in (1, 3, 5)]
     return 'rgb({})'.format(','.join(rgb))
 
 

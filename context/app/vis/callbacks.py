@@ -57,25 +57,25 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             {key: args[i] for (i, key) in enumerate(keys)}
         ))
 
-    def _search_to_ids_json(self, input):
-        ids = self._genes_index.search(input)
+    def _search_to_ids_json(self, search_input):
+        ids = self._genes_index.search(search_input)
         return json.dumps(ids)
 
-    def _scatter_to_gene_ids_json(self, input):
+    def _scatter_to_gene_ids_json(self, scatter_input):
         ids = list({
-            x['text']
-            for x in input['points']
-        }) if input else self._genes
+                       x['text']
+                       for x in scatter_input['points']
+                       }) if scatter_input else self._genes
         return json.dumps(ids)
 
-    def _scatter_to_condition_ids_json(self, input):
+    def _scatter_to_condition_ids_json(self, scatter_input):
         ids = list({
-            x['text']
-            for x in input['points']
-        }) if input else self._conditions
+                       x['text']
+                       for x in scatter_input['points']
+                       }) if scatter_input else self._conditions
         return json.dumps(ids)
 
-    def _update_timestamp(self, input):
+    def _update_timestamp(self, unused_input):
         return time.time()
 
     def _pick_latest(self, *timestamps_and_states):
@@ -179,13 +179,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             dataframe.to_html()
         )
 
-    def _list_html(self, list):
+    def _list_html(self, dataframe_list):
         """
         Given a dataframe,
         returns the indexes of the dataframe as a single column html table.
         """
         return self._css_url_html() + _remove_rowname_header(
-            pandas.DataFrame(list).to_html(
+            pandas.DataFrame(dataframe_list).to_html(
                 index=False
             )
         )
