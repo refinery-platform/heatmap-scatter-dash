@@ -3,13 +3,13 @@ import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
 
-def figure_output(id):
-    return Output(id, 'figure')
+def figure_output(element_id):
+    return Output(element_id, 'figure')
 
 
-def scatter_inputs(id, scale_select=False, meta_select=False):
+def scatter_inputs(element_id, scale_select=False, meta_select=False):
     inputs = [
-        Input('scatter-{}-{}-axis-select'.format(id, axis), 'value')
+        Input('scatter-{}-{}-axis-select'.format(element_id, axis), 'value')
         for axis in ['x', 'y']
     ]
     if scale_select:
