@@ -13,7 +13,7 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
-                     [--diffs CSV [CSV ...]] [--meta CSV]
+                     [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
                      [--most_variable_rows ROWS] [--port PORT] [--profile]
                      [--html_error] [--debug] [--api_prefix PREFIX]
 
@@ -33,7 +33,8 @@ optional arguments:
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
-  --meta CSV            Read CSV or TSV files containing metadata: Row labels
+  --metas CSV [CSV ...]
+                        Read CSV or TSV files containing metadata: Row labels
                         should match column headers of the raw data.
   --most_variable_rows ROWS
                         For the heatmap, we first sort by row variance, and
@@ -56,6 +57,30 @@ Refinery/Developer:
 
 ## Getting Started
 
+### Docker
+
+If you have Docker installed, and data available at public URLs,
+this is the easiest way to get started:
+
+```bash
+$ V=v0.1.5
+$ FIXTURES=https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/$V/fixtures/good/data
+$ docker run --name heatmap --detach --publish 8888:80 \
+  -e "FILE_URLS=$FIXTURES/counts.csv $FIXTURES/counts-copy.csv.gz" \
+  mccalluc/heatmap_scatter_dash:$V
+```
+
+Then visit [http://localhost:8888](http://localhost:8888).
+
+If multiple URLs are desired, use spaces in the value
+of the environment variables, as in the example.
+Besides providing count data, you can also specify
+`DIFF_URLS` for differential expression data and
+`META_URLS` for metadata.
+
+
+### From Source
+
 Check out the project and install dependencies:
 ```bash
   # Requires Python3:
@@ -65,7 +90,7 @@ $ cd heatmap-scatter-dash
 $ pip install -r context/requirements-freeze.txt
 ```
 
-To run it locally:
+Then run it locally:
 
 ```bash
 $ cd context
@@ -80,21 +105,6 @@ $ ./app_runner.py --files ../fixtures/good/data/counts.csv \
 ```
 
 and visit `http://localhost:8050/`.
-
-To run it on AWS:
-
-```bash
-$ cd context
-$ mkdir data
-
-  # AWS needs to know where to create your resources.
-  # This will fail if your AWS credentials are not in place.
-$ eb init
-
-$ ./app_runner_aws.py --name demo --files ../fixtures/good/data/counts.csv --diffs ../fixtures/good/data/stats-*
-```
-
-After a few minutes, the server will start and the URL to visit will be displayed.
 
 ## Testing
 

@@ -12,14 +12,14 @@ class ResourceLoader():
         self._css_urls = [
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/css/bootstrap.min.css',
-            '/static/extra.css'
+            'static/extra.css'
         ]
         self._js_urls = [
             'https://code.jquery.com/'
             'jquery-3.1.1.slim.min.js',
             'https://maxcdn.bootstrapcdn.com/'
             'bootstrap/3.3.7/js/bootstrap.min.js',
-            '/static/extra.js'
+            'static/extra.js'
         ]
 
         for url in self._css_urls:

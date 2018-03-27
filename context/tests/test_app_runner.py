@@ -15,7 +15,7 @@ class TestAppRunnerRefinery(unittest.TestCase):
         with self.assertRaises(SystemExit):
             app_runner_refinery.arg_parser().parse_args()
 
-    @patch.object(app_runner_refinery.RunnerArgs, '_download_files')
+    @patch.object(app_runner_refinery, '_download_files')
     @patch.object(app_runner, 'init')
     def test_with_input(self, mock_init, mock_download):
         path = relative_path(__file__, '../../fixtures/good/input.json')
