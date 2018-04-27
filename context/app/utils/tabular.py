@@ -1,5 +1,5 @@
 import warnings
-from csv import excel_tab, Sniffer
+from csv import Sniffer, excel_tab
 
 from pandas import read_csv
 
