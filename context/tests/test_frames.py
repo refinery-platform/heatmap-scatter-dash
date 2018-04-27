@@ -1,7 +1,6 @@
 import tempfile
 import unittest
 from io import StringIO
-from unittest import skip
 
 import numpy as np
 import pandas
@@ -41,28 +40,18 @@ class TestCenterAndScale(TestDataFrames):
 
 class TestTabularParser(TestDataFrames):
 
-    def setUp(self):
-        self.target = pandas.DataFrame([
+    def assert_file_read(self, input_text, message=None):
+        file = tempfile.NamedTemporaryFile(mode='wb+')
+        file.write(input_text)
+        file.seek(0)
+        dfs = file_dataframes([file])
+        target = pandas.DataFrame([
             [2, 3]],
             columns=['b', 'c'],
             index=[1]
         )
+        self.assertEqualDataFrames(dfs[0], target, message)
 
-    def assert_file_read(self, input_text, message=None):
-        file = tempfile.NamedTemporaryFile(mode=self.mode)
-        file.write(input_text)
-        file.seek(0)
-        dfs = file_dataframes([file])
-        self.assertEqualDataFrames(dfs[0], self.target, message)
-
-
-class TestTabularParserBytes(TestTabularParser):
-
-    def setUp(self):
-        super().setUp()
-        self.mode = 'wb+'
-
-    @skip  # TODO: Why does this fail, when the string version works?
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
             self.assert_file_read(
