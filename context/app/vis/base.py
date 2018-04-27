@@ -1,7 +1,9 @@
+from collections import defaultdict
+
 import dash
 import pandas
 
-from app.utils.frames import center_and_scale_rows
+from app.utils.frames import center_and_scale_rows, correlations
 from app.utils.pca import pca
 from app.utils.profiler import null_profiler
 from app.utils.search import SimpleIndex
@@ -30,6 +32,8 @@ class VisBase():
         self._conditions = self._union_dataframe.axes[1].tolist()
         self._genes = self._union_dataframe.axes[0].tolist()
         self._metas = self._meta_dataframe.axes[1].tolist()
+
+        self._correlations = correlations(self._union_dataframe)
 
         self._genes_index = SimpleIndex()
         self._profiler = profiler

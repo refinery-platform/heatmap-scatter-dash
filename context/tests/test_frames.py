@@ -4,10 +4,11 @@ from io import StringIO
 from unittest import skip
 
 import numpy as np
+from numpy import nan
 import pandas
 
 from app.utils.frames import (center_and_scale_rows, find_index, merge,
-                              sort_by_variance)
+                              sort_by_variance, correlations)
 from app.utils.vulcanize import vulcanize
 from app_runner import file_dataframes
 
@@ -38,6 +39,26 @@ class TestCenterAndScale(TestDataFrames):
             scaled_df
         )
 
+
+class TestCorrelations(TestDataFrames):
+
+    def test_correlations(self):
+        df = pandas.DataFrame([
+            [1, -2, 3, 0],
+            [2, 0, 2, 0],
+            [3, 2, 1, 0]
+        ], columns=['a', 'b', 'c', 'd'])
+        corr = correlations(df)
+        # If you assert equality on the whole matrix, diff is truncated.
+        # nan != nan, so we need to compare strings instead of values.
+        self.assertEqual(str(corr['a']),
+                         str({'a': 1.0, 'b': 1.0, 'c': -1.0, 'd': nan}))
+        self.assertEqual(str(corr['b']),
+                         str({'a': 1.0, 'b': 1.0, 'c': -1.0, 'd': nan}))
+        self.assertEqual(str(corr['c']),
+                         str({'a': -1.0, 'b': -1.0, 'c': 1.0, 'd': nan}))
+        self.assertEqual(str(corr['d']),
+                         str({'a': nan, 'b': nan, 'c': nan, 'd': nan}))
 
 class TestTabularParser(TestDataFrames):
 

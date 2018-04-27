@@ -1,4 +1,7 @@
+from collections import defaultdict
+
 import pandas
+from scipy.stats.stats import pearsonr
 
 
 def merge(frames):
@@ -59,3 +62,15 @@ def center_and_scale_rows(df):
     subtract the row mean, and divide by the row standard deviation."""
     centered = df.sub(df.mean(axis=1), axis=0)
     return centered.div(centered.std(axis=1), axis=0)
+
+
+def correlations(df):
+    conditions = df.axes[1].tolist()
+    correlations = defaultdict(dict)
+    for x in conditions:
+        for y in conditions:
+            x_col = df[x]
+            y_col = df[y]
+            correlation = pearsonr(x_col, y_col)[0]
+            correlations[x][y] = correlation
+    return correlations
