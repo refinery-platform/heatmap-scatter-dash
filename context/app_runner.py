@@ -121,10 +121,42 @@ def main(args, parser=None):
                 '<html><head><title>error</title></head><body><pre>' +
                 html.escape(error_str) +
                 '</pre></body></html>')
+
         app.run(
             port=args.port,
             host='0.0.0.0'
         )
+    # except Exception as e:
+    #     # Big try-blocks are usually to be avoided...
+    #     # but here, we want to be sure that some server comes up
+    #     # and returns a 200, so that django-proxy knows to stop waiting,
+    #     # and the end-user can see the error.
+    #     if not args.html_error:
+    #         raise Exception(e)
+    #     app = Flask('error-page')
+    #     error_str = ''.join(
+    #         traceback.TracebackException.from_exception(e).format()
+    #     )
+    #     warn(error_str)
+    #
+    #     @app.route("/")
+    #     def error_page():
+    #         return '''
+    #             <html><head><title>Error</title></head><body>
+    #             <p>An error has occurred: There may be a problem with the
+    #             input provided. To report a bug, please copy this page and
+    #             paste it in a <a href="{url}">bug report</a>. Thanks!</p>
+    #             <pre>{args}</pre>
+    #             <pre>{stack}</pre>
+    #             </body></html>'''.format(
+    #                 url='https://github.com/refinery-platform/'
+    #                     'heatmap-scatter-dash/issues',
+    #                 args=html.escape(args),
+    #                 stack=html.escape(error_str))
+    #     app.run(
+    #         port=args.port,
+    #         host='0.0.0.0'
+    #     )
 
 
 def arg_parser():

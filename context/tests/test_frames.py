@@ -56,35 +56,6 @@ class TestTabularParser(TestDataFrames):
         self.assertEqualDataFrames(dfs[0], self.target, message)
 
 
-class TestTabularParserStrings(TestTabularParser):
-
-    def setUp(self):
-        super().setUp()
-        self.mode = 'w+'
-
-    def test_read_csv(self):
-        self.assert_file_read(',b,c\n1,2,3')
-
-    def test_read_csv_rn(self):
-        self.assert_file_read(',b,c\r\n1,2,3')
-
-    def test_read_csv_quoted(self):
-        self.assert_file_read(',"b","c"\n"1","2","3"')
-
-    def test_read_tsv(self):
-        self.assert_file_read('\tb\tc\n1\t2\t3')
-
-    def test_read_crazy_delimiters(self):
-        for c in '~!@#$%^&*|:;':
-            self.assert_file_read(
-                '{0}b{0}c\n1{0}2{0}3'.format(c),
-                'Failed with {} as delimiter'.format(c))
-
-    def test_read_gct(self):
-        self.assert_file_read(
-            '#1.2\n1\t1\nNames\tDescription\tb\tc\n1\tfoo\t2\t3')
-
-
 class TestTabularParserBytes(TestTabularParser):
 
     def setUp(self):
@@ -97,10 +68,6 @@ class TestTabularParserBytes(TestTabularParser):
             self.assert_file_read(
                 bytes('{0}b{0}c\n1{0}2{0}3'.format(c), 'utf-8'),
                 'Failed with {} as delimiter'.format(c))
-
-    def test_read_csv(self):
-        # Just a sanity check
-        self.assert_file_read(b',b,c\n1,2,3')
 
     # Easier just to make the data on the commandline
     # than to create it inside python:
@@ -115,6 +82,22 @@ class TestTabularParserBytes(TestTabularParser):
         self.assert_file_read(
             b'PK\x03\x04\n\x00\x00\x00\x00\x00\x8dZML\xfb\x9a\xc9\xa6\n\x00\x00\x00\n\x00\x00\x00\x08\x00\x1c\x00fake.csvUT\t\x00\x03J\x10\x83Zk\x11\x83Zux\x0b\x00\x01\x04\xf6\x01\x00\x00\x04\x14\x00\x00\x00,b,c\n1,2,3PK\x01\x02\x1e\x03\n\x00\x00\x00\x00\x00\x8dZML\xfb\x9a\xc9\xa6\n\x00\x00\x00\n\x00\x00\x00\x08\x00\x18\x00\x00\x00\x00\x00\x01\x00\x00\x00\xa4\x81\x00\x00\x00\x00fake.csvUT\x05\x00\x03J\x10\x83Zux\x0b\x00\x01\x04\xf6\x01\x00\x00\x04\x14\x00\x00\x00PK\x05\x06\x00\x00\x00\x00\x01\x00\x01\x00N\x00\x00\x00L\x00\x00\x00\x00\x00'  # noqa: E501
         )
+
+    def test_read_csv(self):
+        self.assert_file_read(b',b,c\n1,2,3')
+
+    def test_read_csv_rn(self):
+        self.assert_file_read(b',b,c\r\n1,2,3')
+
+    def test_read_csv_quoted(self):
+        self.assert_file_read(b',"b","c"\n"1","2","3"')
+
+    def test_read_tsv(self):
+        self.assert_file_read(b'\tb\tc\n1\t2\t3')
+
+    def test_read_gct(self):
+        self.assert_file_read(
+            b'#1.2\n1\t1\nNames\tDescription\tb\tc\n1\tfoo\t2\t3')
 
 
 class TestMerge(TestDataFrames):

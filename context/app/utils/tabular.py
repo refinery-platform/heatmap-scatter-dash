@@ -25,7 +25,7 @@ def parse(file, col_zero_index=True):
         # We could use read_csv with separator=None...
         # but that requires the python parser, which seems to be about
         # three times as slow as the c parser.
-        first_line = str(file.readline())
+        first_line = file.readline().decode('latin-1')
         is_gct = first_line.startswith('#1.2')
         if is_gct:
             # GCT: throw away the second header line
