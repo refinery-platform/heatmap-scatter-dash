@@ -97,62 +97,61 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             label_rows_mode,
             label_cols_mode,
             row_scaling_mode):
-        with self._profiler():
-            selected_conditions = (
-                json.loads(selected_conditions_ids_json)
-                or self._conditions)
-            base_df = self._scale_dataframe(row_scaling_mode)
-            selected_conditions_df = base_df[selected_conditions]
-            selected_conditions_genes_df = self._filter_by_gene_ids_json(
-                selected_conditions_df,
-                selected_gene_ids_json
+        selected_conditions = (
+            json.loads(selected_conditions_ids_json)
+            or self._conditions)
+        base_df = self._scale_dataframe(row_scaling_mode)
+        selected_conditions_df = base_df[selected_conditions]
+        selected_conditions_genes_df = self._filter_by_gene_ids_json(
+            selected_conditions_df,
+            selected_gene_ids_json
+        )
+        truncated_dataframe = (
+            sort_by_variance(selected_conditions_genes_df)
+            .head(self._most_variable_rows)
+            if self._most_variable_rows else selected_conditions_genes_df
+        )
+        cluster_dataframe = cluster(
+            truncated_dataframe,
+            cluster_rows=(cluster_rows == 'cluster'),
+            cluster_cols=(cluster_cols == 'cluster'))
+
+        show_genes = (len(cluster_dataframe.index.tolist()) < 40
+                      and label_rows_mode == 'auto') or \
+            label_rows_mode == 'always'
+        show_conditions = label_cols_mode in ['always', 'auto']
+
+        # With a proportional font, this is only an estimate.
+        char_width = 10
+
+        if show_genes:
+            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            left_margin = row_max * char_width
+        else:
+            left_margin = 75
+
+        if show_conditions:
+            col_max = max([len(s) for s in list(cluster_dataframe)])
+            bottom_margin = col_max * char_width
+        else:
+            bottom_margin = 10
+
+        return {
+            'data': [
+                self._heatmap(cluster_dataframe,
+                              is_log_scale=(scale == 'log'),
+                              palette=palettes[palette])
+            ],
+            'layout': go.Layout(
+                xaxis={'ticks': '', 'showticklabels': show_conditions,
+                       'tickangle': 90},
+                yaxis={'ticks': '', 'showticklabels': show_genes},
+                margin={'l': left_margin,
+                        'b': bottom_margin,
+                        't': 30,  # so infobox on hover is not truncated
+                        'r': 0}
             )
-            truncated_dataframe = (
-                sort_by_variance(selected_conditions_genes_df)
-                .head(self._most_variable_rows)
-                if self._most_variable_rows else selected_conditions_genes_df
-            )
-            cluster_dataframe = cluster(
-                truncated_dataframe,
-                cluster_rows=(cluster_rows == 'cluster'),
-                cluster_cols=(cluster_cols == 'cluster'))
-
-            show_genes = (len(cluster_dataframe.index.tolist()) < 40
-                          and label_rows_mode == 'auto') or \
-                label_rows_mode == 'always'
-            show_conditions = label_cols_mode in ['always', 'auto']
-
-            # With a proportional font, this is only an estimate.
-            char_width = 10
-
-            if show_genes:
-                row_max = max([len(s) for s in list(cluster_dataframe.index)])
-                left_margin = row_max * char_width
-            else:
-                left_margin = 75
-
-            if show_conditions:
-                col_max = max([len(s) for s in list(cluster_dataframe)])
-                bottom_margin = col_max * char_width
-            else:
-                bottom_margin = 10
-
-            return {
-                'data': [
-                    self._heatmap(cluster_dataframe,
-                                  is_log_scale=(scale == 'log'),
-                                  palette=palettes[palette])
-                ],
-                'layout': go.Layout(
-                    xaxis={'ticks': '', 'showticklabels': show_conditions,
-                           'tickangle': 90},
-                    yaxis={'ticks': '', 'showticklabels': show_genes},
-                    margin={'l': left_margin,
-                            'b': bottom_margin,
-                            't': 30,  # so infobox on hover is not truncated
-                            'r': 0}
-                )
-            }
+        }
 
     def _heatmap(self, dataframe, is_log_scale, palette):
         if is_log_scale:
@@ -177,6 +176,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         """
         return self._css_url_html() + _remove_rowname_header(
             dataframe.to_html()
+            #'<pre>' + dataframe.to_string() + '</pre>'
         )
 
     def _list_html(self, dataframe_list):
@@ -188,6 +188,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             pandas.DataFrame(dataframe_list).to_html(
                 index=False
             )
+            # '<pre>' + pandas.DataFrame(dataframe_list).to_string(
+            #     index=False
+            # ) + '</pre>'
         )
         # Would prefer something like:
         #   dataframe.to_html(max_cols=0)

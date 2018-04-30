@@ -3,7 +3,6 @@ import pandas
 
 from app.utils.frames import center_and_scale_rows
 from app.utils.pca import pca
-from app.utils.profiler import null_profiler
 from app.utils.search import SimpleIndex
 
 
@@ -17,8 +16,7 @@ class VisBase():
                  api_prefix=None,
                  debug=False,
                  server=None,
-                 url_base_pathname=None,
-                 profiler=null_profiler):
+                 url_base_pathname=None):
         self._most_variable_rows = most_variable_rows
 
         self._union_dataframe = union_dataframe
@@ -32,7 +30,6 @@ class VisBase():
         self._metas = self._meta_dataframe.axes[1].tolist()
 
         self._genes_index = SimpleIndex()
-        self._profiler = profiler
         for gene in self._genes:
             self._genes_index.add(gene)
         self._debug = debug

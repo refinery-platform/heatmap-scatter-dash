@@ -8,9 +8,10 @@ from warnings import warn
 import numpy as np
 import pandas
 from flask import Flask, send_from_directory
+from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.help.help_app import HelpApp
-from app.utils import profiler, tabular
+from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -38,66 +39,62 @@ def demo_dataframes(rows, cols, metas):
 
 
 def init(args, parser):  # TODO: Why is parser here?
-    profile_manager = (
-        profiler.active_profiler
-        if args.profile
-        else profiler.null_profiler
+    if args.files:
+        dataframes = file_dataframes(args.files)
+        meta_dataframes = file_dataframes(args.metas)
+    elif args.demo:
+        (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
+    else:
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
+
+    union_dataframe = merge(dataframes)
+    genes = set(union_dataframe.index.tolist())
+    if args.diffs:
+        diff_dataframes = {}
+        for diff_file in args.diffs:
+            diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
+            key = basename(diff_file.name)
+            value = vulcanize(find_index(diff_dataframe, genes))
+            diff_dataframes[key] = value
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
+
+    union_meta_dataframe = merge(meta_dataframes)
+
+    server = Flask(__name__, static_url_path='')
+
+    server.route('/static/<path:path>')(
+        lambda path: send_from_directory('app/static', path)
     )
-    with profile_manager():
-        if args.files:
-            dataframes = file_dataframes(args.files)
-            meta_dataframes = file_dataframes(args.metas)
-        elif args.demo:
-            (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
-        else:
-            # Argparser validation should keep us from reaching this point.
-            raise Exception('Either "demo" or "files" is required')
 
-        union_dataframe = merge(dataframes)
-        genes = set(union_dataframe.index.tolist())
-        if args.diffs:
-            diff_dataframes = {}
-            for diff_file in args.diffs:
-                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                key = basename(diff_file.name)
-                value = vulcanize(find_index(diff_dataframe, genes))
-                diff_dataframes[key] = value
-        else:
-            diff_dataframes = {
-                'No differential files given': pandas.DataFrame()
-            }
-
-        union_meta_dataframe = merge(meta_dataframes)
-
-        server = Flask(__name__, static_url_path='')
-
-        server.route('/static/<path:path>')(
-            lambda path: send_from_directory('app/static', path)
-        )
-
-        # TODO: Just calling constructor shouldn't do stuff.
-        VisCallbacks(
-            server=server,
-            url_base_pathname='/',
-            union_dataframe=union_dataframe,
-            diff_dataframes=diff_dataframes,
-            meta_dataframe=union_meta_dataframe,
-            api_prefix=args.api_prefix,
-            debug=args.debug,
-            most_variable_rows=args.most_variable_rows,
-            profiler=profile_manager
-        )
-        HelpApp(
-            server=server,
-            url_base_pathname='/help',
-        )
-        return server
+    # TODO: Just calling constructor shouldn't do stuff.
+    VisCallbacks(
+        server=server,
+        url_base_pathname='/',
+        union_dataframe=union_dataframe,
+        diff_dataframes=diff_dataframes,
+        meta_dataframe=union_meta_dataframe,
+        api_prefix=args.api_prefix,
+        debug=args.debug,
+        most_variable_rows=args.most_variable_rows,
+    )
+    HelpApp(
+        server=server,
+        url_base_pathname='/help',
+    )
+    return server
 
 
 def main(args, parser=None):
     try:
-        server = init(args=args, parser=parser)
-        server.run(
+        app = init(args=args, parser=parser)
+        if args.profile:
+            app.wsgi_app = ProfilerMiddleware(app.wsgi_app,
+                                              profile_dir=args.profile)
+        app.run(
             debug=args.debug,
             port=args.port,
             host='0.0.0.0'
@@ -170,8 +167,9 @@ def arg_parser():
         'and/or they are used when the tool is embedded in Refinery.')
 
     group.add_argument(
-        '--profile', action='store_true',
-        help='Log profiling data on startup and with each callback.')
+        '--profile', nargs='?', type=str, default='/tmp', metavar='DIR',
+        help='Saves a profile for each request in the specified directory, '
+             '"/tmp" by default. Profiles can be viewed with snakeviz.')
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '
