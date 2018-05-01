@@ -17,7 +17,8 @@ class VisBase():
                  debug=False,
                  server=None,
                  url_base_pathname=None,
-                 html_table=False):
+                 html_table=False,
+                 truncate_table=None):
         self._most_variable_rows = most_variable_rows
 
         self._union_dataframe = union_dataframe
@@ -35,6 +36,7 @@ class VisBase():
             self._genes_index.add(gene)
         self._debug = debug
         self._html_table = html_table
+        self._truncate_table = truncate_table
         self.app = dash.Dash(server=server,
                              url_base_pathname=url_base_pathname)
         if api_prefix:

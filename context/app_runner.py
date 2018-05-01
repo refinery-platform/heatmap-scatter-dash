@@ -81,7 +81,8 @@ def init(args, parser):  # TODO: Why is parser here?
         api_prefix=args.api_prefix,
         debug=args.debug,
         most_variable_rows=args.most_variable_rows,
-        html_table=args.html_table
+        html_table=args.html_table,
+        truncate_table=args.truncate_table
     )
     HelpApp(
         server=server,
@@ -177,8 +178,12 @@ def arg_parser():
     parser.add_argument(
         '--html_table', action='store_true',
         help='The default is to use pre-formatted text for the tables. '
-             'HTML tables are available, but are twice as slow.'
-    )
+             'HTML tables are available, but are twice as slow.')
+
+    parser.add_argument(
+        '--truncate_table', type=int, default=None, metavar='N',
+        help='Truncate the table to the first N rows. Table rendering is '
+             'often a bottleneck. Default is not to truncate.')
 
     parser.add_argument(
         '--port', type=int, default=8050,

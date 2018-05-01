@@ -174,7 +174,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         Given a dataframe,
         returns either a preformatted block or an html table.
         """
-        return self._css_url_html() + (
+        if self._truncate_table and dataframe.shape[0] > self._truncate_table:
+            dataframe = dataframe.head(self._truncate_table)
+            warning = '<p>Limited to the first {} rows.</p>'.format(
+                self._truncate_table)
+        else:
+            warning = ''
+        return self._css_url_html() + warning + (
             _remove_rowname_header(dataframe.to_html())
             if self._html_table
             else '<pre>{}</pre>'.format(dataframe.to_string())
