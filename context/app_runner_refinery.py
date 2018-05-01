@@ -27,6 +27,7 @@ class RunnerArgs():
         for k, v in vars(defaults).items():
             setattr(self, k, v)
         self.demo = False
+        self.http_error = True
         self.port = refinery_args.port
 
         input_json = self._get_input_json(refinery_args.input)

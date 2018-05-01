@@ -1,5 +1,5 @@
 import warnings
-from csv import Sniffer
+from csv import Sniffer, excel_tab
 
 from pandas import read_csv
 
@@ -25,10 +25,16 @@ def parse(file, col_zero_index=True):
         # We could use read_csv with separator=None...
         # but that requires the python parser, which seems to be about
         # three times as slow as the c parser.
-        first_line = str(file.readline())
-        dialect = Sniffer().sniff(first_line)
-        # print('"{}" -> "{}"'.format(first_line, dialect.delimiter))
-        file.seek(0)
+        first_line = file.readline().decode('latin-1')
+        is_gct = first_line.startswith('#1.2')
+        if is_gct:
+            # GCT: throw away the second header line
+            file.readline()
+            dialect = excel_tab
+        else:
+            dialect = Sniffer().sniff(first_line)
+            # print('"{}" -> "{}"'.format(first_line, dialect.delimiter))
+            file.seek(0)
         with warnings.catch_warnings():
             # https://github.com/pandas-dev/pandas/issues/18845
             # pandas raises unnecessary warnings.
@@ -38,4 +44,7 @@ def parse(file, col_zero_index=True):
                 index_col=index_col,
                 dialect=dialect
             )
+        if is_gct:
+            dataframe.drop(columns=['Description'], inplace=True)
+            # TODO: Combine the first two columns?
     return dataframe
