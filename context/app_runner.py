@@ -11,6 +11,7 @@ import pandas
 from flask import Flask, send_from_directory
 from werkzeug.contrib.profiler import ProfilerMiddleware
 
+from app.download.download_app import DownloadApp
 from app.help.help_app import HelpApp
 from app.utils import tabular
 from app.utils.frames import find_index, merge
@@ -87,6 +88,11 @@ def init(args, parser):  # TODO: Why is parser here?
     HelpApp(
         server=server,
         url_base_pathname='/help',
+    )
+    DownloadApp(
+        server=server,
+        url_base_pathname='/download',
+        dataframe=union_dataframe
     )
     return server
 
