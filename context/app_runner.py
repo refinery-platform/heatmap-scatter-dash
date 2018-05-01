@@ -2,7 +2,8 @@
 import argparse
 import html
 import traceback
-from os.path import basename
+from os import makedirs
+from os.path import abspath, basename
 from warnings import warn
 
 import numpy as np
@@ -92,8 +93,10 @@ def main(args, parser=None):
     try:
         app = init(args=args, parser=parser)
         if args.profile:
+            abs_profile_path = abspath(args.profile)
+            makedirs(abs_profile_path, exist_ok=True)
             app.wsgi_app = ProfilerMiddleware(app.wsgi_app,
-                                              profile_dir=args.profile)
+                                              profile_dir=abs_profile_path)
         app.run(
             debug=args.debug,
             port=args.port,
