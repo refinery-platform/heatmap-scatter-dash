@@ -9,10 +9,11 @@ class DownloadApp():
                  server=None,
                  url_base_pathname=None,
                  dataframe=None):
-        @server.route(url_base_pathname)
+        @server.route(url_base_pathname, methods=['POST'])
         def download():
             # TODO: Stream it, rather than holding the whole thing in memory.
             # http://flask.pocoo.org/docs/1.0/patterns/streaming/
+            # ... but only if we actually see a problem.
 
             response = make_response(dataframe.to_csv())
             response.headers.set('Content-Type', 'text/csv')
