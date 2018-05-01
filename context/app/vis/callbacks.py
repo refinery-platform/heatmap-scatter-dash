@@ -4,7 +4,6 @@ import re
 import time
 from urllib.parse import parse_qs, urlencode, urlparse
 
-import pandas
 import plotly.graph_objs as go
 from dash.dependencies import Input, Output
 
@@ -190,12 +189,12 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             else '<pre>{}</pre>'.format(html.escape(dataframe.to_string()))
         )
 
-    def _list_html(self, list):
+    def _list_html(self, items):
         """
         Given a list,
         wrap it in <pre>.
         """
-        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(list))
+        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(items))
 
     def _css_url_html(self):
         return ''.join([
