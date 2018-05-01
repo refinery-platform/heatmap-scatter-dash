@@ -17,6 +17,11 @@ td, th {
 	border: none;
 	padding: 0 5px;
 }
+/* Or the same, for preformatted: */
+pre {
+	background-color: transparent;
+	border: None;
+}
 
 /* Bring baseline of button closer to that of the text, and space between buttons. */
 .nav-tabs > .btn {
