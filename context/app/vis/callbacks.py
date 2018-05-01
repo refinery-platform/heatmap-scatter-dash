@@ -176,7 +176,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         """
         return self._css_url_html() + _remove_rowname_header(
             dataframe.to_html()
-            #'<pre>' + dataframe.to_string() + '</pre>'
+            # '<pre>' + dataframe.to_string() + '</pre>'
         )
 
     def _list_html(self, dataframe_list):
