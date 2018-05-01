@@ -1,6 +1,4 @@
-import io
-
-from flask import send_file, make_response
+from flask import make_response
 
 
 class DownloadApp():

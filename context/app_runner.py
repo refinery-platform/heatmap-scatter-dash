@@ -137,10 +137,10 @@ def main(args, parser=None):
                 <pre>{args}</pre>
                 <pre>{stack}</pre>
                 </body></html>'''.format(
-                    url='https://github.com/refinery-platform/'
-                        'heatmap-scatter-dash/issues',
-                    args=html.escape(args_str),
-                    stack=html.escape(error_str))
+                url='https://github.com/refinery-platform/'
+                'heatmap-scatter-dash/issues',
+                args=html.escape(args_str),
+                stack=html.escape(error_str))
 
         app.run(
             port=args.port,

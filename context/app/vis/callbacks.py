@@ -63,16 +63,16 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 
     def _scatter_to_gene_ids_json(self, scatter_input):
         ids = list({
-                       x['text']
-                       for x in scatter_input['points']
-                       }) if scatter_input else self._genes
+            x['text']
+            for x in scatter_input['points']
+        }) if scatter_input else self._genes
         return json.dumps(ids)
 
     def _scatter_to_condition_ids_json(self, scatter_input):
         ids = list({
-                       x['text']
-                       for x in scatter_input['points']
-                       }) if scatter_input else self._conditions
+            x['text']
+            for x in scatter_input['points']
+        }) if scatter_input else self._conditions
         return json.dumps(ids)
 
     def _update_timestamp(self, unused_input):
@@ -180,7 +180,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         if dataframe.empty:
             return ''
         download = '<p><form method="POST" action="download">' \
-                    '<input type="submit" value="Download All"></form></p>'
+            '<input type="submit" value="Download All"></form></p>'
         if self._truncate_table and dataframe.shape[0] > self._truncate_table:
             dataframe = dataframe.head(self._truncate_table)
             warning = '<p>Limited to the first {} rows.</p>'.format(
