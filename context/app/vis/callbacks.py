@@ -1,3 +1,4 @@
+import html
 import json
 import re
 import time
@@ -174,6 +175,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         Given a dataframe,
         returns either a preformatted block or an html table.
         """
+        # NOTE: There is a different truncated_dataframe for the heatmap.
+        # That is 500 rows by default, corresponding to a typical pixel height.
+        # The truncation here could be plausibly more or less.
         if self._truncate_table and dataframe.shape[0] > self._truncate_table:
             dataframe = dataframe.head(self._truncate_table)
             warning = '<p>Limited to the first {} rows.</p>'.format(
@@ -183,8 +187,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         return self._css_url_html() + warning + (
             _remove_rowname_header(dataframe.to_html())
             if self._html_table
-            else '<pre>{}</pre>'.format(dataframe.to_string())
-            # TODO: injection vulnerability
+            else '<pre>{}</pre>'.format(html.escape(dataframe.to_string()))
         )
 
     def _list_html(self, dataframe_list):
