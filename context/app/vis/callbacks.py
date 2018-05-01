@@ -176,8 +176,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         returns either a preformatted block or an html table.
         """
         # NOTE: There is a different truncated_dataframe for the heatmap.
-        # That is 500 rows by default, corresponding to a typical pixel height.
-        # The truncation here could be plausibly more or less.
+        # That is 500 rows by default, corresponding to a typical height in
+        # pixels. The truncation here could be plausibly more or less.
         if self._truncate_table and dataframe.shape[0] > self._truncate_table:
             dataframe = dataframe.head(self._truncate_table)
             warning = '<p>Limited to the first {} rows.</p>'.format(
