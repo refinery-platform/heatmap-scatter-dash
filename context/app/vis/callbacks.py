@@ -190,22 +190,12 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
             else '<pre>{}</pre>'.format(html.escape(dataframe.to_string()))
         )
 
-    def _list_html(self, dataframe_list):
+    def _list_html(self, list):
         """
-        Given a dataframe,
-        returns the indexes of the dataframe as a single column html table.
+        Given a list,
+        wrap it in <pre>.
         """
-        return self._css_url_html() + _remove_rowname_header(
-            pandas.DataFrame(dataframe_list).to_html(
-                index=False
-            )
-            # '<pre>' + pandas.DataFrame(dataframe_list).to_string(
-            #     index=False
-            # ) + '</pre>'
-        )
-        # Would prefer something like:
-        #   dataframe.to_html(max_cols=0)
-        # but that shows all columns, not just the row header.
+        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(list))
 
     def _css_url_html(self):
         return ''.join([
