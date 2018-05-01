@@ -172,11 +172,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
     def _table_html(self, dataframe):
         """
         Given a dataframe,
-        returns the dataframe as an html table.
+        returns either a preformatted block or an html table.
         """
-        return self._css_url_html() + _remove_rowname_header(
-            dataframe.to_html()
-            # '<pre>' + dataframe.to_string() + '</pre>'
+        return self._css_url_html() + (
+            _remove_rowname_header(dataframe.to_html())
+            if self._html_table
+            else '<pre>{}</pre>'.format(dataframe.to_string())
+            # TODO: injection vulnerability
         )
 
     def _list_html(self, dataframe_list):

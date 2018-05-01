@@ -81,6 +81,7 @@ def init(args, parser):  # TODO: Why is parser here?
         api_prefix=args.api_prefix,
         debug=args.debug,
         most_variable_rows=args.most_variable_rows,
+        html_table=args.html_table
     )
     HelpApp(
         server=server,
@@ -172,6 +173,12 @@ def arg_parser():
         '--most_variable_rows', type=int, default=500, metavar='ROWS',
         help='For the heatmap, we first sort by row variance, and then take '
              'the number of rows specified here. Defaults to 500.')
+
+    parser.add_argument(
+        '--html_table', action='store_true',
+        help='The default is to use pre-formatted text for the tables. '
+             'HTML tables are available, but are twice as slow.'
+    )
 
     parser.add_argument(
         '--port', type=int, default=8050,
