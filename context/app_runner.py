@@ -2,15 +2,18 @@
 import argparse
 import html
 import traceback
-from os.path import basename
+from os import makedirs
+from os.path import abspath, basename
 from warnings import warn
 
 import numpy as np
 import pandas
 from flask import Flask, send_from_directory
+from werkzeug.contrib.profiler import ProfilerMiddleware
 
+from app.download.download_app import DownloadApp
 from app.help.help_app import HelpApp
-from app.utils import profiler, tabular
+from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -38,66 +41,71 @@ def demo_dataframes(rows, cols, metas):
 
 
 def init(args, parser):  # TODO: Why is parser here?
-    profile_manager = (
-        profiler.active_profiler
-        if args.profile
-        else profiler.null_profiler
+    if args.files:
+        dataframes = file_dataframes(args.files)
+        meta_dataframes = file_dataframes(args.metas)
+    elif args.demo:
+        (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
+    else:
+        # Argparser validation should keep us from reaching this point.
+        raise Exception('Either "demo" or "files" is required')
+
+    union_dataframe = merge(dataframes)
+    genes = set(union_dataframe.index.tolist())
+    if args.diffs:
+        diff_dataframes = {}
+        for diff_file in args.diffs:
+            diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
+            key = basename(diff_file.name)
+            value = vulcanize(find_index(diff_dataframe, genes))
+            diff_dataframes[key] = value
+    else:
+        diff_dataframes = {
+            'No differential files given': pandas.DataFrame()
+        }
+
+    union_meta_dataframe = merge(meta_dataframes)
+
+    server = Flask(__name__, static_url_path='')
+
+    server.route('/static/<path:path>')(
+        lambda path: send_from_directory('app/static', path)
     )
-    with profile_manager():
-        if args.files:
-            dataframes = file_dataframes(args.files)
-            meta_dataframes = file_dataframes(args.metas)
-        elif args.demo:
-            (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
-        else:
-            # Argparser validation should keep us from reaching this point.
-            raise Exception('Either "demo" or "files" is required')
 
-        union_dataframe = merge(dataframes)
-        genes = set(union_dataframe.index.tolist())
-        if args.diffs:
-            diff_dataframes = {}
-            for diff_file in args.diffs:
-                diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
-                key = basename(diff_file.name)
-                value = vulcanize(find_index(diff_dataframe, genes))
-                diff_dataframes[key] = value
-        else:
-            diff_dataframes = {
-                'No differential files given': pandas.DataFrame()
-            }
-
-        union_meta_dataframe = merge(meta_dataframes)
-
-        server = Flask(__name__, static_url_path='')
-
-        server.route('/static/<path:path>')(
-            lambda path: send_from_directory('app/static', path)
-        )
-
-        # TODO: Just calling constructor shouldn't do stuff.
-        VisCallbacks(
-            server=server,
-            url_base_pathname='/',
-            union_dataframe=union_dataframe,
-            diff_dataframes=diff_dataframes,
-            meta_dataframe=union_meta_dataframe,
-            api_prefix=args.api_prefix,
-            debug=args.debug,
-            most_variable_rows=args.most_variable_rows,
-            profiler=profile_manager
-        )
-        HelpApp(
-            server=server,
-            url_base_pathname='/help',
-        )
-        return server
+    # TODO: Just calling constructor shouldn't do stuff.
+    VisCallbacks(
+        server=server,
+        url_base_pathname='/',
+        union_dataframe=union_dataframe,
+        diff_dataframes=diff_dataframes,
+        meta_dataframe=union_meta_dataframe,
+        api_prefix=args.api_prefix,
+        debug=args.debug,
+        most_variable_rows=args.most_variable_rows,
+        html_table=args.html_table,
+        truncate_table=args.truncate_table
+    )
+    HelpApp(
+        server=server,
+        url_base_pathname='/help',
+    )
+    DownloadApp(
+        server=server,
+        url_base_pathname='/download',
+        dataframe=union_dataframe
+    )
+    return server
 
 
 def main(args, parser=None):
     try:
-        server = init(args=args, parser=parser)
-        server.run(
+        app = init(args=args, parser=parser)
+        if args.profile:
+            abs_profile_path = abspath(args.profile)
+            makedirs(abs_profile_path, exist_ok=True)
+            app.wsgi_app = ProfilerMiddleware(app.wsgi_app,
+                                              profile_dir=abs_profile_path)
+        app.run(
             debug=args.debug,
             port=args.port,
             host='0.0.0.0'
@@ -129,10 +137,10 @@ def main(args, parser=None):
                 <pre>{args}</pre>
                 <pre>{stack}</pre>
                 </body></html>'''.format(
-                    url='https://github.com/refinery-platform/'
-                        'heatmap-scatter-dash/issues',
-                    args=html.escape(args_str),
-                    stack=html.escape(error_str))
+                url='https://github.com/refinery-platform/'
+                'heatmap-scatter-dash/issues',
+                args=html.escape(args_str),
+                stack=html.escape(error_str))
 
         app.run(
             port=args.port,
@@ -174,6 +182,16 @@ def arg_parser():
              'the number of rows specified here. Defaults to 500.')
 
     parser.add_argument(
+        '--html_table', action='store_true',
+        help='The default is to use pre-formatted text for the tables. '
+             'HTML tables are available, but are twice as slow.')
+
+    parser.add_argument(
+        '--truncate_table', type=int, default=None, metavar='N',
+        help='Truncate the table to the first N rows. Table rendering is '
+             'often a bottleneck. Default is not to truncate.')
+
+    parser.add_argument(
         '--port', type=int, default=8050,
         help='Specify a port to run the server on. Defaults to 8050.')
 
@@ -183,8 +201,9 @@ def arg_parser():
         'and/or they are used when the tool is embedded in Refinery.')
 
     group.add_argument(
-        '--profile', action='store_true',
-        help='Log profiling data on startup and with each callback.')
+        '--profile', nargs='?', type=str, default='/tmp', metavar='DIR',
+        help='Saves a profile for each request in the specified directory, '
+             '"/tmp" by default. Profiles can be viewed with snakeviz.')
     group.add_argument(
         '--html_error', action='store_true',
         help='If there is a configuration error, instead of exiting, '

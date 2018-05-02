@@ -85,7 +85,7 @@ class VisLayout(VisBase, ResourceLoader):
                               conditions_options, active=True),
                 self._scatter('volcano',
                               volcano_options, volcano=True),
-                _iframe('table'),
+                _iframe('table', download=True),
                 _iframe('list')
             ], className='tab-content'),
         ]
@@ -155,8 +155,7 @@ class VisLayout(VisBase, ResourceLoader):
         return html.Div(
             html.Div(nodes, className='form-horizontal'),
             className='tab-pane',
-            id=element_id,
-            style={'height': '40vh'})
+            id=element_id)
 
     def _scatter(self, element_id, options,
                  active=False, volcano=False, meta=False):
@@ -255,9 +254,17 @@ def _axis_label_dropdown(element_id, options, axis, axis_index):
     )
 
 
-def _iframe(element_id):
+def _iframe(element_id, download=False):
+    optional_download_form = html.Form([
+        dcc.Input(id=element_id + '-input-genes-json',
+                  type='hidden', name='genes-json'),
+        dcc.Input(id=element_id + '-input-conditions-json',
+                  type='hidden', name='conditions-json'),
+        dcc.Input(type='submit', value='Download')
+    ], method='POST', action='download') if download else ''
     return html.Div([
         html.Br(),
+        optional_download_form,
         html.Iframe(id=element_id + '-iframe',
                     srcDoc='First select a subset')
         # or

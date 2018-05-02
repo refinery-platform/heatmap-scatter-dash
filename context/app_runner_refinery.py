@@ -29,6 +29,7 @@ class RunnerArgs():
         self.demo = False
         self.http_error = True
         self.port = refinery_args.port
+        self.truncate_table = 100
 
         input_json = self._get_input_json(refinery_args.input)
         if input_json:

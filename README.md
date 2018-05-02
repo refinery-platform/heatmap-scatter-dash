@@ -14,7 +14,8 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
                      [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
-                     [--most_variable_rows ROWS] [--port PORT] [--profile]
+                     [--most_variable_rows ROWS] [--html_table]
+                     [--truncate_table N] [--port PORT] [--profile [DIR]]
                      [--html_error] [--debug] [--api_prefix PREFIX]
 
 Light-weight visualization for differential expression
@@ -40,13 +41,21 @@ optional arguments:
                         For the heatmap, we first sort by row variance, and
                         then take the number of rows specified here. Defaults
                         to 500.
+  --html_table          The default is to use pre-formatted text for the
+                        tables. HTML tables are available, but are twice as
+                        slow.
+  --truncate_table N    Truncate the table to the first N rows. Table
+                        rendering is often a bottleneck. Default is not to
+                        truncate.
   --port PORT           Specify a port to run the server on. Defaults to 8050.
 
 Refinery/Developer:
   These parameters will probably only be of interest to developers, and/or
   they are used when the tool is embedded in Refinery.
 
-  --profile             Log profiling data on startup and with each callback.
+  --profile [DIR]       Saves a profile for each request in the specified
+                        directory, "/tmp" by default. Profiles can be viewed
+                        with snakeviz.
   --html_error          If there is a configuration error, instead of exiting,
                         start the server and display an error page.
   --debug               Run the server in debug mode: The server will restart

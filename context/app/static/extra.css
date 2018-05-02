@@ -17,6 +17,11 @@ td, th {
 	border: none;
 	padding: 0 5px;
 }
+/* Or the same, for preformatted: */
+pre {
+	background-color: transparent;
+	border: None;
+}
 
 /* Bring baseline of button closer to that of the text, and space between buttons. */
 .nav-tabs > .btn {
@@ -49,6 +54,10 @@ td, th {
 	opacity: 0;
 	background: no-repeat center url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Ctext x='256' y='256'%3EPlease wait...%3C/text%3E%3C/svg%3E");
 	animation: fadein 0.5s ease-in 0.2s forwards;
+}
+
+.tab-pane {
+	display: block;
 }
 
 /* Slight delay on "Please Wait" to reduce flicker */
