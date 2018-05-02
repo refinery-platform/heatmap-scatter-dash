@@ -155,8 +155,7 @@ class VisLayout(VisBase, ResourceLoader):
         return html.Div(
             html.Div(nodes, className='form-horizontal'),
             className='tab-pane',
-            id=element_id,
-            style={'height': '40vh'})
+            id=element_id)
 
     def _scatter(self, element_id, options,
                  active=False, volcano=False, meta=False):
@@ -258,10 +257,10 @@ def _axis_label_dropdown(element_id, options, axis, axis_index):
 def _iframe(element_id, download=False):
     optional_download_form = html.Form([
         dcc.Input(id=element_id + '-input-genes-json',
-                  name='genes-json'),
+                  type='hidden', name='genes-json'),
         dcc.Input(id=element_id + '-input-conditions-json',
-                  name='conditions-json'),
-        dcc.Input(type='submit', value='Download All')
+                  type='hidden', name='conditions-json'),
+        dcc.Input(type='submit', value='Download')
     ], method='POST', action='download') if download else ''
     return html.Div([
         html.Br(),
