@@ -1,4 +1,6 @@
-from flask import make_response
+import json
+
+from flask import make_response, request
 
 
 class DownloadApp():
@@ -13,7 +15,14 @@ class DownloadApp():
             # http://flask.pocoo.org/docs/1.0/patterns/streaming/
             # ... but only if we actually see a problem.
 
-            response = make_response(dataframe.to_csv())
+            # TODO: Include the metadata rows.
+
+            conditions = json.loads(request.form['conditions-json'])
+            genes = json.loads(request.form['genes-json'])
+
+            filtered_df = dataframe.reindex(genes)[conditions]
+
+            response = make_response(filtered_df.to_csv())
             response.headers.set('Content-Type', 'text/csv')
             response.headers.set(
                 'Content-Disposition', 'attachment', filename='data.csv')

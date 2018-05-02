@@ -31,6 +31,20 @@ class VisGeneCallbacks(VisLayout):
              Input('selected-conditions-ids-json', 'children')]
         )(self._update_gene_table)
 
+        # HTML5 offers the "form" attribute on elements, which lets us
+        # have non-nested forms, but an input can still only belong
+        # to one form... but maybe that's all we need? If so, we could
+        # get rid of these.
+        # https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-form
+        self.app.callback(
+            Output('table-input-genes-json', 'value'),
+            [Input('selected-genes-ids-json', 'children')]
+        )(self._no_change)
+        self.app.callback(
+            Output('table-input-conditions-json', 'value'),
+            [Input('selected-conditions-ids-json', 'children')]
+        )(self._no_change)
+
         self.app.callback(
             Output('list-iframe', 'srcDoc'),
             [Input('selected-genes-ids-json', 'children')]
@@ -150,3 +164,6 @@ class VisGeneCallbacks(VisLayout):
             return dataframe.reindex(selected_gene_ids)
         else:
             return dataframe
+
+    def _no_change(self, ids):
+        return ids

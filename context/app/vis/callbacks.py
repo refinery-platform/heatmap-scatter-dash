@@ -179,15 +179,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         # pixels. The truncation here could be plausibly more or less.
         if dataframe.empty:
             return ''
-        download = '<p><form method="POST" action="download">' \
-            '<input type="submit" value="Download All"></form></p>'
         if self._truncate_table and dataframe.shape[0] > self._truncate_table:
             dataframe = dataframe.head(self._truncate_table)
             warning = '<p>Limited to the first {} rows.</p>'.format(
                 self._truncate_table)
         else:
             warning = ''
-        return self._css_url_html() + download + warning + (
+        return self._css_url_html() + warning + (
             _remove_rowname_header(dataframe.to_html())
             if self._html_table
             else '<pre>{}</pre>'.format(html.escape(dataframe.to_string()))
