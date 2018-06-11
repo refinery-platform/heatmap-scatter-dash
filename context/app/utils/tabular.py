@@ -4,7 +4,7 @@ from csv import Sniffer, excel_tab
 from pandas import read_csv
 
 
-def parse(file, col_zero_index=True):
+def parse(file, col_zero_index=True, keep_strings=False):
     compression_type = {
         b'\x1f\x8b': 'gzip',
         b'\x50\x4b': 'zip'
@@ -47,4 +47,4 @@ def parse(file, col_zero_index=True):
         if is_gct:
             dataframe.drop(columns=['Description'], inplace=True)
             # TODO: Combine the first two columns?
-    return dataframe.select_dtypes(['number'])
+    return dataframe if keep_strings else dataframe.select_dtypes(['number'])
