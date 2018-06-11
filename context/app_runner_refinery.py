@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 import argparse
+import html
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 import os
 import re
 from urllib.parse import urlparse
+from tempfile import mkdtemp
+import traceback
+from warnings import warn
 
 import requests
 
@@ -146,10 +151,37 @@ def arg_parser():
     return parser
 
 
+def error_page(e):
+    error_str = ''.join(
+        traceback.TracebackException.from_exception(e).format()
+    )
+    warn(error_str)
+
+    html_doc = '''
+                <html><head><title>Error</title></head><body>
+                <p>An error has occurred: There may be a problem with the
+                input provided. To report a bug, please copy this page and
+                paste it in a <a href="{url}">bug report</a>. Thanks!</p>
+                <pre>{stack}</pre>
+                </body></html>'''.format(
+        url='https://github.com/refinery-platform/'
+            'heatmap-scatter-dash/issues/new',
+        stack=html.escape(error_str))
+
+    os.chdir(mkdtemp())
+    open('index.html', 'w').write(html_doc)
+
+    httpd = HTTPServer(('', 80), SimpleHTTPRequestHandler)
+    httpd.serve_forever()
+
+
 if __name__ == '__main__':
-    args = RunnerArgs(arg_parser().parse_args())
+    try:
+        args = RunnerArgs(arg_parser().parse_args())
 
-    print('args from {}: {}'.format(__name__, args))
-    assert args.files
+        print('args from {}: {}'.format(__name__, args))
+        assert args.files
 
-    app_runner.main(args)
+        app_runner.main(args)
+    except Exception as e:
+        error_page(e)
