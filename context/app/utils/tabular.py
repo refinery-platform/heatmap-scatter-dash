@@ -47,4 +47,4 @@ def parse(file, col_zero_index=True):
         if is_gct:
             dataframe.drop(columns=['Description'], inplace=True)
             # TODO: Combine the first two columns?
-    return dataframe
+    return dataframe.select_dtypes(['number'])
