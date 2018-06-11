@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 import argparse
 import html
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 import os
 import re
-from urllib.parse import urlparse
-from tempfile import mkdtemp
 import traceback
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from tempfile import mkdtemp
+from urllib.parse import urlparse
 from warnings import warn
 
 import requests
