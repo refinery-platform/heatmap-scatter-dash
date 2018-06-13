@@ -75,6 +75,9 @@ class TestTabularParser(TestDataFrames):
     def test_read_csv(self):
         self.assert_file_read(b',b,c\n1,2,3')
 
+    def test_read_csv_remove_non_numeric(self):
+        self.assert_file_read(b',b,c,xxx\n1,2,3,XXX')
+
     def test_read_csv_rn(self):
         self.assert_file_read(b',b,c\r\n1,2,3')
 

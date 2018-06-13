@@ -55,7 +55,11 @@ def init(args, parser):  # TODO: Why is parser here?
     if args.diffs:
         diff_dataframes = {}
         for diff_file in args.diffs:
-            diff_dataframe = tabular.parse(diff_file, col_zero_index=False)
+            diff_dataframe = tabular.parse(
+                diff_file,
+                col_zero_index=False,
+                keep_strings=True
+            )
             key = basename(diff_file.name)
             value = vulcanize(find_index(diff_dataframe, genes))
             diff_dataframes[key] = value

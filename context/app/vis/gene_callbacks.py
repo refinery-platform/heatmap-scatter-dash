@@ -148,8 +148,11 @@ class VisGeneCallbacks(VisLayout):
             selected_gene_ids_json
         )
         selected_conditions = json.loads(selected_condition_ids_json)
+        body = self._table_html(selected_genes_df[selected_conditions])
+        if self._meta_dataframe.empty:
+            return body
         return self._table_html(self._meta_dataframe.T[selected_conditions]) \
-            + self._table_html(selected_genes_df[selected_conditions])
+            + body
 
     def _update_gene_list(self, selected_genes_ids_json):
         selected_genes_df = self._filter_by_gene_ids_json(
