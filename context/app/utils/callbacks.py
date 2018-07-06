@@ -85,7 +85,13 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
             text=trace['dataframe'].index,
             marker=trace['marker'],
             name=trace['name']
-        ) for trace in trace_defs if not trace['dataframe'].empty
+        ) for trace in trace_defs
+        if not trace['dataframe'].empty
+            # If there are only two samples,
+            # there will be only one principle component.
+            # Might need more messaging to user here?
+            and x_axis in trace['dataframe']
+            and y_axis in trace['dataframe']
     ]
 
 

@@ -196,7 +196,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         Given a list,
         wrap it in <pre>.
         """
-        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(items))
+        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(
+            str(i) for i in items)
+        )
 
     def _css_url_html(self):
         return ''.join([
