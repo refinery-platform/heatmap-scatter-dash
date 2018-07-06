@@ -9,7 +9,7 @@ def vulcanize(dataframe):
     remove all other columns,
     and replace p-value with its negative log.
     """
-    log_fold_col = _pick_col(r'log.*fold.*change', dataframe)
+    log_fold_col = _pick_col(r'\blog[^a-z]', dataframe)
     p_value_col = _pick_col(r'p.*value', dataframe)
     log_p_value_col = '-log10({})'.format(p_value_col)
     dataframe[log_p_value_col] =\
@@ -25,7 +25,10 @@ def _pick_col(name_re, df):
         col for col in df.columns
         if re.search(name_re, col, flags=re.IGNORECASE)
     ]
-    assert len(match_cols) == 1
+    assert len(match_cols) == 1, \
+        'expected one match for /{}/i in {}, got {}'.format(
+            name_re, df.columns.tolist(), match_cols
+    )
     return match_cols[0]
 
 

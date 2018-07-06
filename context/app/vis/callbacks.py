@@ -124,14 +124,19 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         # With a proportional font, this is only an estimate.
         char_width = 10
 
+        # We do not coerce the dataframe indexes to be strings:
+        # Doing so makes no difference to Dash, which still requires
+        # an explicit type="category", and it causes problems in vulcanize.
+        # So we call str() explicitly below.
+
         if show_genes:
-            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            row_max = max([len(str(s)) for s in list(cluster_dataframe.index)])
             left_margin = row_max * char_width
         else:
             left_margin = 75
 
         if show_conditions:
-            col_max = max([len(s) for s in list(cluster_dataframe)])
+            col_max = max([len(str(s)) for s in list(cluster_dataframe)])
             bottom_margin = col_max * char_width
         else:
             bottom_margin = 10
@@ -143,9 +148,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                               palette=palettes[palette])
             ],
             'layout': go.Layout(
-                xaxis={'ticks': '', 'showticklabels': show_conditions,
-                       'tickangle': 90},
-                yaxis={'ticks': '', 'showticklabels': show_genes},
+                xaxis={'ticks': '',
+                       'showticklabels': show_conditions,
+                       'tickangle': 90,
+                       'type': 'category'},
+                yaxis={'ticks': '',
+                       'showticklabels': show_genes,
+                       'type': 'category'},
                 margin={'l': left_margin,
                         'b': bottom_margin,
                         't': 30,  # so infobox on hover is not truncated
@@ -196,7 +205,9 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         Given a list,
         wrap it in <pre>.
         """
-        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(items))
+        return self._css_url_html() + '<pre>{}</pre>'.format('\n'.join(
+            str(i) for i in items)
+        )
 
     def _css_url_html(self):
         return ''.join([
