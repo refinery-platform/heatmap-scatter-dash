@@ -28,7 +28,7 @@ def _pick_col(name_re, df):
     assert len(match_cols) == 1, \
         'expected one match for /{}/i in {}, got {}'.format(
             name_re, df.columns.tolist(), match_cols
-        )
+    )
     return match_cols[0]
 
 
