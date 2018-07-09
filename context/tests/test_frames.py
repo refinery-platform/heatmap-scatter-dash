@@ -48,7 +48,7 @@ class TestTabularParser(TestDataFrames):
         target = pandas.DataFrame([
             [2, 3]],
             columns=['b', 'c'],
-            index=[1]
+            index=['1']
         )
         self.assertEqualDataFrames(dfs[0], target, message)
 
