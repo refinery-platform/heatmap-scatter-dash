@@ -143,9 +143,13 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
                               palette=palettes[palette])
             ],
             'layout': go.Layout(
-                xaxis={'ticks': '', 'showticklabels': show_conditions,
-                       'tickangle': 90},
-                yaxis={'ticks': '', 'showticklabels': show_genes},
+                xaxis={'ticks': '',
+                       'showticklabels': show_conditions,
+                       'tickangle': 90,
+                       'type': 'category'},
+                yaxis={'ticks': '',
+                       'showticklabels': show_genes,
+                       'type': 'category'},
                 margin={'l': left_margin,
                         'b': bottom_margin,
                         't': 30,  # so infobox on hover is not truncated

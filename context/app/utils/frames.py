@@ -27,7 +27,7 @@ def find_index(frame, keys):
         # TODO: Something better with pandas?
         matches = []
         for column_name, value in row.to_dict().items():
-            if value in keys:
+            if str(value) in keys:
                 matches.append(column_name)
         if len(matches) == 1:
             break

@@ -48,7 +48,7 @@ class TestTabularParser(TestDataFrames):
         target = pandas.DataFrame([
             [2, 3]],
             columns=['b', 'c'],
-            index=[1]
+            index=['1']
         )
         self.assertEqualDataFrames(dfs[0], target, message)
 
@@ -206,7 +206,7 @@ class TestVulcanize(TestDataFrames):
         df = pandas.DataFrame([
             [0, 0, 1, 0, 0.1],
             [0, 0, -1, 0, 10]],
-            columns=['log-fold-fake', 'fake-fold-change', 'xLOGxFOLDxCHANGEx',
+            columns=['xLOGx_NO', 'logFoldChange_NO', 'Log2-change_YES',
                      'fake-p-val', 'p-value!'],
             index=['gene1', 'gene2']
         )
@@ -217,7 +217,7 @@ class TestVulcanize(TestDataFrames):
                 [
                     [1, 1],
                     [-1, -1]],
-                columns=['xLOGxFOLDxCHANGEx', '-log10(p-value!)'],
+                columns=['Log2-change_YES', '-log10(p-value!)'],
                 index=['gene1', 'gene2']
             )
         )

@@ -22,7 +22,9 @@ from app.vis.callbacks import VisCallbacks
 def file_dataframes(files):
     frames = []
     for file in files:
-        frames.append(tabular.parse(file))
+        df = tabular.parse(file)
+        df.index = [str(i) for i in df.index]
+        frames.append(df)
         file.close()
     return frames
 
