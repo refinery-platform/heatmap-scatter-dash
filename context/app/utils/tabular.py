@@ -4,7 +4,15 @@ from csv import Sniffer, excel_tab
 from pandas import read_csv
 
 
-def parse(file, col_zero_index=True, keep_strings=False):
+def parse(file, col_zero_index=True, keep_strings=False, merge_strings=False):
+    '''
+    Given a file handle, try to determine its format and return a dataframe.
+    :param file:
+    :param col_zero_index:
+    :param keep_strings: Preserve string values in dataframe? Default False.
+    :param merge_strings: Concatenate string values onto index? Default False.
+    :return:
+    '''
     compression_type = {
         b'\x1f\x8b': 'gzip',
         b'\x50\x4b': 'zip'

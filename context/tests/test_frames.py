@@ -15,6 +15,7 @@ from app_runner import file_dataframes
 class TestDataFrames(unittest.TestCase):
 
     def assertEqualDataFrames(self, a, b, message=''):
+        self.assertEqual(a.shape, b.shape, message)
         a_np = np.array(a.as_matrix().tolist())
         b_np = np.array(b.as_matrix().tolist())
         np.testing.assert_equal(a_np, b_np, message)
@@ -48,18 +49,20 @@ class TestTabularParser(TestDataFrames):
             index=[1]
         )
 
-    def assert_file_read(self, input_text, target, message=None):
+    def assert_file_read(self, input_bytes, target, kwargs={}, message=None):
         file = tempfile.NamedTemporaryFile(mode='wb+')
-        file.write(input_text)
+        file.write(input_bytes)
         file.seek(0)
-        df = tabular.parse(file)
+        df = tabular.parse(file, **kwargs)
         self.assertEqualDataFrames(df, target, message)
 
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
             self.assert_file_read(
-                bytes('{0}b{0}c\n1{0}2{0}3'.format(c), 'utf-8'), self.target,
-                'Failed with {} as delimiter'.format(c))
+                bytes('{0}b{0}c\n1{0}2{0}3'.format(c), 'utf-8'),
+                self.target,
+                message='Failed with {} as delimiter'.format(c)
+            )
 
     # Easier just to make the data on the commandline
     # than to create it inside python:
@@ -78,8 +81,18 @@ class TestTabularParser(TestDataFrames):
     def test_read_csv(self):
         self.assert_file_read(b',b,c\n1,2,3', self.target)
 
-    def test_read_csv_remove_non_numeric(self):
-        self.assert_file_read(b',b,c,xxx\n1,2,3,XXX', self.target)
+    def test_read_csv_remove_strings(self):
+        self.assert_file_read(b',b,c,xxx\n1,2,3,X!', self.target)
+
+    def test_read_csv_keep_strings(self):
+        self.assert_file_read(
+            b',b,c,xxx\n1,2,3,X!',
+            pandas.DataFrame([
+                [2, 3, 'X!']],
+                columns=['b', 'c', 'xxx'],
+                index=[1]
+            ),
+            kwargs={'keep_strings': True})
 
     def test_read_csv_rn(self):
         self.assert_file_read(b',b,c\r\n1,2,3', self.target)
