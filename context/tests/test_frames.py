@@ -49,12 +49,14 @@ class TestTabularParser(TestDataFrames):
             index=[1]
         )
 
-    def assert_file_read(self, input_bytes, target, kwargs={}, message=None):
+    def assert_file_read(self, input_bytes, df_target, label_map_target=None, kwargs={}, message=None):
         file = tempfile.NamedTemporaryFile(mode='wb+')
         file.write(input_bytes)
         file.seek(0)
-        df = tabular.parse(file, **kwargs)
-        self.assertEqualDataFrames(df, target, message)
+        (df, label_map) = tabular.parse(file, **kwargs)
+        self.assertEqualDataFrames(df, df_target, message)
+        if label_map_target:
+            self.assertEqual(label_map, label_map_target, message)
 
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
@@ -100,9 +102,10 @@ class TestTabularParser(TestDataFrames):
             pandas.DataFrame([
                 [2, 3]],
                 columns=['b', 'c'],
-                index=['X! / Y! / 1']
+                index=[1]
             ),
-            kwargs={'index_delim': ' / '})
+            label_map_target={1: 'X! / Y! / 1'},
+            kwargs={'label_delim': ' / '})
 
     def test_read_csv_rn(self):
         self.assert_file_read(b',b,c\r\n1,2,3', self.target)

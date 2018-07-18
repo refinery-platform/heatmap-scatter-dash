@@ -19,14 +19,16 @@ from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
 
 
-def file_dataframes(files):
+def file_dataframes(files, label_delim=None):
     frames = []
+    label_maps = []
     for file in files:
-        df = tabular.parse(file)
+        (df, label_map) = tabular.parse(file, label_delim=label_delim)
         df.index = [str(i) for i in df.index]
         frames.append(df)
+        label_maps.append(label_map)
         file.close()
-    return frames
+    return (frames, label_maps)
 
 
 def demo_dataframes(rows, cols, metas):
@@ -44,8 +46,8 @@ def demo_dataframes(rows, cols, metas):
 
 def init(args, parser):  # TODO: Why is parser here?
     if args.files:
-        dataframes = file_dataframes(args.files)
-        meta_dataframes = file_dataframes(args.metas)
+        (dataframes, label_maps) = file_dataframes(args.files)
+        (meta_dataframes, _) = file_dataframes(args.metas)
     elif args.demo:
         (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
     else:
@@ -57,7 +59,7 @@ def init(args, parser):  # TODO: Why is parser here?
     if args.diffs:
         diff_dataframes = {}
         for diff_file in args.diffs:
-            diff_dataframe = tabular.parse(
+            (diff_dataframe, _) = tabular.parse(
                 diff_file,
                 col_zero_index=False,
                 keep_strings=True
