@@ -122,10 +122,10 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         show_conditions = label_cols_mode in ['always', 'auto']
 
         # With a proportional font, this is only an estimate.
-        char_width = 10
+        char_width = 8
 
         if show_genes:
-            row_max = max([len(s) for s in list(cluster_dataframe.index)])
+            row_max = max([len(s) for s in list(self._union_label_map.values())])
             left_margin = row_max * char_width
         else:
             left_margin = 75
@@ -166,7 +166,6 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         else:
             adjusted_color_scale = \
                 palette.linear()
-
         return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
             y=[self._union_label_map[i] for i in dataframe.index.tolist()],
