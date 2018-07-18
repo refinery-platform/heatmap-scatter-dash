@@ -8,6 +8,7 @@ import pandas
 from app.utils.frames import (center_and_scale_rows, find_index, merge,
                               sort_by_variance)
 from app.utils.vulcanize import vulcanize
+from app.utils import tabular
 from app_runner import file_dataframes
 
 
@@ -44,13 +45,13 @@ class TestTabularParser(TestDataFrames):
         file = tempfile.NamedTemporaryFile(mode='wb+')
         file.write(input_text)
         file.seek(0)
-        dfs = file_dataframes([file])
+        df = tabular.parse(file)
         target = pandas.DataFrame([
             [2, 3]],
             columns=['b', 'c'],
-            index=['1']
+            index=[1]
         )
-        self.assertEqualDataFrames(dfs[0], target, message)
+        self.assertEqualDataFrames(df, target, message)
 
     def test_read_crazy_delimiters(self):
         for c in '~!@#$%^&*|:;':
