@@ -169,7 +169,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
 
         return go.Heatmap(  # TODO: Non-fuzzy Heatmapgl
             x=dataframe.columns.tolist(),
-            y=dataframe.index.tolist(),
+            y=[self._union_label_map[i] for i in dataframe.index.tolist()],
             z=dataframe.as_matrix(),
             colorscale=adjusted_color_scale)
 

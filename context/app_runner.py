@@ -46,15 +46,20 @@ def demo_dataframes(rows, cols, metas):
 
 def init(args, parser):  # TODO: Why is parser here?
     if args.files:
-        (dataframes, label_maps) = file_dataframes(args.files)
+        (dataframes, label_maps) = file_dataframes(args.files,
+                                                   label_delim=' / ')
         (meta_dataframes, _) = file_dataframes(args.metas)
     elif args.demo:
         (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
+        label_maps = []
     else:
         # Argparser validation should keep us from reaching this point.
         raise Exception('Either "demo" or "files" is required')
 
     union_dataframe = merge(dataframes)
+    union_label_map = {}
+    for lm in label_maps:
+        union_label_map.update(lm)
     genes = set(union_dataframe.index.tolist())
     if args.diffs:
         diff_dataframes = {}
@@ -85,6 +90,7 @@ def init(args, parser):  # TODO: Why is parser here?
         server=server,
         url_base_pathname='/',
         union_dataframe=union_dataframe,
+        union_label_map=union_label_map,
         diff_dataframes=diff_dataframes,
         meta_dataframe=union_meta_dataframe,
         api_prefix=args.api_prefix,
