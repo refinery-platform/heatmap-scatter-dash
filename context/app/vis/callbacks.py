@@ -122,7 +122,7 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         show_conditions = label_cols_mode in ['always', 'auto']
 
         # With a proportional font, this is only an estimate.
-        char_width = 8
+        char_width = 10
 
         if show_genes:
             row_max = max([len(s) for s in list(self._union_label_map.values())])

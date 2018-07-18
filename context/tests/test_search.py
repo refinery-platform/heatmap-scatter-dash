@@ -6,41 +6,43 @@ from app.utils.search import SimpleIndex  # , WhooshIndex
 class TestIndex():
     def setUp(self):
         self.index = self.index_class()
-        self.index.add('foo')
-        self.index.add('bar', 'foobar', 'baz')
+        self.index.add_document('fo', 'foo')
+        self.index.add_document('br', 'bar')
+        self.index.add_document('fb', 'foobar')
+        self.index.add_document('bz', 'baz')
         # Should accept varargs
 
     def test_unique_search(self):
         self.assertEqual(set(self.index.search('baz')),
-                         {'baz'})
+                         {'bz'})
 
     def test_exact_search(self):
         self.assertEqual(set(self.index.search('bar')),
-                         {'bar', 'foobar'})
+                         {'br', 'fb'})
 
     def test_substring_search(self):
         self.assertEqual(set(self.index.search('ba')),
-                         {'bar', 'foobar', 'baz'})
+                         {'br', 'fb', 'bz'})
 
     def test_multiple_search(self):
         self.assertEqual(set(self.index.search('oo az')),
-                         {'foo', 'foobar', 'baz'})
+                         {'fo', 'fb', 'bz'})
 
     def test_padded_multiple_search(self):
         self.assertEqual(set(self.index.search('  oo  az  ')),
-                         {'foo', 'foobar', 'baz'})
+                         {'fo', 'fb', 'bz'})
 
     def test_none_search(self):
         self.assertEqual(set(self.index.search(None)),
-                         {'foo', 'bar', 'foobar', 'baz'})
+                         {'fo', 'br', 'fb', 'bz'})
 
     def test_empty_search(self):
         self.assertEqual(set(self.index.search('')),
-                         {'foo', 'bar', 'foobar', 'baz'})
+                         {'fo', 'br', 'fb', 'bz'})
 
     def test_single_char_search(self):
         self.assertEqual(set(self.index.search('z')),
-                         {'baz'})
+                         {'bz'})
 
 
 class TestSimpleIndex(TestIndex, unittest.TestCase):
