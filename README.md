@@ -1,7 +1,3 @@
-### ☞ *Are you using this? Or do you want to?*  ☜ 
-
-We'd be really interested in getting feedback from users or potential users. Are you able to get it started? Does it support the file formats and visualizations you use most often? Please file an issue or reach out on email. Thanks! 
-
 # heatmap-scatter-dash
 
 A heatmap-scatterplot using [Dash by plotly](https://plot.ly/products/dash/).
