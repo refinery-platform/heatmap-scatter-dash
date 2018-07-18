@@ -23,7 +23,8 @@ class VisBase():
         self._most_variable_rows = most_variable_rows
 
         self._union_dataframe = union_dataframe
-        self._union_label_map = union_label_map or {i: i for i in union_dataframe.index}
+        self._union_label_map = union_label_map or {
+            i: i for i in union_dataframe.index}
         self._pca_dataframe = pca(self._union_dataframe)
         self._scaled_dataframe = center_and_scale_rows(self._union_dataframe)
         self._diff_dataframes = diff_dataframes

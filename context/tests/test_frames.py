@@ -5,11 +5,10 @@ from io import StringIO
 import numpy as np
 import pandas
 
+from app.utils import tabular
 from app.utils.frames import (center_and_scale_rows, find_index, merge,
                               sort_by_variance)
 from app.utils.vulcanize import vulcanize
-from app.utils import tabular
-from app_runner import file_dataframes
 
 
 class TestDataFrames(unittest.TestCase):
@@ -49,7 +48,8 @@ class TestTabularParser(TestDataFrames):
             index=[1]
         )
 
-    def assert_file_read(self, input_bytes, df_target, label_map_target=None, kwargs={}, message=None):
+    def assert_file_read(self, input_bytes, df_target, label_map_target=None,
+                         kwargs={}, message=None):
         file = tempfile.NamedTemporaryFile(mode='wb+')
         file.write(input_bytes)
         file.seek(0)

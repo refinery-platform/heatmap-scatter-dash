@@ -125,7 +125,8 @@ class VisCallbacks(VisGeneCallbacks, VisConditionCallbacks):
         char_width = 10
 
         if show_genes:
-            row_max = max([len(s) for s in list(self._union_label_map.values())])
+            row_max = max([len(s)
+                           for s in list(self._union_label_map.values())])
             left_margin = row_max * char_width
         else:
             left_margin = 75

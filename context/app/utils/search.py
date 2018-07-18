@@ -12,8 +12,8 @@ class SimpleIndex():
     def __init__(self):
         self._index = {}
 
-    def add_document(self, id, document):
-        self._index[id] = document
+    def add_document(self, doc_id, document):
+        self._index[doc_id] = document
 
     def search(self, substrings):
         if substrings:
