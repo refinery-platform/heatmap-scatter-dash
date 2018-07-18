@@ -94,6 +94,16 @@ class TestTabularParser(TestDataFrames):
             ),
             kwargs={'keep_strings': True})
 
+    def test_read_csv_merge_strings(self):
+        self.assert_file_read(
+            b',b,c,xxx,yyy\n1,2,3,X!,Y!',
+            pandas.DataFrame([
+                [2, 3]],
+                columns=['b', 'c'],
+                index=['X! / Y! / 1']
+            ),
+            kwargs={'index_delim': ' / '})
+
     def test_read_csv_rn(self):
         self.assert_file_read(b',b,c\r\n1,2,3', self.target)
 

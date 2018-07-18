@@ -4,13 +4,13 @@ from csv import Sniffer, excel_tab
 from pandas import read_csv
 
 
-def parse(file, col_zero_index=True, keep_strings=False, merge_strings=False):
+def parse(file, col_zero_index=True, keep_strings=False, index_delim=None):
     '''
     Given a file handle, try to determine its format and return a dataframe.
     :param file:
     :param col_zero_index:
     :param keep_strings: Preserve string values in dataframe? Default False.
-    :param merge_strings: Concatenate string values onto index? Default False.
+    :param index_delim: Concatenate string values onto index? Default None.
     :return:
     '''
     compression_type = {
@@ -55,4 +55,12 @@ def parse(file, col_zero_index=True, keep_strings=False, merge_strings=False):
         if is_gct:
             dataframe.drop(columns=['Description'], inplace=True)
             # TODO: Combine the first two columns?
+    if index_delim:
+        dataframe.index = [
+            index_delim.join(
+                dataframe.select_dtypes(['object']).loc[i].tolist()
+                + [str(i)]
+            )
+            for i in dataframe.index
+        ]
     return dataframe if keep_strings else dataframe.select_dtypes(['number'])
