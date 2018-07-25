@@ -60,7 +60,7 @@ def parse(file, col_zero_index=True, keep_strings=False, relabel=False):
     if relabel:
         label_map = {
             i: ' / '.join(
-                dataframe.select_dtypes(['object']).loc[i].tolist()[:0] +
+                dataframe.select_dtypes(['object']).loc[i].tolist()[:1] +
                 # `select_dtypes` returns a subset of the original columns.
                 # 'object' means non-number, usually string, in numpy.
                 # `loc` returns a single row.
