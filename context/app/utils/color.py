@@ -11,6 +11,12 @@ def _hex_to_rgb(hex_rgb):
 
 
 class _Palette():
+    '''
+    Dash does not have an option for log color scales out of the box,
+    so we interpolate our own as an approximation. The legend is still
+    linear, though, and is not much use beyond 2 orders of magnitude.
+    '''
+
     def __init__(self, *hex_list, reverse=True):
         self._rgb_list = [_hex_to_rgb(h) for h in hex_list]
         if reverse:

@@ -7,6 +7,9 @@ def relative_path(base, file):
 
 
 class ResourceLoader():
+    '''
+    Mixin which provides JS and CSS for apps.
+    '''
 
     def load_resources(self):
         self._css_urls = [

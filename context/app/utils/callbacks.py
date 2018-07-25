@@ -122,7 +122,7 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
 
 class ScatterLayout(go.Layout):
     '''
-    Provides styling around scatterplot.
+    Provides styling around scatterplots.
     '''
 
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):

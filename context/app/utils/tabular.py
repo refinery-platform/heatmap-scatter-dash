@@ -4,13 +4,14 @@ from csv import Sniffer, excel_tab
 from pandas import read_csv
 
 
-def parse(file, col_zero_index=True, keep_strings=False, label_delim=None):
+def parse(file, col_zero_index=True, keep_strings=False, relabel=False):
     '''
     Given a file handle, try to determine its format and return a dataframe.
+
     :param file:
     :param col_zero_index:
-    :param keep_strings: Preserve string values in dataframe? Default False.
-    :param label_delim: Concatenate string values in table? Default None.
+    :param keep_strings: Preserve string values in dataframe if True
+    :param relabel: Use the first string column inside the table as row labels
     :return:
     '''
     compression_type = {
@@ -56,17 +57,19 @@ def parse(file, col_zero_index=True, keep_strings=False, label_delim=None):
             dataframe.drop(columns=['Description'], inplace=True)
             # TODO: Combine the first two columns?
 
-    if label_delim:
+    if relabel:
         label_map = {
-            i: label_delim.join(
-                dataframe.select_dtypes(['object']).loc[i].tolist()
-                + [str(i)]
-            )
+            i: ' / '.join([
+                dataframe.select_dtypes(['object']).loc[i].tolist()[0],
+                # `select_dtypes` returns a subset of the original columns.
+                # 'object' means non-number, usually string, in numpy.
+                # `loc` returns a single row.
+                str(i)
+                # `i` is the original, cryptic, row index
+            ])
             for i in dataframe.index
         }
     else:
-        # This is unused, but only returning
-        # a tuple sometimes seems more confusing.
         label_map = None
 
     if keep_strings:

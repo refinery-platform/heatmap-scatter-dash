@@ -104,8 +104,9 @@ class TestTabularParser(TestDataFrames):
                 columns=['b', 'c'],
                 index=[1]
             ),
-            label_map_target={1: 'X! / Y! / 1'},
-            kwargs={'label_delim': ' / '})
+            label_map_target={1: 'X! / 1'},
+            # We get the first text column, and the original index.
+            kwargs={'relabel': True})
 
     def test_read_csv_rn(self):
         self.assert_file_read(b',b,c\r\n1,2,3', self.target)

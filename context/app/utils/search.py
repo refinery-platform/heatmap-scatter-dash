@@ -7,7 +7,12 @@ import re
 
 
 class SimpleIndex():
-    # "Indexing" is fast, but search is slow.
+    '''
+    Right now we're just doing substring search because indexing
+    made startup too slow, but making sure it is done through
+    this interface makes it easier for us to plug in something better,
+    at some point.
+    '''
 
     def __init__(self):
         self._index = {}
