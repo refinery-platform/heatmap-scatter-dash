@@ -8,6 +8,14 @@ def figure_output(element_id):
 
 
 def scatter_inputs(element_id, scale_select=False, meta_select=False):
+    '''
+    Returns the axis and scale Inputs for a scatter plot.
+
+    :param element_id:
+    :param scale_select: Display log scale toggle?
+    :param meta_select: Display metadata selector?
+    :return: List of Inputs
+    '''
     inputs = [
         Input('scatter-{}-{}-axis-select'.format(element_id, axis), 'value')
         for axis in ['x', 'y']
@@ -40,6 +48,23 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
                         highlight=pandas.DataFrame(),
                         selected_highlight=pandas.DataFrame(),
                         color_by=None, palette=None):
+    '''
+    Returns the backing list of Scattergl elements for every scatterplot.
+    The selected-vs-unselected distinction in the UI is something we
+    need to create for ourselves, with one series of points partially
+    obscuring another set.
+
+    :param x_axis:
+    :param y_axis:
+    :param everyone:
+    :param selected:
+    :param highlight:
+    :param selected_highlight:
+    :param color_by:
+    :param palette:
+    :return:
+    '''
+
     # Was hitting something like
     # https://community.plot.ly/t/7329
     # when I included the empty df,
@@ -96,6 +121,10 @@ def traces_all_selected(x_axis, y_axis, everyone, selected,
 
 
 class ScatterLayout(go.Layout):
+    '''
+    Provides styling around scatterplot.
+    '''
+
     def __init__(self, x_axis, y_axis, x_log=False, y_log=False):
         x_axis_config = {'title': x_axis}
         y_axis_config = {'title': y_axis}
