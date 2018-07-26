@@ -6,6 +6,9 @@ from app.utils.resource_loader import ResourceLoader, relative_path
 
 
 class HelpApp(ResourceLoader):
+    '''
+    Trivial Dash app that renders MarkDown for the help page.
+    '''
 
     def __init__(self,
                  server=None,

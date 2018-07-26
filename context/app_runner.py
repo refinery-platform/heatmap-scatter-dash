@@ -19,14 +19,16 @@ from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
 
 
-def file_dataframes(files):
+def file_dataframes(files, relabel=False):
     frames = []
+    label_maps = []
     for file in files:
-        df = tabular.parse(file)
+        (df, label_map) = tabular.parse(file, relabel=relabel)
         df.index = [str(i) for i in df.index]
         frames.append(df)
+        label_maps.append(label_map)
         file.close()
-    return frames
+    return (frames, label_maps)
 
 
 def demo_dataframes(rows, cols, metas):
@@ -44,20 +46,24 @@ def demo_dataframes(rows, cols, metas):
 
 def init(args, parser):  # TODO: Why is parser here?
     if args.files:
-        dataframes = file_dataframes(args.files)
-        meta_dataframes = file_dataframes(args.metas)
+        (dataframes, label_maps) = file_dataframes(args.files, relabel=True)
+        (meta_dataframes, _) = file_dataframes(args.metas)
     elif args.demo:
         (dataframes, meta_dataframes) = demo_dataframes(*args.demo)
+        label_maps = []
     else:
         # Argparser validation should keep us from reaching this point.
         raise Exception('Either "demo" or "files" is required')
 
     union_dataframe = merge(dataframes)
+    union_label_map = {}
+    for lm in label_maps:
+        union_label_map.update(lm)
     genes = set(union_dataframe.index.tolist())
     if args.diffs:
         diff_dataframes = {}
         for diff_file in args.diffs:
-            diff_dataframe = tabular.parse(
+            (diff_dataframe, _) = tabular.parse(
                 diff_file,
                 col_zero_index=False,
                 keep_strings=True
@@ -83,6 +89,7 @@ def init(args, parser):  # TODO: Why is parser here?
         server=server,
         url_base_pathname='/',
         union_dataframe=union_dataframe,
+        union_label_map=union_label_map,
         diff_dataframes=diff_dataframes,
         meta_dataframe=union_meta_dataframe,
         api_prefix=args.api_prefix,

@@ -7,21 +7,27 @@ import re
 
 
 class SimpleIndex():
-    # "Indexing" is fast, but search is a bit slow.
+    '''
+    Right now we're just doing substring search because indexing
+    made startup too slow, but making sure it is done through
+    this interface makes it easier for us to plug in something better,
+    at some point.
+    '''
 
     def __init__(self):
-        self._index = []
+        self._index = {}
 
-    def add(self, *gene_ids):
-        self._index.extend(gene_ids)
+    def add_document(self, doc_id, document):
+        self._index[doc_id] = document
 
     def search(self, substrings):
         if substrings:
             matches = []
             for substring in re.split('\s+', substrings.strip()):
-                matches.extend([gene_id
-                                for gene_id in self._index
-                                if substring in gene_id])
+                matches.extend([
+                    id for (id, document) in self._index.items()
+                    if substring in document
+                ])
             return matches
         else:
             return self._index.copy()

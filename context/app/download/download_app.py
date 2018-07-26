@@ -4,6 +4,9 @@ from flask import make_response, request
 
 
 class DownloadApp():
+    '''
+    Trivial Flask app that provides CSV download of selected data points.
+    '''
 
     def __init__(self,
                  server=None,

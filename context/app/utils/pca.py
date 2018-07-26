@@ -3,6 +3,13 @@ from sklearn import decomposition
 
 
 def pca(dataframe, components=4):
+    '''
+    Compute the PCA of a dataframe
+
+    :param dataframe:
+    :param components: The number of components to return
+    :return: principle components as a DataFrame
+    '''
     # TODO: Confirm that this is a good number of components
     dataframe = dataframe.fillna(0)  # TODO: Confirm that this is correct
     orig_columns = dataframe.columns.tolist()

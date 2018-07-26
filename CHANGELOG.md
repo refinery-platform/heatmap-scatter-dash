@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.1.13](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.13) (Jul 26, 2018)
+
+* If the body of the table has non-numeric columns, the value in the first
+of those columns is prepended to the row label. (Often, the first column is
+just a numeric ID, but something more human-readable is present farther to
+the right.)
+
 
 ## [v0.1.12](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.12) (Jul 10, 2018)
 

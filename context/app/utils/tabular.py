@@ -4,7 +4,16 @@ from csv import Sniffer, excel_tab
 from pandas import read_csv
 
 
-def parse(file, col_zero_index=True, keep_strings=False):
+def parse(file, col_zero_index=True, keep_strings=False, relabel=False):
+    '''
+    Given a file handle, try to determine its format and return a dataframe.
+
+    :param file:
+    :param col_zero_index:
+    :param keep_strings: Preserve string values in dataframe if True
+    :param relabel: Use the first string column inside the table as row labels
+    :return:
+    '''
     compression_type = {
         b'\x1f\x8b': 'gzip',
         b'\x50\x4b': 'zip'
@@ -47,4 +56,23 @@ def parse(file, col_zero_index=True, keep_strings=False):
         if is_gct:
             dataframe.drop(columns=['Description'], inplace=True)
             # TODO: Combine the first two columns?
-    return dataframe if keep_strings else dataframe.select_dtypes(['number'])
+
+    if relabel:
+        label_map = {
+            i: ' / '.join(
+                dataframe.select_dtypes(['object']).loc[i].tolist()[:1] +
+                # `select_dtypes` returns a subset of the original columns.
+                # 'object' means non-number, usually string, in numpy.
+                # `loc` returns a single row.
+                # tolist() may be empty if there were no strings.
+                [str(i)]
+                # `i` is the original, cryptic, row index
+            )
+            for i in dataframe.index
+        }
+    else:
+        label_map = None
+
+    if keep_strings:
+        return (dataframe, label_map)
+    return (dataframe.select_dtypes(['number']), label_map)
