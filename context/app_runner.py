@@ -8,12 +8,12 @@ from warnings import warn
 
 import numpy as np
 import pandas
+from dataframer import dataframer
 from flask import Flask, send_from_directory
 from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.download.download_app import DownloadApp
 from app.help.help_app import HelpApp
-from app.utils import tabular
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -23,10 +23,11 @@ def file_dataframes(files, relabel=False):
     frames = []
     label_maps = []
     for file in files:
-        (df, label_map) = tabular.parse(file, relabel=relabel)
+        df_info = dataframer.parse(file, relabel=relabel)
+        df = df_info.data_frame
         df.index = [str(i) for i in df.index]
         frames.append(df)
-        label_maps.append(label_map)
+        label_maps.append(df_info.label_map)
         file.close()
     return (frames, label_maps)
 
@@ -63,13 +64,13 @@ def init(args, parser):  # TODO: Why is parser here?
     if args.diffs:
         diff_dataframes = {}
         for diff_file in args.diffs:
-            (diff_dataframe, _) = tabular.parse(
+            df_info = dataframer.parse(
                 diff_file,
                 col_zero_index=False,
                 keep_strings=True
             )
             key = basename(diff_file.name)
-            value = vulcanize(find_index(diff_dataframe, genes))
+            value = vulcanize(find_index(df_info.data_frame, genes))
             diff_dataframes[key] = value
     else:
         diff_dataframes = {
