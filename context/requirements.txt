@@ -6,5 +6,5 @@ plotly==2.2.3
 pandas==0.22.0
 scipy==1.0.0
 scikit-learn==0.19.1
-awsebcli==3.12.1
+dataframer==0.0.1
 # TODO: whoosh==2.7.4
