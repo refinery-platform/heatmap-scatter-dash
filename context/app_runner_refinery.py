@@ -60,15 +60,14 @@ class RunnerArgs():
             self.files = []
             self.diffs = []
             for file in mystery_files:
-                with open(file, 'rb') as binary_stream:
-                    df = dataframer.parse(binary_stream)
-                    # TODO: This is reading and parsing the entire file...
-                    # Could we try just the first n bytes?
-                    if (_column_matches_re(df, P_VALUE_RE) and
-                            _column_matches_re(df, LOG_FOLD_RE)):
-                        self.diffs.append(file)
-                    else:
-                        self.files.append(file)
+                df = dataframer.parse(file).data_frame
+                # TODO: This is reading and parsing the entire file...
+                # Could we try just the first n bytes?
+                if (_column_matches_re(df, P_VALUE_RE) and
+                        _column_matches_re(df, LOG_FOLD_RE)):
+                    self.diffs.append(file.name)
+                else:
+                    self.files.append(file.name)
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
 
@@ -112,7 +111,7 @@ def _split_envvar(name):
 def _download_files(urls, data_dir):
     """
     Given a list of urls and a target directory,
-    download the files to the target, and return a list of filenames.
+    download the files to the target, and return a list of file handles.
     """
     files = []
 

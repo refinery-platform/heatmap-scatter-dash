@@ -15,13 +15,19 @@ class TestAppRunnerRefinery(unittest.TestCase):
         with self.assertRaises(SystemExit):
             app_runner_refinery.arg_parser().parse_args()
 
-    @patch.object(app_runner_refinery, '_download_files')
     @patch.object(app_runner, 'init')
-    def test_with_input(self, mock_init, mock_download):
+    def test_with_input(self, mock_init):
         path = relative_path(__file__, '../../fixtures/good/input.json')
         refinery_args = app_runner_refinery.arg_parser().parse_args([
             '--input', path])
         runner_args = app_runner_refinery.RunnerArgs(refinery_args)
+        self.assertEqual(
+            runner_args.files,
+            ['/tmp/counts.csv', '/tmp/counts-copy.csv.gz', '/tmp/fake.gct'])
+        self.assertEqual(
+            runner_args.diffs,
+            ['/tmp/stats-with-genes-in-col-1.csv',
+             '/tmp/stats-with-genes-in-col-2.tsv'])
         app_runner.main(runner_args)
         mock_init.assert_called_once()
         mock_download.assert_called()

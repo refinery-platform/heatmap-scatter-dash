@@ -9,7 +9,7 @@
     "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-2.tsv"
   ],
   "extra_directories": [
-    "/refinery-data/"
+    "/tmp/"
   ],
   "node_info": {
     "some-refinery-uuid-1": {
