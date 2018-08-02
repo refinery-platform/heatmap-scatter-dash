@@ -22,15 +22,14 @@ class TestAppRunnerRefinery(unittest.TestCase):
             '--input', path])
         runner_args = app_runner_refinery.RunnerArgs(refinery_args)
         self.assertEqual(
-            runner_args.files,
+            [file.name for file in runner_args.files],
             ['/tmp/counts.csv', '/tmp/counts-copy.csv.gz', '/tmp/fake.gct'])
         self.assertEqual(
-            runner_args.diffs,
+            [diff.name for diff in runner_args.diffs],
             ['/tmp/stats-with-genes-in-col-1.csv',
              '/tmp/stats-with-genes-in-col-2.tsv'])
         app_runner.main(runner_args)
         mock_init.assert_called_once()
-        mock_download.assert_called()
 
 
 class TestAppRunner(unittest.TestCase):

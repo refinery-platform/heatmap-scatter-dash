@@ -65,9 +65,9 @@ class RunnerArgs():
                 # Could we try just the first n bytes?
                 if (_column_matches_re(df, P_VALUE_RE) and
                         _column_matches_re(df, LOG_FOLD_RE)):
-                    self.diffs.append(file.name)
+                    self.diffs.append(file)
                 else:
-                    self.files.append(file.name)
+                    self.files.append(file)
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
 
