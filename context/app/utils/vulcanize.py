@@ -1,7 +1,6 @@
 import re
 from math import log10
 
-
 LOG_FOLD_RE = r'\blog[^a-z]'
 P_VALUE_RE = r'p.*value'
 

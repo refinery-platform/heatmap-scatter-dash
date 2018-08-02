@@ -10,11 +10,11 @@ from tempfile import mkdtemp
 from urllib.parse import urlparse
 from warnings import warn
 
-from dataframer import dataframer
 import requests
+from dataframer import dataframer
 
 import app_runner
-from app.utils.vulcanize import P_VALUE_RE, LOG_FOLD_RE
+from app.utils.vulcanize import LOG_FOLD_RE, P_VALUE_RE
 
 
 class RunnerArgs():
@@ -65,7 +65,7 @@ class RunnerArgs():
                     # TODO: This is reading and parsing the entire file...
                     # Could we try just the first n bytes?
                     if (_column_matches_re(df, P_VALUE_RE) and
-                        _column_matches_re(df, LOG_FOLD_RE)):
+                            _column_matches_re(df, LOG_FOLD_RE)):
                         self.diffs.append(file)
                     else:
                         self.files.append(file)
