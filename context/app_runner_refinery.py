@@ -10,9 +10,11 @@ from tempfile import mkdtemp
 from urllib.parse import urlparse
 from warnings import warn
 
+from dataframer import dataframer
 import requests
 
 import app_runner
+from app.utils.vulcanize import P_VALUE_RE, LOG_FOLD_RE
 
 
 class RunnerArgs():
@@ -54,8 +56,19 @@ class RunnerArgs():
             data_directory = os.environ.get('DATA_DIR', '/tmp')
             file_urls = _split_envvar('FILE_URLS')
         try:
-            self.files = _download_files(file_urls, data_directory)
-            # TODO: set self.diffs
+            mystery_files = _download_files(file_urls, data_directory)
+            self.files = []
+            self.diffs = []
+            for file in mystery_files:
+                with open(file, 'rb') as binary_stream:
+                    df = dataframer.parse(binary_stream)
+                    # TODO: This is reading and parsing the entire file...
+                    # Could we try just the first n bytes?
+                    if (_column_matches_re(df, P_VALUE_RE) and
+                        _column_matches_re(df, LOG_FOLD_RE)):
+                        self.diffs.append(file)
+                    else:
+                        self.files.append(file)
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
 
@@ -83,6 +96,12 @@ class RunnerArgs():
         return '\n'.join(
             ['{}: {}'.format(k, v) for k, v in vars(self).items()]
         )
+
+
+def _column_matches_re(dataframe, pattern):
+    return any(
+        re.search(pattern, col, flags=re.IGNORECASE)
+        for col in dataframe.columns)
 
 
 def _split_envvar(name):
