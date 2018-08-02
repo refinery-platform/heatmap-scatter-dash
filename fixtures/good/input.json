@@ -2,15 +2,11 @@
   "api_prefix": "/",
   "api_prefix NOTE": "Should actually be something like: /visualizations/container-name/",
   "file_relationships": [
-    [
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts.csv",
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts-copy.csv.gz",
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.9/fixtures/good/data/fake.gct"
-    ],
-    [
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-1.csv",
-      "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-2.tsv"
-    ]
+    "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts.csv",
+    "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/counts-copy.csv.gz",
+    "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.9/fixtures/good/data/fake.gct",
+    "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-1.csv",
+    "https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/v0.1.5/fixtures/good/data/stats-with-genes-in-col-2.tsv"
   ],
   "extra_directories": [
     "/refinery-data/"

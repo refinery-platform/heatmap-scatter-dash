@@ -49,20 +49,13 @@ class RunnerArgs():
             assert type(self.api_prefix) == str
 
             data_directory = input_data['extra_directories'][0]
-
-            file_urls = input_data['file_relationships'][0]
-            diff_urls = input_data['file_relationships'][1]
-            meta_urls = []  # TODO: Not supported by Refinery
+            file_urls = input_data['file_relationships']
         else:
             data_directory = os.environ.get('DATA_DIR', '/tmp')
-
             file_urls = _split_envvar('FILE_URLS')
-            diff_urls = _split_envvar('DIFF_URLS')
-            meta_urls = _split_envvar('META_URLS')
         try:
             self.files = _download_files(file_urls, data_directory)
-            self.diffs = _download_files(diff_urls, data_directory)
-            self.metas = _download_files(meta_urls, data_directory)
+            # TODO: set self.diffs
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
 
@@ -144,8 +137,7 @@ def arg_parser():
                         help='If the specified file does not exist, '
                         'falls back to environment variables: '
                         'First, INPUT_JSON or INPUT_JSON_URL, '
-                        'and if neither of those exist, '
-                        'FILE_URLS, DIFF_URLS, META_URLS.')
+                        'and if neither of those exist, FILE_URLS.')
     parser.add_argument('--port', type=int, default=80)
     # During development, it's useful to be able to specify a high port.
     return parser
