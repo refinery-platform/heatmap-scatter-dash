@@ -61,8 +61,6 @@ class RunnerArgs():
             self.diffs = []
             for file in mystery_files:
                 df = dataframer.parse(file).data_frame
-                # TODO: This is reading and parsing the entire file...
-                # Could we try just the first n bytes?
                 file.seek(0)  # Reset cursor we can re-read the file.
                 if (_column_matches_re(df, P_VALUE_RE) and
                         _column_matches_re(df, LOG_FOLD_RE)):
