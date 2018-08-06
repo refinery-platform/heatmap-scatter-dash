@@ -1,5 +1,10 @@
 # Change Log
 
+## [v0.1.14](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.14) (Aug 2, 2018)
+
+* app_runner_refinery sniffs files to determine if they are counts or differential expression.
+
+
 ## [v0.1.13](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.13) (Jul 26, 2018)
 
 * If the body of the table has non-numeric columns, the value in the first

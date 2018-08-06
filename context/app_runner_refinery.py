@@ -11,8 +11,10 @@ from urllib.parse import urlparse
 from warnings import warn
 
 import requests
+from dataframer import dataframer
 
 import app_runner
+from app.utils.vulcanize import LOG_FOLD_RE, P_VALUE_RE
 
 
 class RunnerArgs():
@@ -49,20 +51,22 @@ class RunnerArgs():
             assert type(self.api_prefix) == str
 
             data_directory = input_data['extra_directories'][0]
-
-            file_urls = input_data['file_relationships'][0]
-            diff_urls = input_data['file_relationships'][1]
-            meta_urls = []  # TODO: Not supported by Refinery
+            file_urls = input_data['file_relationships']
         else:
             data_directory = os.environ.get('DATA_DIR', '/tmp')
-
             file_urls = _split_envvar('FILE_URLS')
-            diff_urls = _split_envvar('DIFF_URLS')
-            meta_urls = _split_envvar('META_URLS')
         try:
-            self.files = _download_files(file_urls, data_directory)
-            self.diffs = _download_files(diff_urls, data_directory)
-            self.metas = _download_files(meta_urls, data_directory)
+            mystery_files = _download_files(file_urls, data_directory)
+            self.files = []
+            self.diffs = []
+            for file in mystery_files:
+                df = dataframer.parse(file).data_frame
+                file.seek(0)  # Reset cursor we can re-read the file.
+                if (_column_matches_re(df, P_VALUE_RE) and
+                        _column_matches_re(df, LOG_FOLD_RE)):
+                    self.diffs.append(file)
+                else:
+                    self.files.append(file)
         except OSError as e:
             raise Exception('Does {} exist?'.format(data_directory)) from e
 
@@ -92,6 +96,12 @@ class RunnerArgs():
         )
 
 
+def _column_matches_re(dataframe, pattern):
+    return any(
+        re.search(pattern, col, flags=re.IGNORECASE)
+        for col in dataframe.columns)
+
+
 def _split_envvar(name):
     value = os.environ.get(name)
     return re.split(r'\s+', value) if value else []
@@ -100,7 +110,7 @@ def _split_envvar(name):
 def _download_files(urls, data_dir):
     """
     Given a list of urls and a target directory,
-    download the files to the target, and return a list of filenames.
+    download the files to the target, and return a list of file handles.
     """
     files = []
 
@@ -144,8 +154,7 @@ def arg_parser():
                         help='If the specified file does not exist, '
                         'falls back to environment variables: '
                         'First, INPUT_JSON or INPUT_JSON_URL, '
-                        'and if neither of those exist, '
-                        'FILE_URLS, DIFF_URLS, META_URLS.')
+                        'and if neither of those exist, FILE_URLS.')
     parser.add_argument('--port', type=int, default=80)
     # During development, it's useful to be able to specify a high port.
     return parser
