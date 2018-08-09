@@ -35,21 +35,6 @@ isort --recursive context --check-only || die "Run 'isort --recursive context'"
 end isort
 
 
-start pip
-# Request from githubusercontent.com was failing...
-#URL_BASE=https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/master
-#DIFF_RAW=$(diff <(cat context/requirements.txt; \
-#                      cat requirements-dev.txt) \
-#                <(curl --silent $URL_BASE/context/requirements.txt; \
-#                  curl --silent $URL_BASE/requirements-dev.txt))
-#DIFF_FREEZE=$(diff requirements-freeze.txt <(curl --silent $URL_BASE/requirements-freeze.txt))
-#[ "$DIFF_RAW" ] && [ -z "$DIFF_FREEZE" ] && \
-#  die "If raw changes, freeze should change: '$DIFF_RAW'"
-#[ -z "$DIFF_RAW" ] && [ "$DIFF_FREEZE" ] && \
-#  die "If freeze changes, raw should change: '$DIFF_FREEZE'"
-end pip
-
-
 start usage
 diff <(perl -ne 'print if /^usage:/../^  --api_prefix/' README.md) \
      <(cd context; ./app_runner.py -h) || \
