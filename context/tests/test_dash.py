@@ -70,7 +70,9 @@ class TestDash():
             {
                 'suppress_callback_exceptions': False,
                 'routes_pathname_prefix': '/',
-                'requests_pathname_prefix': '/'
+                'requests_pathname_prefix': '/',
+                'include_assets_files': True,
+                'assets_external_path': ''
             }
         )
 

@@ -27,9 +27,9 @@ describe('heatmap-scatterplot', function(){
     cy.contains('.Select', 'auto').click();
     // TODO: Change selection: They are not really selects, so this is hard?
 
-    cy.contains('a', 'Help').click();
-    // Can't actually visit new page:
-    // https://docs.cypress.io/faq/questions/using-cypress-faq.html#Can-I-test-anchor-links-that-open-in-a-new-tab
+    // cy.contains('a', 'Help').click();
+    // // Can't actually visit new page:
+    // // https://docs.cypress.io/faq/questions/using-cypress-faq.html#Can-I-test-anchor-links-that-open-in-a-new-tab
 
   });
 
@@ -58,9 +58,9 @@ describe('heatmap-scatterplot', function(){
     // TODO: Test content of iframe
   });
 
-  it('help works', function() {
-    cy.visit('http://localhost:8888/help');
-    cy.title().should('equal', 'Heatmap + Scatterplots: Help');
-    cy.contains('This is a tool for exploring');
-  });
+  // it('help works', function() {
+  //   cy.visit('http://localhost:8888/help');
+  //   cy.title().should('equal', 'Heatmap + Scatterplots: Help');
+  //   cy.contains('This is a tool for exploring');
+  // });
 });

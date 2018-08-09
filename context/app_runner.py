@@ -13,7 +13,6 @@ from flask import Flask, send_from_directory
 from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.download.download_app import DownloadApp
-from app.help.help_app import HelpApp
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -99,10 +98,12 @@ def init(args, parser):  # TODO: Why is parser here?
         html_table=args.html_table,
         truncate_table=args.truncate_table
     )
-    HelpApp(
-        server=server,
-        url_base_pathname='/help',
-    )
+    # TODO: Running multiple Dash apps simultaneously now causes problems.
+    # Instead, let Dash handle the URLs? https://community.plot.ly/t/12533
+    # HelpApp(
+    #     server=server,
+    #     url_base_pathname='/help',
+    # )
     DownloadApp(
         server=server,
         url_base_pathname='/download',
