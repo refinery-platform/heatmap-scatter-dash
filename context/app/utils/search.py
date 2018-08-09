@@ -25,7 +25,7 @@ class SimpleIndex():
             matches = []
             for substring in re.split('\s+', substrings.strip()):
                 matches.extend([
-                    id for (id, document) in self._index.items()
+                    doc_id for (doc_id, document) in self._index.items()
                     if substring in document
                 ])
             return matches
