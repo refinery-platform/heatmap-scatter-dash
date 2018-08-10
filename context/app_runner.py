@@ -13,7 +13,6 @@ from flask import Flask, send_from_directory
 from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.download.download_app import DownloadApp
-from app.help.help_app import HelpApp
 from app.utils.frames import find_index, merge
 from app.utils.vulcanize import vulcanize
 from app.vis.callbacks import VisCallbacks
@@ -98,10 +97,6 @@ def init(args, parser):  # TODO: Why is parser here?
         most_variable_rows=args.most_variable_rows,
         html_table=args.html_table,
         truncate_table=args.truncate_table
-    )
-    HelpApp(
-        server=server,
-        url_base_pathname='/help',
     )
     DownloadApp(
         server=server,

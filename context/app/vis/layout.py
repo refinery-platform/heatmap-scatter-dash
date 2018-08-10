@@ -2,7 +2,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from app.utils.color import palettes
-from app.utils.resource_loader import ResourceLoader
+from app.utils.resource_loader import ResourceLoader, relative_path
+
 from app.vis.base import VisBase
 
 
@@ -47,26 +48,41 @@ class VisLayout(VisBase, ResourceLoader):
         ], className='container-fluid')
 
     def _left_column(self):
+        with open(relative_path(__file__, 'help.md')) as f:
+            markdown = f.read()
         return [
-            dcc.Graph(
-                id='heatmap',
-                style={'height': '90vh'}
-            ),
+            html.Br(),  # Top of tab was right against window top
+
+            _tabs('', 'Map', 'Help'),
             html.Div([
                 html.Div([
-                    html.Label(['gene'],
-                               className='col-xs-1 control-label'
-                               ),
+                    dcc.Graph(
+                        id='heatmap',
+                        style={'height': '90vh'}
+                    ),
                     html.Div([
-                        dcc.Input(
-                            id='search-genes',
-                            placeholder='search...',
-                            type="text",
-                            className='form-control')
-                    ], className='col-xs-5'),
-                ], className='form-group'),
-            ], className='form-horizontal')
+                        html.Div([
+                            html.Label(['gene'],
+                                       className='col-xs-1 control-label'
+                                       ),
+                            html.Div([
+                                dcc.Input(
+                                    id='search-genes',
+                                    placeholder='search...',
+                                    type="text",
+                                    className='form-control')
+                            ], className='col-xs-5'),
+                        ], className='form-group'),
+                    ], className='form-horizontal')
+                ], className='tab-pane active', id='map'),
+                html.Div([
+                    dcc.Markdown([
+                        markdown
+                    ])
+                ], className='tab-pane', id='help')
+            ], className='tab-content')
         ]
+
 
     def _right_column(self, pc_options, conditions_options, volcano_options):
         return [
