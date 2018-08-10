@@ -140,7 +140,6 @@ def _download_files(urls, data_dir):
                     if chunk:
                         f.write(chunk)
             files.append(open(path, 'rb'))
-        finally:
             response.close()
     return files
 
