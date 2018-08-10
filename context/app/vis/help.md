@@ -4,9 +4,7 @@ This is a tool for exploring tabular gene expression and differential expression
 
 There are three main components:
 
-![screen shot](static/screen-shot.png)
-
-- On the left is a hierarchically clustered heatmap, with a gene search box and an axis toggle.
+- In this pane (in the other tab) is a hierarchically clustered heatmap, with a gene search box and an axis toggle.
 - To the right and above is a scatter-plot of the conditions in the dataset,
 arranged by their principle components.
 - To the right and below is a scatter-plot of genes, and in successive tabs,

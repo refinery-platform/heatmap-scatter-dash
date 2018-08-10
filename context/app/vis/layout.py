@@ -2,7 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 
 from app.utils.color import palettes
-from app.utils.resource_loader import ResourceLoader
+from app.utils.resource_loader import ResourceLoader, relative_path
 from app.vis.base import VisBase
 
 
@@ -47,32 +47,46 @@ class VisLayout(VisBase, ResourceLoader):
         ], className='container-fluid')
 
     def _left_column(self):
+        with open(relative_path(__file__, 'help.md')) as f:
+            markdown = f.read()
         return [
-            dcc.Graph(
-                id='heatmap',
-                style={'height': '90vh'}
-            ),
+            html.Br(),  # Top of tab was right against window top
+
+            _tabs('', 'Map', 'Help'),
             html.Div([
                 html.Div([
-                    html.Label(['gene'],
-                               className='col-xs-1 control-label'
-                               ),
+                    dcc.Graph(
+                        id='heatmap',
+                        style={'height': '80vh'}
+                    ),
                     html.Div([
-                        dcc.Input(
-                            id='search-genes',
-                            placeholder='search...',
-                            type="text",
-                            className='form-control')
-                    ], className='col-xs-5'),
-                ], className='form-group'),
-            ], className='form-horizontal')
+                        html.Div([
+                            html.Label(['gene'],
+                                       className='col-xs-1 control-label'
+                                       ),
+                            html.Div([
+                                dcc.Input(
+                                    id='search-genes',
+                                    placeholder='search...',
+                                    type="text",
+                                    className='form-control')
+                            ], className='col-xs-5'),
+                        ], className='form-group'),
+                    ], className='form-horizontal')
+                ], className='tab-pane active', id='map'),
+                html.Div([
+                    dcc.Markdown([
+                        markdown
+                    ])
+                ], className='tab-pane', id='help')
+            ], className='tab-content')
         ]
 
     def _right_column(self, pc_options, conditions_options, volcano_options):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('Conditions:', 'PCA', 'IDs', 'Options', help_button=True),
+            _tabs('Conditions:', 'PCA', 'IDs', 'Options'),
             html.Div([
                 self._scatter('pca', pc_options, active=True, meta=True),
                 _iframe('ids'),
@@ -285,29 +299,12 @@ def _class_from_index(i):
     return ''
 
 
-def _tabs(*names, help_button=False):
-    li_list = [
+def _tabs(*names):
+    return html.Ul([
         html.Li([
             html.A([
                 name
             ], href='#' + name.lower())
         ], className=_class_from_index(index))
         for (index, name) in enumerate(names)
-    ]
-
-    css_classes = 'btn pull-right'
-    if help_button:
-        li_list.append(html.A(
-            ['Help'], href='help',
-            target='_blank',
-            className=css_classes
-        ))
-        li_list.append(html.A(
-            ['Report Bug'], href='https://github.com/refinery-platform/'
-            'heatmap-scatter-dash/issues/new',
-            target='_blank',
-            className=css_classes
-        ))
-    tabs = html.Ul(li_list,
-                   className='nav nav-tabs')
-    return tabs
+    ], className='nav nav-tabs')
