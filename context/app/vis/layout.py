@@ -88,7 +88,7 @@ class VisLayout(VisBase, ResourceLoader):
         return [
             html.Br(),  # Top of tab was right against window top
 
-            _tabs('Conditions:', 'PCA', 'IDs', 'Options', help_button=True),
+            _tabs('Conditions:', 'PCA', 'IDs', 'Options'),
             html.Div([
                 self._scatter('pca', pc_options, active=True, meta=True),
                 _iframe('ids'),
@@ -301,29 +301,12 @@ def _class_from_index(i):
     return ''
 
 
-def _tabs(*names, help_button=False):
-    li_list = [
+def _tabs(*names):
+    return html.Ul([
         html.Li([
             html.A([
                 name
             ], href='#' + name.lower())
         ], className=_class_from_index(index))
         for (index, name) in enumerate(names)
-    ]
-
-    css_classes = 'btn pull-right'
-    if help_button:
-        li_list.append(html.A(
-            ['Help'], href='help',
-            target='_blank',
-            className=css_classes
-        ))
-        li_list.append(html.A(
-            ['Report Bug'], href='https://github.com/refinery-platform/'
-            'heatmap-scatter-dash/issues/new',
-            target='_blank',
-            className=css_classes
-        ))
-    tabs = html.Ul(li_list,
-                   className='nav nav-tabs')
-    return tabs
+    ], className='nav nav-tabs')
