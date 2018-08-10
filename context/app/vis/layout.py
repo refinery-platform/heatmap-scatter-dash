@@ -57,7 +57,7 @@ class VisLayout(VisBase, ResourceLoader):
                 html.Div([
                     dcc.Graph(
                         id='heatmap',
-                        style={'height': '90vh'}
+                        style={'height': '80vh'}
                     ),
                     html.Div([
                         html.Div([
