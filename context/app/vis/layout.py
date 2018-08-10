@@ -3,7 +3,6 @@ import dash_html_components as html
 
 from app.utils.color import palettes
 from app.utils.resource_loader import ResourceLoader, relative_path
-
 from app.vis.base import VisBase
 
 
@@ -82,7 +81,6 @@ class VisLayout(VisBase, ResourceLoader):
                 ], className='tab-pane', id='help')
             ], className='tab-content')
         ]
-
 
     def _right_column(self, pc_options, conditions_options, volcano_options):
         return [
