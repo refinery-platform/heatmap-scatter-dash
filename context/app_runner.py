@@ -14,7 +14,7 @@ from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.download.download_app import DownloadApp
 from app.utils.frames import find_index, merge
-from app.utils.vulcanize import vulcanize
+from app.utils.vulcanize import Vulcanizer
 from app.vis.callbacks import VisCallbacks
 
 
@@ -69,7 +69,10 @@ def init(args, parser):  # TODO: Why is parser here?
                 keep_strings=True
             )
             key = basename(diff_file.name)
-            value = vulcanize(find_index(df_info.data_frame, genes))
+            value = Vulcanizer(
+                log_fold_re_list=[r'\blog[^a-z]'],
+                p_value_re_list=[r'p.*value']).vulcanize(
+                    find_index(df_info.data_frame, genes))
             diff_dataframes[key] = value
     else:
         diff_dataframes = {

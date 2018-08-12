@@ -1,26 +1,36 @@
 import re
 from math import log10
 
-LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
-P_VALUE_RE_LIST = [r'p.*value']
+
+class Vulcanizer():
+
+    def __init__(self, log_fold_re_list, p_value_re_list):
+        self.log_fold_re_list = log_fold_re_list
+        self.p_value_re_list = p_value_re_list
 
 
-def vulcanize(dataframe):
-    """
-    Given a dataframe,
-    identify the columns for log-fold-change and p-value,
-    remove all other columns,
-    and replace p-value with its negative log.
-    """
-    log_fold_col = _pick_col(LOG_FOLD_RE_LIST, dataframe)
-    p_value_col = _pick_col(P_VALUE_RE_LIST, dataframe)
-    log_p_value_col = '-log10({})'.format(p_value_col)
-    dataframe[log_p_value_col] =\
-        dataframe[p_value_col].apply(_neg_log)
-    two_columns = dataframe[[log_fold_col, log_p_value_col]]
-    return two_columns.dropna(axis='rows', how='all')
-    # Plotly fails to show anything if rows with missing data are present,
-    # (I think.)
+    def vulcanize(self, dataframe):
+        """
+        Given a dataframe,
+        identify the columns for log-fold-change and p-value,
+        remove all other columns,
+        and replace p-value with its negative log.
+        """
+        log_fold_col = self._pick_log_fold(dataframe)
+        p_value_col = self._pick_p_value(dataframe)
+        log_p_value_col = '-log10({})'.format(p_value_col)
+        dataframe[log_p_value_col] =\
+            dataframe[p_value_col].apply(_neg_log)
+        two_columns = dataframe[[log_fold_col, log_p_value_col]]
+        return two_columns.dropna(axis='rows', how='all')
+        # Plotly fails to show anything if rows with missing data are present,
+        # (I think.)
+
+    def _pick_log_fold(self, dataframe):
+        _pick_col(self.log_fold_re_list, dataframe)
+
+    def _pick_p_value(self, dataframe):
+        _pick_col(self.p_value_re_list, dataframe)
 
 
 def _pick_col(name_re_list, df):
