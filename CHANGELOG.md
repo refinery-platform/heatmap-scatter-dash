@@ -1,5 +1,13 @@
 # Change Log
 
+## [v0.1.15](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.15) (Aug 13, 2018)
+
+* Fix race condition where selecting points on the scatterplot did not always
+update the found set.
+* Also look for "padj" and "fdr" when scanning headers.
+* Move help to tab instead of separate page.
+
+
 ## [v0.1.14](https://github.com/refinery-platform/heatmap-scatter-dash/tree/v0.1.14) (Aug 2, 2018)
 
 * app_runner_refinery sniffs files to determine if they are counts or differential expression.
