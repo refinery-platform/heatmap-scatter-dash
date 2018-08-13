@@ -15,9 +15,6 @@ from dataframer import dataframer
 
 import app_runner
 
-LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
-P_VALUE_RE_LIST = [r'p.*value']
-
 
 class RunnerArgs():
     """
@@ -64,8 +61,8 @@ class RunnerArgs():
             for file in mystery_files:
                 df = dataframer.parse(file).data_frame
                 file.seek(0)  # Reset cursor we can re-read the file.
-                if (_column_matches_re(df, P_VALUE_RE_LIST) and
-                        _column_matches_re(df, LOG_FOLD_RE_LIST)):
+                if (_column_matches_re(df, app_runner.P_VALUE_RE_LIST) and
+                        _column_matches_re(df, app_runner.LOG_FOLD_RE_LIST)):
                     self.diffs.append(file)
                 else:
                     self.files.append(file)

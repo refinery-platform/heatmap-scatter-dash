@@ -160,6 +160,10 @@ def main(args, parser=None):
         )
 
 
+P_VALUE_RE_LIST = [r'p.*value']
+LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
+
+
 def arg_parser():
     parser = argparse.ArgumentParser(
         description='Light-weight visualization for differential expression')
@@ -212,6 +216,20 @@ def arg_parser():
         'These parameters will probably only be of interest to developers, '
         'and/or they are used when the tool is embedded in Refinery.')
 
+    group.add_argument(
+        '--p_value_re', nargs='+', type=str, metavar='RE',
+        default=P_VALUE_RE_LIST,
+        help='Regular expressions which column headers will be checked '
+             'against to identify p-values. Defaults to {}.'.format(
+                 repr(P_VALUE_RE_LIST)
+             ))
+    group.add_argument(
+        '--log_fold_re', nargs='+', type=str, metavar='RE',
+        default=LOG_FOLD_RE_LIST,
+        help='Regular expressions which column headers will be checked '
+             'against to identify fold-change values. Defaults to {}.'.format(
+                 repr(LOG_FOLD_RE_LIST)
+             ))
     group.add_argument(
         '--profile', nargs='?', type=str, default='/tmp', metavar='DIR',
         help='Saves a profile for each request in the specified directory, '
