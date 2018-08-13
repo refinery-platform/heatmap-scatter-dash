@@ -18,6 +18,10 @@ from app.utils.vulcanize import Vulcanizer
 from app.vis.callbacks import VisCallbacks
 
 
+P_VALUE_RE_LIST = [r'p.*value', r'padj', r'fdr']
+LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
+
+
 def file_dataframes(files, relabel=False):
     frames = []
     label_maps = []
@@ -158,10 +162,6 @@ def main(args, parser=None):
             port=args.port,
             host='0.0.0.0'
         )
-
-
-P_VALUE_RE_LIST = [r'p.*value', r'padj', r'fdr']
-LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
 
 
 def arg_parser():
