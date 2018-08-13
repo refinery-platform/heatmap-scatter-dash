@@ -8,7 +8,6 @@ class Vulcanizer():
         self.log_fold_re_list = log_fold_re_list
         self.p_value_re_list = p_value_re_list
 
-
     def vulcanize(self, dataframe):
         """
         Given a dataframe,

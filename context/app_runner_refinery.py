@@ -15,7 +15,6 @@ from dataframer import dataframer
 
 import app_runner
 
-
 LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
 P_VALUE_RE_LIST = [r'p.*value']
 
