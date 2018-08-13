@@ -6,7 +6,7 @@ import pandas
 
 from app.utils.frames import (center_and_scale_rows, find_index, merge,
                               sort_by_variance)
-from app.utils.vulcanize import vulcanize
+from app.utils.vulcanize import Vulcanizer
 
 
 class TestDataFrames(unittest.TestCase):
@@ -145,9 +145,9 @@ class SortByVariance(TestDataFrames):
         )
 
 
-class TestVulcanize(TestDataFrames):
+class TestVulcanizer(TestDataFrames):
 
-    def test_vulcanize(self):
+    def test_vulcanizer(self):
         df = pandas.DataFrame([
             [0, 0, 1, 0, 0.1],
             [0, 0, -1, 0, 10]],
@@ -155,7 +155,10 @@ class TestVulcanize(TestDataFrames):
                      'fake-p-val', 'p-value!'],
             index=['gene1', 'gene2']
         )
-        v = vulcanize(df)
+        v = Vulcanizer(
+            log_fold_re_list=[r'\blog[^a-z]'],
+            p_value_re_list=[r'p.*value']
+        ).vulcanize(df)
         self.assertEqualDataFrames(
             v,
             pandas.DataFrame([

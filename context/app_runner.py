@@ -14,8 +14,11 @@ from werkzeug.contrib.profiler import ProfilerMiddleware
 
 from app.download.download_app import DownloadApp
 from app.utils.frames import find_index, merge
-from app.utils.vulcanize import vulcanize
+from app.utils.vulcanize import Vulcanizer
 from app.vis.callbacks import VisCallbacks
+
+P_VALUE_RE_LIST = [r'p.*value', r'padj', r'fdr']
+LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
 
 
 def file_dataframes(files, relabel=False):
@@ -69,7 +72,10 @@ def init(args, parser):  # TODO: Why is parser here?
                 keep_strings=True
             )
             key = basename(diff_file.name)
-            value = vulcanize(find_index(df_info.data_frame, genes))
+            value = Vulcanizer(
+                log_fold_re_list=[r'\blog[^a-z]'],
+                p_value_re_list=[r'p.*value']
+            ).vulcanize(find_index(df_info.data_frame, genes))
             diff_dataframes[key] = value
     else:
         diff_dataframes = {
@@ -172,7 +178,7 @@ def arg_parser():
         '--files', nargs='+', metavar='CSV', type=binary_file,
         help='Read CSV or TSV files. Identifiers should be in the first '
              'column and multiple files will be joined on identifier. '
-             'Gzip and Zip files are also handled.')
+             'Gzip files are also handled.')
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',
@@ -209,6 +215,20 @@ def arg_parser():
         'These parameters will probably only be of interest to developers, '
         'and/or they are used when the tool is embedded in Refinery.')
 
+    group.add_argument(
+        '--p_value_re', nargs='+', type=str, metavar='RE',
+        default=P_VALUE_RE_LIST,
+        help='Regular expressions which column headers will be checked '
+             'against to identify p-values. Defaults to {}.'.format(
+                 repr(P_VALUE_RE_LIST)
+             ))
+    group.add_argument(
+        '--log_fold_re', nargs='+', type=str, metavar='RE',
+        default=LOG_FOLD_RE_LIST,
+        help='Regular expressions which column headers will be checked '
+             'against to identify fold-change values. Defaults to {}.'.format(
+                 repr(LOG_FOLD_RE_LIST)
+             ))
     group.add_argument(
         '--profile', nargs='?', type=str, default='/tmp', metavar='DIR',
         help='Saves a profile for each request in the specified directory, '
