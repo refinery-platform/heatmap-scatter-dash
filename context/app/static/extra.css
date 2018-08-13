@@ -69,3 +69,11 @@ pre {
 		opacity: 0.5;
 	}
 }
+
+/*
+While debugging, these hidden fields can be long. Uncomment this to hide them.
+
+#search-genes-ids-json, #scatter-volcano-ids-json {
+	display: none;
+}
+*/

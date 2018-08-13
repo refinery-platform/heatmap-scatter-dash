@@ -54,17 +54,17 @@ class VisGeneCallbacks(VisLayout):
 
         self.app.callback(
             Output('search-genes-timestamp', 'children'),
-            [Input('search-genes', 'value')]
+            [Input('search-genes-ids-json', 'children')]
         )(self._update_timestamp)
 
         self.app.callback(
             Output('scatter-sample-by-sample-timestamp', 'children'),
-            [Input('scatter-sample-by-sample', 'selectedData')]
+            [Input('scatter-sample-by-sample-ids-json', 'children')]
         )(self._update_timestamp)
 
         self.app.callback(
             Output('scatter-volcano-timestamp', 'children'),
-            [Input('scatter-volcano', 'selectedData')]
+            [Input('scatter-volcano-ids-json', 'children')]
         )(self._update_timestamp)
 
         # Hidden elements which transform inputs into lists of IDs:
