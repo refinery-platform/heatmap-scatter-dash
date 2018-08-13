@@ -11,8 +11,10 @@ $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
                      [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
                      [--most_variable_rows ROWS] [--html_table]
-                     [--truncate_table N] [--port PORT] [--profile [DIR]]
-                     [--html_error] [--debug] [--api_prefix PREFIX]
+                     [--truncate_table N] [--port PORT]
+                     [--p_value_re RE [RE ...]] [--log_fold_re RE [RE ...]]
+                     [--profile [DIR]] [--html_error] [--debug]
+                     [--api_prefix PREFIX]
 
 Light-weight visualization for differential expression
 
@@ -49,6 +51,14 @@ Refinery/Developer:
   These parameters will probably only be of interest to developers, and/or
   they are used when the tool is embedded in Refinery.
 
+  --p_value_re RE [RE ...]
+                        Regular expressions which column headers will be
+                        checked against to identify p-values. Defaults to
+                        ['p.*value'].
+  --log_fold_re RE [RE ...]
+                        Regular expressions which column headers will be
+                        checked against to identify fold-change values.
+                        Defaults to ['\\blog[^a-z]'].
   --profile [DIR]       Saves a profile for each request in the specified
                         directory, "/tmp" by default. Profiles can be viewed
                         with snakeviz.
