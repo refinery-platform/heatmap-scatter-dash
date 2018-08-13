@@ -27,10 +27,10 @@ class Vulcanizer():
         # (I think.)
 
     def _pick_log_fold(self, dataframe):
-        _pick_col(self.log_fold_re_list, dataframe)
+        return _pick_col(self.log_fold_re_list, dataframe)
 
     def _pick_p_value(self, dataframe):
-        _pick_col(self.p_value_re_list, dataframe)
+        return _pick_col(self.p_value_re_list, dataframe)
 
 
 def _pick_col(name_re_list, df):

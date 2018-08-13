@@ -71,8 +71,8 @@ def init(args, parser):  # TODO: Why is parser here?
             key = basename(diff_file.name)
             value = Vulcanizer(
                 log_fold_re_list=[r'\blog[^a-z]'],
-                p_value_re_list=[r'p.*value']).vulcanize(
-                    find_index(df_info.data_frame, genes))
+                p_value_re_list=[r'p.*value']
+            ).vulcanize(find_index(df_info.data_frame, genes))
             diff_dataframes[key] = value
     else:
         diff_dataframes = {

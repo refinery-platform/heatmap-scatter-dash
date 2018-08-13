@@ -14,7 +14,10 @@ import requests
 from dataframer import dataframer
 
 import app_runner
-from app.utils.vulcanize import LOG_FOLD_RE, P_VALUE_RE
+
+
+LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
+P_VALUE_RE_LIST = [r'p.*value']
 
 
 class RunnerArgs():
@@ -62,8 +65,8 @@ class RunnerArgs():
             for file in mystery_files:
                 df = dataframer.parse(file).data_frame
                 file.seek(0)  # Reset cursor we can re-read the file.
-                if (_column_matches_re(df, P_VALUE_RE) and
-                        _column_matches_re(df, LOG_FOLD_RE)):
+                if (_column_matches_re(df, P_VALUE_RE_LIST) and
+                        _column_matches_re(df, LOG_FOLD_RE_LIST)):
                     self.diffs.append(file)
                 else:
                     self.files.append(file)
@@ -96,10 +99,10 @@ class RunnerArgs():
         )
 
 
-def _column_matches_re(dataframe, pattern):
+def _column_matches_re(dataframe, patterns):
     return any(
         re.search(pattern, col, flags=re.IGNORECASE)
-        for col in dataframe.columns)
+        for col in dataframe.columns for pattern in patterns)
 
 
 def _split_envvar(name):
