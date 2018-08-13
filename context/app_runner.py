@@ -160,7 +160,7 @@ def main(args, parser=None):
         )
 
 
-P_VALUE_RE_LIST = [r'p.*value']
+P_VALUE_RE_LIST = [r'p.*value', r'padj', r'fdr']
 LOG_FOLD_RE_LIST = [r'\blog[^a-z]']
 
 
@@ -179,7 +179,7 @@ def arg_parser():
         '--files', nargs='+', metavar='CSV', type=binary_file,
         help='Read CSV or TSV files. Identifiers should be in the first '
              'column and multiple files will be joined on identifier. '
-             'Gzip and Zip files are also handled.')
+             'Gzip files are also handled.')
 
     parser.add_argument(
         '--diffs', nargs='+', metavar='CSV',

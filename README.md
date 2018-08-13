@@ -28,7 +28,7 @@ optional arguments:
   --files CSV [CSV ...]
                         Read CSV or TSV files. Identifiers should be in the
                         first column and multiple files will be joined on
-                        identifier. Gzip and Zip files are also handled.
+                        identifier. Gzip files are also handled.
   --diffs CSV [CSV ...]
                         Read CSV or TSV files containing differential
                         expression data.
@@ -54,7 +54,7 @@ Refinery/Developer:
   --p_value_re RE [RE ...]
                         Regular expressions which column headers will be
                         checked against to identify p-values. Defaults to
-                        ['p.*value'].
+                        ['p.*value', 'padj', 'fdr'].
   --log_fold_re RE [RE ...]
                         Regular expressions which column headers will be
                         checked against to identify fold-change values.
