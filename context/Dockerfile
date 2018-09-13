@@ -10,6 +10,8 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN pip install -r requirements.txt
 
-VOLUME data  # Can be mounted to pass in data, but not required.
+# The /data directory can be mounted to pass inputs, but not required:
+# If not present, falls back to INPUT_JSON and INPUT_JSON_URL.
+VOLUME data
 CMD ["python", "app_runner_refinery.py", "--input", "/data/input.json"]
 EXPOSE 80
