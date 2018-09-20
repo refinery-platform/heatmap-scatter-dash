@@ -6,71 +6,10 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 
 ![v0.1.2-screenshot](https://user-images.githubusercontent.com/730388/36332441-2ba33e9c-1340-11e8-900a-6f16549f1f6b.png)
 
-```
-$ python app_runner.py -h
-usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
-                     [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
-                     [--most_variable_rows ROWS] [--html_table]
-                     [--truncate_table N] [--port PORT]
-                     [--p_value_re RE [RE ...]] [--log_fold_re RE [RE ...]]
-                     [--profile [DIR]] [--html_error] [--debug]
-                     [--api_prefix PREFIX]
-
-Light-weight visualization for differential expression
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --demo ROWS COLS META
-                        Generates a random matrix with the number of rows and
-                        columns specified. In addition, "META" determines the
-                        number of mock metadata fields to associate with each
-                        column.
-  --files CSV [CSV ...]
-                        Read CSV or TSV files. Identifiers should be in the
-                        first column and multiple files will be joined on
-                        identifier. Gzip files are also handled.
-  --diffs CSV [CSV ...]
-                        Read CSV or TSV files containing differential
-                        expression data.
-  --metas CSV [CSV ...]
-                        Read CSV or TSV files containing metadata: Row labels
-                        should match column headers of the raw data.
-  --most_variable_rows ROWS
-                        For the heatmap, we first sort by row variance, and
-                        then take the number of rows specified here. Defaults
-                        to 500.
-  --html_table          The default is to use pre-formatted text for the
-                        tables. HTML tables are available, but are twice as
-                        slow.
-  --truncate_table N    Truncate the table to the first N rows. Table
-                        rendering is often a bottleneck. Default is not to
-                        truncate.
-  --port PORT           Specify a port to run the server on. Defaults to 8050.
-
-Refinery/Developer:
-  These parameters will probably only be of interest to developers, and/or
-  they are used when the tool is embedded in Refinery.
-
-  --p_value_re RE [RE ...]
-                        Regular expressions which column headers will be
-                        checked against to identify p-values. Defaults to
-                        ['p.*value', 'padj', 'fdr'].
-  --log_fold_re RE [RE ...]
-                        Regular expressions which column headers will be
-                        checked against to identify fold-change values.
-                        Defaults to ['\\blog[^a-z]'].
-  --profile [DIR]       Saves a profile for each request in the specified
-                        directory, "/tmp" by default. Profiles can be viewed
-                        with snakeviz.
-  --html_error          If there is a configuration error, instead of exiting,
-                        start the server and display an error page.
-  --debug               Run the server in debug mode: The server will restart
-                        in response to any code changes, and some hidden
-                        fields will be shown.
-  --api_prefix PREFIX   Prefix for API URLs.
-```
-
 ## Getting Started
+
+For input, a variety of tabular data formats are supported (CSV, TSV, GCT, or
+any of those zipped). Examples are available [here](fixtures/good/data).
 
 ### Docker
 
@@ -144,8 +83,73 @@ Successful Github tags and PRs will prompt Travis to push the built image to Doc
 $ git tag v0.0.x && git push origin --tags
 ```
 
-## For More Information...
+## Help
 
 There are a few [notes](docs) on implementation decisions and lessons learned.
 
-The [online help](context/app/help/help.md) can be previewed to get a better sense of the operational details.
+The [online help](context/app/vis/help.md) can be previewed to get a better sense of the operational details.
+
+Command line usage:
+```
+$ python app_runner.py -h
+usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
+                     [--diffs CSV [CSV ...]] [--metas CSV [CSV ...]]
+                     [--most_variable_rows ROWS] [--html_table]
+                     [--truncate_table N] [--port PORT]
+                     [--p_value_re RE [RE ...]] [--log_fold_re RE [RE ...]]
+                     [--profile [DIR]] [--html_error] [--debug]
+                     [--api_prefix PREFIX]
+
+Light-weight visualization for differential expression
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --demo ROWS COLS META
+                        Generates a random matrix with the number of rows and
+                        columns specified. In addition, "META" determines the
+                        number of mock metadata fields to associate with each
+                        column.
+  --files CSV [CSV ...]
+                        Read CSV or TSV files. Identifiers should be in the
+                        first column and multiple files will be joined on
+                        identifier. Gzip files are also handled.
+  --diffs CSV [CSV ...]
+                        Read CSV or TSV files containing differential
+                        expression data.
+  --metas CSV [CSV ...]
+                        Read CSV or TSV files containing metadata: Row labels
+                        should match column headers of the raw data.
+  --most_variable_rows ROWS
+                        For the heatmap, we first sort by row variance, and
+                        then take the number of rows specified here. Defaults
+                        to 500.
+  --html_table          The default is to use pre-formatted text for the
+                        tables. HTML tables are available, but are twice as
+                        slow.
+  --truncate_table N    Truncate the table to the first N rows. Table
+                        rendering is often a bottleneck. Default is not to
+                        truncate.
+  --port PORT           Specify a port to run the server on. Defaults to 8050.
+
+Refinery/Developer:
+  These parameters will probably only be of interest to developers, and/or
+  they are used when the tool is embedded in Refinery.
+
+  --p_value_re RE [RE ...]
+                        Regular expressions which column headers will be
+                        checked against to identify p-values. Defaults to
+                        ['p.*value', 'padj', 'fdr'].
+  --log_fold_re RE [RE ...]
+                        Regular expressions which column headers will be
+                        checked against to identify fold-change values.
+                        Defaults to ['\\blog[^a-z]'].
+  --profile [DIR]       Saves a profile for each request in the specified
+                        directory, "/tmp" by default. Profiles can be viewed
+                        with snakeviz.
+  --html_error          If there is a configuration error, instead of exiting,
+                        start the server and display an error page.
+  --debug               Run the server in debug mode: The server will restart
+                        in response to any code changes, and some hidden
+                        fields will be shown.
+  --api_prefix PREFIX   Prefix for API URLs.
+```
