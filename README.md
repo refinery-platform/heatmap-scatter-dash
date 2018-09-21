@@ -6,6 +6,102 @@ from the [Refinery](https://github.com/refinery-platform/refinery-platform) GUI.
 
 ![v0.1.2-screenshot](https://user-images.githubusercontent.com/730388/36332441-2ba33e9c-1340-11e8-900a-6f16549f1f6b.png)
 
+## Getting Started
+
+
+### Docker
+
+If you have Docker installed, and data available at public URLs,
+this is the easiest way to get started:
+
+```bash
+$ V=v0.1.5
+$ FIXTURES=https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/$V/fixtures/good/data
+$ docker run --name heatmap --detach --publish 8888:80 \
+  -e "FILE_URLS=$FIXTURES/counts.csv $FIXTURES/counts-copy.csv.gz" \
+  mccalluc/heatmap_scatter_dash:$V
+```
+
+Then visit [http://localhost:8888](http://localhost:8888).
+
+If multiple URLs are desired, use spaces in the value
+of the environment variables, as in the example.
+Besides providing count data, you can also specify
+`DIFF_URLS` for differential expression data and
+`META_URLS` for metadata.
+
+
+### From Source
+
+Check out the project and install dependencies:
+```bash
+  # Requires Python3:
+$ python --version
+$ git clone https://github.com/refinery-project/heatmap-scatter-dash.git
+$ cd heatmap-scatter-dash
+$ pip install -r requirements-freeze.txt
+```
+
+Then run it locally:
+
+```bash
+$ cd context
+
+  # Generate a random matrix:
+$ ./app_runner.py --demo 100 10 5
+
+  # Load data from disk:
+$ ./app_runner.py --files ../fixtures/good/data/counts.csv \
+                  --diffs ../fixtures/good/data/stats-* \
+                  --meta ../fixtures/good/data/metadata.csv
+```
+
+and visit `http://localhost:8050/`.
+
+## Input file format
+For input, a variety of tabular data formats are supported: CSV, TSV, GCT, or any of those zipped.
+In the example below, `r1`, `r2`, etc. are genes and `c1`, `c2`, etc. are conditions.
+Optionally, `name1`, `name2`, etc. are human-readable names for the genes, 
+
+| gene | c1 | c2 | c3 | c4 | code1 | code2 |
+|------|----|----|----|----|-------|-------|
+| r1   | 1  | 2  | 3  | 4  | a     | b     |
+| r2   | 5  | 6  | 7  | 8  | c     | b     |
+| r3   | 3  | 5  | 7  | 9  | c     | d     |
+
+[More examples](fixtures/good/data) are available.
+
+
+## Testing
+
+One bash script, `test.sh`, handles all our tests:
+- Python unit tests
+- Python style tests (`flake8` and `isort`)
+- Cypress.io interaction tests
+- Docker container build and launch
+
+A few more dependencies are required for this to work locally:
+```bash
+  # Install Docker: https://www.docker.com/community-edition
+$ pip install -r requirements-dev.txt
+$ npm install cypress --save-dev
+```
+
+## Release
+
+Successful Github tags and PRs will prompt Travis to push the built image to Dockerhub. For a new version number:
+
+```bash
+$ git tag v0.0.x && git push origin --tags
+```
+
+## Help
+
+There are a few [notes](docs) on implementation decisions and lessons learned.
+
+The [online help](context/app/vis/help.md) can be previewed to get a better sense of the operational details.
+
+Command line usage:
 ```
 $ python app_runner.py -h
 usage: app_runner.py [-h] (--demo ROWS COLS META | --files CSV [CSV ...])
@@ -69,83 +165,3 @@ Refinery/Developer:
                         fields will be shown.
   --api_prefix PREFIX   Prefix for API URLs.
 ```
-
-## Getting Started
-
-### Docker
-
-If you have Docker installed, and data available at public URLs,
-this is the easiest way to get started:
-
-```bash
-$ V=v0.1.5
-$ FIXTURES=https://raw.githubusercontent.com/refinery-platform/heatmap-scatter-dash/$V/fixtures/good/data
-$ docker run --name heatmap --detach --publish 8888:80 \
-  -e "FILE_URLS=$FIXTURES/counts.csv $FIXTURES/counts-copy.csv.gz" \
-  mccalluc/heatmap_scatter_dash:$V
-```
-
-Then visit [http://localhost:8888](http://localhost:8888).
-
-If multiple URLs are desired, use spaces in the value
-of the environment variables, as in the example.
-Besides providing count data, you can also specify
-`DIFF_URLS` for differential expression data and
-`META_URLS` for metadata.
-
-
-### From Source
-
-Check out the project and install dependencies:
-```bash
-  # Requires Python3:
-$ python --version
-$ git clone https://github.com/refinery-project/heatmap-scatter-dash.git
-$ cd heatmap-scatter-dash
-$ pip install -r requirements-freeze.txt
-```
-
-Then run it locally:
-
-```bash
-$ cd context
-
-  # Generate a random matrix:
-$ ./app_runner.py --demo 100 10 5
-
-  # Load data from disk:
-$ ./app_runner.py --files ../fixtures/good/data/counts.csv \
-                  --diffs ../fixtures/good/data/stats-* \
-                  --meta ../fixtures/good/data/metadata.csv
-```
-
-and visit `http://localhost:8050/`.
-
-## Testing
-
-One bash script, `test.sh`, handles all our tests:
-- Python unit tests
-- Python style tests (`flake8` and `isort`)
-- Cypress.io interaction tests
-- Docker container build and launch
-
-A few more dependencies are required for this to work locally:
-```bash
-  # Install Docker: https://www.docker.com/community-edition
-$ pip install -r requirements-dev.txt
-$ npm install cypress --save-dev
-```
-
-## Release
-
-Successful Github tags and PRs will prompt Travis to push the built image to Dockerhub. For a new version number:
-
-```bash
-$ git tag v0.0.x && git push origin --tags
-```
-
-## For More Information...
-
-There are a few [notes](docs) on implementation decisions and lessons learned.
-
-The [online help](context/app/help/help.md) can be previewed to get a better sense of the operational details.
