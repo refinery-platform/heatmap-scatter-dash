@@ -59,15 +59,17 @@ $ ./app_runner.py --files ../fixtures/good/data/counts.csv \
 and visit `http://localhost:8050/`.
 
 ## Input file format
-For input, a variety of tabular data formats are supported (CSV, TSV, GCT, or any of those zipped). For example, a CSV file could look as below, where c1, .. c4 are samples and word1 and word2 are xxx(?):
+For input, a variety of tabular data formats are supported: CSV, TSV, GCT, or any of those zipped.
+In the example below, `r1`, `r2`, etc. are genes and `c1`, `c2`, etc. are conditions.
+Optionally, `name1`, `name2`, etc. are human-readable names for the genes, 
 
-| gene | c1 | c2 | c3 | c4 | word1 | word2 |
+| gene | c1 | c2 | c3 | c4 | code1 | code2 |
 |------|----|----|----|----|-------|-------|
 | r1   | 1  | 2  | 3  | 4  | a     | b     |
 | r2   | 5  | 6  | 7  | 8  | c     | b     |
 | r3   | 3  | 5  | 7  | 9  | c     | d     |
 
-More examples are available [here](fixtures/good/data).
+[More examples](fixtures/good/data) are available.
 
 
 ## Testing
